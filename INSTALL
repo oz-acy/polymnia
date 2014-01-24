@@ -1,0 +1,8 @@
+"INSTALL" of LIBPOLYMNIA
+
+1. 基本的には ./configure, make, make install を順に實行すれば、
+   本プログラムは /usr/local/bin にインストールされる。
+
+2. prefix を變更する場合は ./configure --prefix=DIR で變更すればよい。
+
+3. その他、./configure --help も參照のこと。
