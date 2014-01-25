@@ -1,9 +1,9 @@
 dnl ====================================================================
-dnl   configure.in for POLYMNIA
+dnl   configure.ac for POLYMNIA
 dnl ====================================================================
 
 AC_PREREQ([2.69])
-AC_INIT(polymnia, 0.4.0, [acy@hiemalis.org])
+AC_INIT(polymnia, 0.5.0, [acy@hiemalis.org])
 AC_CONFIG_SRCDIR([colcnv.cpp])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
