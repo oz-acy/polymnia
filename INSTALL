@@ -1,5 +1,12 @@
 "INSTALL" of LIBPOLYMNIA
 
-1. cmakeを利用するやうに變更した。cmake, make, make install を順に實行すれば良い筈である。
-2. 現状、CMakeLists.txt に手許の環境用の設定が含まれてゐるので、適宜變更されたい。
-3. Autotools用の設定ファイルが as is で殘つてゐるので、そちらを適宜修正して利用することも可。恐らく無修正ではうまくいかない。
+1. 基本的には、cmake, make, make install を順に實行すれば、
+   本ライブラリのヘッダファイルやライブラリアーカイブは
+   /usr/local/include, /usr/local/lib にインストールされる。
+
+2. prefix を變更する場合は cmake -DCMAKE_INSTALL_PREFIX=DIR とする。
+   其の他、configurationの方法は cmake の使ひ方を調べられたい。
+
+3. Autotools 關係のファイルの保守はやめたので、
+   殘つてゐるファイルが其の儘使へるとは限らない。
+   適宜修正して利用するのは可。
