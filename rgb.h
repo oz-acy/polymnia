@@ -1,15 +1,16 @@
 /**************************************************************************
-*
-*  rgb.h
-*  by oZ/acy
-*  (c) 2001-2008 oZ/acy. ALL RIGHTS RESERVED.
-*
-*  RGB (24bit) color type
-*  Še8bit RGB Color Œ^
-*
-*  last update: 2009.11.7
-*
-**************************************************************************/
+ *
+ *  rgb.h
+ *  by oZ/acy
+ *  (c) 2001-2016 oZ/acy. ALL RIGHTS RESERVED.
+ *
+ *  RGB (24bit) color type
+ *  Še8bit RGB Color Œ^
+ *
+ *  —š—ð
+ *    2016.2.27  C++11/14›”œä(˜ï)
+ *
+ *************************************************************************/
 
 #ifndef INC_POLYMNIA_RGBCOL_H___
 #define INC_POLYMNIA_RGBCOL_H___
@@ -28,8 +29,8 @@ public:
   themis::Byte r, g, b;
 
 public:
-  RgbColor() throw() : r(0), g(0), b(0) {}
-  RgbColor(themis::Byte r0, themis::Byte g0, themis::Byte b0) throw()
+  constexpr RgbColor() throw() : r(0), g(0), b(0) {}
+  constexpr RgbColor(themis::Byte r0, themis::Byte g0, themis::Byte b0) throw()
     : r(r0), g(g0), b(b0)
     {}
 

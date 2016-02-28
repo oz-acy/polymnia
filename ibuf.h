@@ -1,14 +1,15 @@
 /**************************************************************************
-*
-*  ibuf.h
-*  by oZ/acy
-*  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
-*
-*  Image BUFfer template
-*  畫像バッファのクラステンプレート
-*
-*  last update: 2011.11.7
-**************************************************************************/
+ *
+ *  ibuf.h
+ *  by oZ/acy
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *
+ *  Image BUFfer template
+ *  畫像バッファのクラステンプレート
+ *
+ *  履歴
+ *    2016.2.27  C++11/14對應(假)
+ *************************************************************************/
 
 #ifndef INC_POLYMNIA_IMAGEBUFFER_H___
 #define INC_POLYMNIA_IMAGEBUFFER_H___
@@ -31,7 +32,7 @@ struct Point
   int x, y;
 
   Point() = default;
-  Point(int xx, int yy) : x(xx), y(yy) {}
+  constexpr Point(int xx, int yy) : x(xx), y(yy) {}
 };
 
 
@@ -44,7 +45,7 @@ struct Rect
   int x1, y1, x2, y2;
 
   Rect() = default;
-  Rect(int x, int y, int xx, int yy) : x1(x), y1(y), x2(xx), y2(yy) {}
+  constexpr Rect(int x, int y, int xx, int yy) : x1(x), y1(y), x2(xx), y2(yy) {}
 };
 
 
@@ -120,36 +121,36 @@ public:
   const C_* buffer() const throw() { return buf_; }
 
 
-  C_& pixel(int x, int y) throw() { return buf_[x+y*offset_]; }
-  const C_& pixel(int x, int y) const throw() { return buf_[x+y*offset_]; }
+  C_& pixel(int x, int y) throw() { return buf_[x + y * offset_]; }
+  const C_& pixel(int x, int y) const throw() { return buf_[x + y * offset_]; }
 
 
   C_& at(int x, int y) throw(polymnia::RangeOverException)
   {
-    if (x<0)
+    if (x < 0)
       throw polymnia::RangeOverException();
-    if (x>=w_)
+    if (x >= w_)
       throw polymnia::RangeOverException();
     if (y<0)
       throw polymnia::RangeOverException();
-    if (y>=h_)
+    if (y >= h_)
       throw polymnia::RangeOverException();
 
-    return buf_[x+y*offset_];
+    return buf_[x + y * offset_];
   }
 
   const C_& at(int x, int y) const throw(polymnia::RangeOverException)
   {
-    if (x<0)
+    if (x < 0)
       throw polymnia::RangeOverException();
-    if (x>=w_)
+    if (x >= w_)
       throw polymnia::RangeOverException();
-    if (y<0)
+    if (y < 0)
       throw polymnia::RangeOverException();
-    if (y>=h_)
+    if (y >= h_)
       throw polymnia::RangeOverException();
 
-    return buf_[x+y*offset_];
+    return buf_[x + y * offset_];
   }
 
 

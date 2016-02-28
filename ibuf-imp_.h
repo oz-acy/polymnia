@@ -1,15 +1,16 @@
 /**************************************************************************
-*
-*  ibuf-imp_.h
-*  by oZ/acy
-*  (c) 2002-2008 oZ/acy.  ALL RIGHTS RESERVED.
-*
-*  implement of Image BUFfer template
-*  畫像バッファクラステンプレート實裝部分
-*
-*  last update: 7 Nov MMIX
-*
-**************************************************************************/
+ *
+ *  ibuf-imp_.h
+ *  by oZ/acy
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *
+ *  implement of Image BUFfer template
+ *  畫像バッファクラステンプレート實裝部分
+ *
+ *  履歴
+ *    2016.2.26 ellipse()内の不使用變數の宣言を削除
+ *
+ *************************************************************************/
 
 #include <stack>
 #include <cstring>
@@ -237,6 +238,7 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
   int yy2 = y2;
 
   int e, i, p, q;
+
   if (dx >= dy)
   {
     e = -dx;
@@ -256,17 +258,17 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
       q -= sx;
       xx1 += sx;
       xx2 -= sx;
-      e += 2*dy;
-      if (e>=0)
+      e += 2 * dy;
+      if (e >= 0)
       {
-        if (sy>0)
+        if (sy > 0)
         {
           p += offset_;
           q -= offset_;
           yy1++;
           yy2--;
         }
-        else if (sy<0)
+        else if (sy < 0)
         {
           p -= offset_;
           q += offset_;
@@ -274,7 +276,7 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
           yy2++;
         }
 
-        e -= 2*dx;
+        e -= 2 * dx;
       }
     }
 
@@ -288,7 +290,7 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
     p = x1 + y1 * offset_;
     q = x2 + y2 * offset_;
 
-    for (i=0; i<ly; i++)
+    for (i = 0; i < ly; i++)
     {
       if (xx1 >= 0 && xx1 < w_ && yy1 >= 0 && yy1 < h_)
         buf_[p] = col;
@@ -311,13 +313,13 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
       }
 
       e += 2 * dx;
-      if (e>=0)
+      if (e >= 0)
       {
         p += sx;
         q -= sx;
         xx1 += sx;
         xx2 -= sx;
-        e -= 2*dy;
+        e -= 2 * dy;
       }
     }
 
@@ -372,7 +374,7 @@ void polymnia::ImageBuffer<C_>::box
   { // 塗り潰し
     int i, j;
     int p = yy1 * offset_;
-    int w = xx2 - xx1;
+    //int w = xx2 - xx1;
     for (i=yy1; i<=yy2; i++, p+=offset_)
       for (j=xx1; j<=xx2; j++)
         buf_[p+j] = col;
@@ -439,7 +441,7 @@ polymnia::ImageBuffer<C_>::ellipse(
   if (a==0 || b==0)
     return;
 
-  int ysp, ysm, ytp, ytm;
+  int ytp, ytm;
 
   a = std::abs(a);
   b = std::abs(b);
@@ -448,12 +450,12 @@ polymnia::ImageBuffer<C_>::ellipse(
   int q, e;
   if (a < b)
   {
-    e = 2 - 3*b;
+    e = 2 - 3 * b;
     q = b;
   }
   else
   {
-    e = 2 - 3*a;
+    e = 2 - 3 * a;
     q = a;
   }
 
@@ -488,115 +490,115 @@ polymnia::ImageBuffer<C_>::ellipse(
     p++;
 
 
-    if (x-s < w_ && x+s >= 0 && y-t < h_ && y+t >= 0)
+    if (x - s < w_  &&  x + s >= 0  &&  y - t < h_  &&  y + t >= 0)
     {
       if (fl)
       {
-        int i = (x-s < 0) ? 0 : x-s;
-        int j = (x+s+1 >= w_) ? w_-1 : x+s+1;
-        if (y+t < h_)
+        int i = (x - s < 0) ? 0 : x-s;
+        int j = (x + s + 1 >= w_) ? w_-1 : x + s + 1;
+        if (y + t < h_)
         {
-          int ytp = (y+t) * offset_;
+          int ytp = (y + t) * offset_;
 
-          if (y-t >= 0)
+          if (y - t >= 0)
           { // 1=>2, 7=>8
-            int ytm = (y-t) * offset_;
+            int ytm = (y - t) * offset_;
             for ( ; i < j; ++i)
-              buf_[i+ytp] = buf_[i+ytm] = col;
+              buf_[i + ytp] = buf_[i + ytm] = col;
           }
           else
           { // 1=>2
             for ( ; i < j; ++i)
-              buf_[i+ytp] = col;
+              buf_[i + ytp] = col;
           }
         }
         else
         {
-          if (y-t >= 0)
+          if (y - t >= 0)
           { //7->8
-            int ytm = (y-t) * offset_;
-            for ( ; i<j; i++)
-              buf_[i+ytm] = col;
+            int ytm = (y - t) * offset_;
+            for ( ; i < j; i++)
+              buf_[i + ytm] = col;
           }
         }
       }
       else
       {
-        bool xs1 = (x-s) >= 0;
-        bool xs2 = (x+s) < w_;
+        bool xs1 = (x - s) >= 0;
+        bool xs2 = (x + s) < w_;
 
-        if (y+t < h_)
+        if (y + t < h_)
         {
-          ytp = (y+t) * offset_;
+          ytp = (y + t) * offset_;
           if (xs1)
-            buf_[x-s + ytp] = col;  //1
+            buf_[x - s + ytp] = col;  //1
           if (xs2)
-            buf_[x+s + ytp] = col;  //2
+            buf_[x + s + ytp] = col;  //2
         }
-        if (y-t >= 0)
+        if (y - t >= 0)
         {
-          ytm = (y-t) * offset_;
+          ytm = (y - t) * offset_;
           if (xs1)
-            buf_[x-s + ytm] = col;  //7
+            buf_[x - s + ytm] = col;  //7
           if (xs2)
-            buf_[x+s + ytm] = col;  //8
+            buf_[x + s + ytm] = col;  //8
         }
       }
     }
 
 
-    if (x-s2 < w_ && x+s2 >= 0 && y-t2 < h_ && y+t2 >= 0)
+    if (x - s2 < w_  &&  x + s2 >= 0  & & y - t2 < h_  &&  y + t2 >= 0)
     {
       if (fl)
       {
-        int i = (x-s2 < 0) ? 0 : x-s2;
-        int j = (x+s2+1 >= w_) ? w_-1 : x+s2+1;
-        if (y+t2 < h_)
+        int i = (x - s2 < 0) ? 0 : x - s2;
+        int j = (x + s2 + 1 >= w_) ? w_ - 1 : x + s2 + 1;
+        if (y + t2 < h_)
         {
-          int ytp = (y+t2) * offset_;
+          int ytp = (y + t2) * offset_;
 
-          if (y-t2 >= 0)
+          if (y - t2 >= 0)
           { // 3=>4, 5=>6
-            int ytm = (y-t2) * offset_;
+            int ytm = (y - t2) * offset_;
             for ( ; i < j; ++i)
-              buf_[i+ytp] = buf_[i+ytm] = col;
+              buf_[i + ytp] = buf_[i + ytm] = col;
           }
           else
           { // 3=>4
             for ( ; i < j; ++i)
-              buf_[i+ytp] = col;
+              buf_[i + ytp] = col;
           }
         }
         else
         {
-          if (y-t2 >= 0)
+          if (y - t2 >= 0)
           { //5=>6
-            int ytm = (y-t2) * offset_;
-            for ( ; i<j; i++)
-              buf_[i+ytm] = col;
+            int ytm = (y - t2) * offset_;
+            for ( ; i < j; i++)
+              buf_[i + ytm] = col;
           }
         }
       }
       else
       {
-        bool xs1 = (x-s2) >= 0;
-        bool xs2 = (x+s2) < w_;
+        bool xs1 = (x - s2) >= 0;
+        bool xs2 = (x + s2) < w_;
 
-        if (y+t2 < h_)
+        if (y + t2 < h_)
         {
-          ytp = (y+t2) * offset_;
+          ytp = (y + t2) * offset_;
           if (xs1)
-            buf_[x-s2 + ytp] = col;  //3
+            buf_[x - s2 + ytp] = col;  //3
           if (xs2)
-            buf_[x+s2 + ytp] = col;  //4
+            buf_[x + s2 + ytp] = col;  //4
         }
-        if (y-t2 >= 0)
+        if (y - t2 >= 0)
         {
-          ytm = (y-t2) * offset_;
+          ytm = (y - t2) * offset_;
           if (xs1)
-            buf_[x-s2 + ytm] = col;  //5
+            buf_[x - s2 + ytm] = col;  //5
           if (xs2)
-            buf_[x+s2 + ytm] = col;  //6
+            buf_[x + s2 + ytm] = col;  //6
         }
       }
     }
