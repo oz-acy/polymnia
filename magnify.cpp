@@ -2,16 +2,17 @@
  *
  *  magnify.cpp
  *
- *  (C) 2003-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2003-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Picture—p°‘åk¬ƒ‹[ƒ`ƒ“
+ *  Pictureç”¨æ“´å¤§ç¸®å°ãƒ«ãƒ¼ãƒãƒ³
  *
- *  —š—ğ
- *    27 Nov MMIV   °‘åƒ‹[ƒ`ƒ“‚ÌƒAƒ‹ƒSƒŠƒYƒ€‚ğÌX
- *    27 Fev MMVIII LIBPOLYMNIA‚ÉˆÚs
- *    20 Apl MMVIII LIBPOLYMNIA‚Ì\¬ÌX‚É”º‚ĞC³
- *     8 Sep MMXI   NULL ‚ğ nullptr ‚ÉC³ (C++11)
- *    26 Feb MMXVI  ƒtƒ@ƒCƒ‹–¼ÌX
+ *  å±¥æ­´
+ *    27 Nov MMIV    æ“´å¤§ãƒ«ãƒ¼ãƒãƒ³ã®ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è®Šæ›´
+ *    27 Fev MMVIII  LIBPOLYMNIAã«ç§»è¡Œ
+ *    20 Apl MMVIII  LIBPOLYMNIAã®æ§‹æˆè®Šæ›´ã«ä¼´ã²ä¿®æ­£
+ *     8 Sep MMXI    NULL ã‚’ nullptr ã«ä¿®æ­£ (C++11)
+ *    26 Feb MMXVI   ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´
+ *     2 Mar MMXVI   throw()ã‚’å‰Šé™¤
  *************************************************************************/
 
 #include "pictcvt.h"
@@ -57,11 +58,10 @@ void productMat14_44__(double* res, double* vec, double* mat)
 
 /*================================================
  *  createMagnifiedPicture()
- *  °‘åá`‘œ¶¬ƒ‹[ƒ`ƒ“
+ *  æ“´å¤§ç•«åƒç”Ÿæˆãƒ«ãƒ¼ãƒãƒ³
  *==============================================*/
 polymnia::Picture* 
 polymnia::createMagnifiedPicture(int w, int h, const polymnia::Picture* src)
-throw()
 {
   using namespace polymnia;
   using namespace themis;

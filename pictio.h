@@ -2,12 +2,13 @@
  *
  *  pictio.h
  *  by oZ/acy
- *  (c) 2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2012-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PICTue buffer IO
- *  á`‘œƒoƒbƒtƒ@‚Ìƒ[ƒhAƒZ[ƒu—pŠî’êƒNƒ‰ƒXƒeƒ“ƒvƒŒ[ƒg
+ *  ç•«åƒãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒ¼ãƒ‰ã€ã‚»ãƒ¼ãƒ–ç”¨åŸºåº•ã‚¯ãƒ©ã‚¹ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
  *
- *  last update: 2012.3.1
+ *  å±¥æ­´
+ *    2016.3.2  C++11å°æ‡‰
  *
  ************************************************************************/
 
@@ -27,13 +28,13 @@ namespace polymnia
 
 /*---------------------------------
  *  PictLoader<P_>
- *  á`‘œƒ[ƒh—pƒNƒ‰ƒXŠî’ê
+ *  ç•«åƒãƒ­ãƒ¼ãƒ‰ç”¨ã‚¯ãƒ©ã‚¹åŸºåº•
  */
 template<class P_>
 class polymnia::PictLoader : boost::noncopyable
 {
 public:
-  PictLoader() throw() {}
+  PictLoader() noexcept {}
   virtual ~PictLoader() {}
 
   P_* load(const char* path) { return load_(path); }
@@ -46,13 +47,13 @@ protected:
 
 /*---------------------------------
  *  PictSaver<P_>
- *  á`‘œƒZ[ƒu—pƒNƒ‰ƒXŠî’ê
+ *  ç•«åƒã‚»ãƒ¼ãƒ–ç”¨ã‚¯ãƒ©ã‚¹åŸºåº•
  */
 template<class P_>
 class polymnia::PictSaver : boost::noncopyable
 {
 public:
-  PictSaver() throw() {}
+  PictSaver() noexcept {}
   virtual ~PictSaver() {}
 
   bool save(const P_* p, const char* path) { return save_(p, path); }

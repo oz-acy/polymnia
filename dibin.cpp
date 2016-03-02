@@ -2,18 +2,19 @@
  *
  *  dibin.cpp
  *
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  DIB INput
- *  DIBŒ`®‰æ‘œ“ü—Í—pƒNƒ‰ƒXÀ‘•
+ *  DIBå½¢å¼ç”»åƒå…¥åŠ›ç”¨ã‚¯ãƒ©ã‚¹å®Ÿè£…
  *
- *  last update: 2012.3.1
- *
+ *  å±¥æ­´
+ *    2016.3.2  C++11å°æ‡‰
  *************************************************************************/
 #include <iostream>
 #include <fstream>
 #include <cstring>
 #include <new>
+#include <memory>
 #include "dibio.h"
 
 
@@ -22,31 +23,31 @@ namespace
 
 /*---------------------------------------------------
 *  class Error
-*  “à•”“I‚É—p‚¢‚éƒGƒ‰[ƒnƒ“ƒhƒ‹ƒNƒ‰ƒX
+*  å†…éƒ¨çš„ã«ç”¨ã„ã‚‹ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒ«ã‚¯ãƒ©ã‚¹
 *--------------------------------------------------*/
 class Error {};
 
 
 /*----------------------------------------------
 *  struct Info_
-*  DIBƒtƒ@ƒCƒ‹î•ñ(‚Ìˆê•”)
+*  DIBãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±(ã®ä¸€éƒ¨)
 *---------------------------------------------*/
 struct Info_
 {
-  int w;    //•
-  int h;    //‚‚³
+  int w;    //å¹…
+  int h;    //é«˜ã•
   int bit;  //Bit per Pixel
-  int npal; //ƒpƒŒƒbƒg”
+  int npal; //ãƒ‘ãƒ¬ãƒƒãƒˆæ•°
 };
 
 
 //////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹æ“ª•”‚Ì“Ç‚İ‚İ•”•ª
+// ãƒ•ã‚¡ã‚¤ãƒ«å…ˆé ­éƒ¨ã®èª­ã¿è¾¼ã¿éƒ¨åˆ†
 //////////////////////////////////////////////////
 
 /*==============================================
 *  readHeader__()
-*  DIBƒwƒbƒ_“Ç‚İ‚İ 
+*  DIBãƒ˜ãƒƒãƒ€èª­ã¿è¾¼ã¿ 
 *=============================================*/
 bool readHeader__(std::istream& is)
 {
@@ -55,23 +56,23 @@ bool readHeader__(std::istream& is)
   UWord w;
   UDWord d;
 
-  // ƒ}ƒWƒbƒNƒiƒ“ƒo[("BM")‚Ì“Ç‚İ‚İ‚ÆÆ‡
+  // ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼("BM")ã®èª­ã¿è¾¼ã¿ã¨ç…§åˆ
   if (!is.read((char*)&w, sizeof(UWord)))
     return false;
   if (w!=*(UWord*)("BM"))
     return false;
 
-  // ƒtƒ@ƒCƒ‹ƒTƒCƒY“Ç‚İ‚İ
+  // ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºèª­ã¿è¾¼ã¿
   if (!is.read((char*)&d, sizeof(UDWord)))
     return false;
 
-  // —\–ñÏƒ[ƒh(2‚Â)“Ç‚İ‚İ
+  // äºˆç´„æ¸ˆãƒ¯ãƒ¼ãƒ‰(2ã¤)èª­ã¿è¾¼ã¿
   if (!is.read((char*)&w, sizeof(UWord)))
     return false;
   if (!is.read((char*)&w, sizeof(UWord)))
     return false;
 
-  // BitData‚Ö‚ÌƒIƒtƒZƒbƒg“Ç‚İ‚İ
+  // BitDataã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆèª­ã¿è¾¼ã¿
   if (!is.read((char*)&d, sizeof(UDWord)))
     return false;
 
@@ -80,7 +81,7 @@ bool readHeader__(std::istream& is)
 
 /*========================================================
 *  readInfo__()
-*  BMP-Infoƒwƒbƒ_‚ğæ¤‚İ‚Ş (struct Info ‚É’l‚ğİ’è)
+*  BMP-Infoãƒ˜ãƒƒãƒ€ã‚’è®€ã¿è¾¼ã‚€ (struct Info ã«å€¤ã‚’è¨­å®š)
 *=======================================================*/
 bool readInfo__(std::istream& is, Info_* pi)
 {
@@ -90,16 +91,16 @@ bool readInfo__(std::istream& is, Info_* pi)
   UDWord u;
   SDWord d;
 
-  // InfoHeader ‚ÌƒTƒCƒY
+  // InfoHeader ã®ã‚µã‚¤ã‚º
   if (!is.read((char*)&u, sizeof(UDWord)))
     return false;
 
-  // á`‘œ•
+  // ç•«åƒå¹…
   if (!is.read((char*)&d, sizeof(SDWord)))
     return false;
   pi->w = d;
 
-  // á`‘œ‚‚³
+  // ç•«åƒé«˜ã•
   if (!is.read((char*)&d, sizeof(SDWord)))
     return false;
   pi->h = d;
@@ -122,7 +123,7 @@ bool readInfo__(std::istream& is, Info_* pi)
   if (!is.read((char*)&d, sizeof(SDWord)))
     return false;
 
-  // ƒpƒŒƒbƒgÉ
+  // ãƒ‘ãƒ¬ãƒƒãƒˆæ•¸
   if (!is.read((char*)&u, sizeof(UDWord)))
     return false;
   pi->npal = u;
@@ -135,7 +136,7 @@ bool readInfo__(std::istream& is, Info_* pi)
 
 /*==============================================
 *  readPalette__()
-*  ƒpƒŒƒbƒg“Ç‚İ‚İ
+*  ãƒ‘ãƒ¬ãƒƒãƒˆèª­ã¿è¾¼ã¿
 *=============================================*/
 bool readPalette__(std::istream& is, polymnia::RgbColor pal[], int npal)
 {
@@ -149,7 +150,7 @@ bool readPalette__(std::istream& is, polymnia::RgbColor pal[], int npal)
     UByte v;
   } quad[256];
 
-  if (!is.read((char*)quad, sizeof(UByte)*4*npal))
+  if (!is.read((char*)quad, sizeof(UByte) * 4 * npal))
     return false;
 
   for (int i = 0; i < npal; i++)
@@ -160,21 +161,21 @@ bool readPalette__(std::istream& is, polymnia::RgbColor pal[], int npal)
 
 /*===================================================
 *  getBufSize__()
-*  Bitmap ‚Ì 1line ‚Ìƒoƒbƒtƒ@’·‚ğ‹‚ß‚é
+*  Bitmap ã® 1line ã®ãƒãƒƒãƒ•ã‚¡é•·ã‚’æ±‚ã‚ã‚‹
 *==================================================*/
 inline int getBufSize__(int l)
 {
-  return (l+3) & ~3;
+  return (l + 3) & ~3;
 }
 
 
 /*=================================================
-*  ƒpƒŒƒbƒg -> RGB ™|—
+*  ãƒ‘ãƒ¬ãƒƒãƒˆ -> RGB è™•ç†
 *================================================*/
 void
 palpaint__(
   polymnia::RgbColor dbuf[], const themis::UByte sbuf[], int w,
-  const polymnia::RgbColor pal[]) throw()
+  const polymnia::RgbColor pal[])
 {
   for (int i = 0; i < w; i++)
     dbuf[i] = pal[sbuf[i]];
@@ -182,10 +183,10 @@ palpaint__(
 
 /*=============================================
 *  read01_oneline__()
-*  1bit bitmap ƒf[ƒ^‚ğ1ƒ‰ƒCƒ““Ç‚İ‚İ
+*  1bit bitmap ãƒ‡ãƒ¼ã‚¿ã‚’1ãƒ©ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 *============================================*/
 void
-read01_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w) throw()
+read01_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 {
   for (int i = 0; i < w / 8; i++)
     for (int j = 7; j >= 0; j--)
@@ -206,44 +207,43 @@ read01_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w) throw()
 
 /*================================================
 *  read04_oneline__()
-*  4bit bitmap ƒf[ƒ^‚ğ1ƒ‰ƒCƒ““Ç‚İ‚İ
+*  4bit bitmap ãƒ‡ãƒ¼ã‚¿ã‚’1ãƒ©ã‚¤ãƒ³èª­ã¿è¾¼ã¿
 *===============================================*/
 void
-read04_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w) throw()
+read04_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 {
   using namespace themis;
 
   for (int i = 0; i < w / 2; i++)
   {
-    dbuf[i*2+1] = (UByte)(sbuf[i] & 0x0F);
-    dbuf[i*2] = (UByte)((sbuf[i] >> 4) & 0x0F);
+    dbuf[i * 2 + 1] = (UByte)(sbuf[i] & 0x0F);
+    dbuf[i * 2] = (UByte)((sbuf[i] >> 4) & 0x0F);
   }
 
   if (w & 1)
-    dbuf[w-1] = (UByte)(sbuf[w / 2] & 0x0F);
+    dbuf[w - 1] = (UByte)(sbuf[w / 2] & 0x0F);
 }
 
 
 /*====================================================
 *  read01bit__()
-*  1Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(24bit—p)
+*  1Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(24bitç”¨)
 *===================================================*/
 bool
 read01bit__(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
-throw()
 {
   using namespace themis;
   using namespace polymnia;
 
   int bufsize = getBufSize__((pct->width() + 7) / 8);
 
-  UByte* linebuf;
-  UByte* palbuf;
+  std::unique_ptr<UByte[]> linebuf;
+  std::unique_ptr<UByte[]> palbuf;
   try
   {
-    linebuf = new UByte[bufsize];
-    palbuf = new UByte[pct->width()];
+    linebuf.reset(new UByte[bufsize]);
+    palbuf.reset(new UByte[pct->width()]);
   }
   catch(std::bad_alloc)
   {
@@ -251,42 +251,38 @@ throw()
   }
 
   RgbColor* pctbuf = pct->buffer() + pct->offset() * (pct->height() - 1);
-  int j;
-  for (j=0; j < pct->height(); j++, pctbuf += pct->offset())
+  for (int j = 0; j < pct->height(); j++, pctbuf += pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read01_oneline__(palbuf, linebuf, pct->width());
-    palpaint__(pctbuf, palbuf, pct->width(), pal);
+    read01_oneline__(palbuf.get(), linebuf.get(), pct->width());
+    palpaint__(pctbuf, palbuf.get(), pct->width(), pal);
   }
 
-  delete[] linebuf;
-  delete[] palbuf;
   return true;
 }
 
 
 /*=============================================
 *  read04bit__()
-*  4Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(24bit—p)
+*  4Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(24bitç”¨)
 *============================================*/
 bool
 read04bit__(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
-throw()
 {
   using namespace themis;
   using namespace polymnia;
 
   int bufsize = getBufSize__((pct->width()+1)/2);
 
-  UByte* linebuf;
-  UByte* palbuf;
+  std::unique_ptr<UByte[]> linebuf;
+  std::unique_ptr<UByte[]> palbuf;
   try
   {
-    linebuf = new UByte[bufsize];
-    palbuf = new UByte[pct->width()];
+    linebuf.reset(new UByte[bufsize]);
+    palbuf.reset(new UByte[pct->width()]);
   }
   catch(std::bad_alloc)
   {
@@ -294,58 +290,54 @@ throw()
   }
 
   RgbColor* pctbuf = pct->buffer() + pct->offset() * (pct->height()-1);
-  int j;
-  for (j=0; j<pct->height(); j++, pctbuf+=pct->offset())
+  for (int j = 0; j<pct->height(); j++, pctbuf+=pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read04_oneline__(palbuf, linebuf, pct->width());
-    palpaint__(pctbuf, palbuf, pct->width(), pal);
+    read04_oneline__(palbuf.get(), linebuf.get(), pct->width());
+    palpaint__(pctbuf, palbuf.get(), pct->width(), pal);
   }
 
-  delete[] linebuf;
-  delete[] palbuf;
   return true;
 }
 
-/* 8Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(24bit—p) */
+
+/* 8Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(24bitç”¨) */
 bool
 read08bit__(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
-throw()
 {
   using namespace themis;
   using namespace polymnia;
 
   int bufsize = getBufSize__(pct->width());
 
-  UByte* linebuf;
+  std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf = new UByte[bufsize];
+    linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc)
   {
     return false;
   }
 
-  RgbColor* pctbuf = pct->buffer() + pct->offset() * (pct->height()-1);
-  int j;
-  for (j=0; j<pct->height(); j++, pctbuf-=pct->offset())
+  RgbColor* pctbuf = pct->buffer() + pct->offset() * (pct->height() - 1);
+  for (int j = 0; j<pct->height(); j++, pctbuf-=pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    palpaint__(pctbuf, linebuf, pct->width(), pal);
+    palpaint__(pctbuf, linebuf.get(), pct->width(), pal);
   }
 
-  delete[] linebuf;
   return true;
 }
 
-/* 24Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(24bit—p) */
-bool read24bit__(std::istream& is, polymnia::Picture* pct) throw()
+
+/* 24Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(24bitç”¨) */
+bool read24bit__(std::istream& is, polymnia::Picture* pct)
 {
   using namespace themis;
   using namespace polymnia;
@@ -353,12 +345,12 @@ bool read24bit__(std::istream& is, polymnia::Picture* pct) throw()
   int w = pct->width();
   int o = pct->offset();
 
-  int linesize = getBufSize__(w*3);
+  int linesize = getBufSize__(w * 3);
 
-  UByte* imgbuf;
+  std::unique_ptr<UByte[]> imgbuf;
   try
   {
-    imgbuf = new UByte[linesize*pct->height()];
+    imgbuf.reset(new UByte[linesize * pct->height()]);
   }
   catch(std::bad_alloc)
   {
@@ -367,19 +359,19 @@ bool read24bit__(std::istream& is, polymnia::Picture* pct) throw()
 
   RgbColor* resbuf = pct->buffer();
 
-  is.read((char*)imgbuf, linesize*pct->height());
+  is.read((char*)(imgbuf.get()), linesize * pct->height());
 
 
-  for (int j=(pct->height()-1)*o, l=0; j>=0; j-=o, l+=linesize)
-    for (int i=0, k=0; i<w; i++, k+=3)
-      resbuf[i+j] = RgbColor(imgbuf[l+k+2], imgbuf[l+k+1], imgbuf[l+k]);
+  for (int j = (pct->height()-1) * o, l = 0; j >= 0; j -= o, l += linesize)
+    for (int i = 0, k = 0; i < w; i++, k += 3)
+      resbuf[i + j] = RgbColor(imgbuf[l+k+2], imgbuf[l+k+1], imgbuf[l+k]);
 
-  delete[] imgbuf;
   return true;
 }
 
-/* 32Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(32bit—p) */
-bool read32bit__(std::istream& is, polymnia::Picture* pct) throw()
+
+/* 32Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(32bitç”¨) */
+bool read32bit__(std::istream& is, polymnia::Picture* pct)
 {
   using namespace themis;
   using namespace polymnia;
@@ -389,10 +381,10 @@ bool read32bit__(std::istream& is, polymnia::Picture* pct) throw()
 
   int linesize = getBufSize__(w * 4);
 
-  UByte* imgbuf;
+  std::unique_ptr<UByte[]> imgbuf;
   try
   {
-    imgbuf = new UByte[linesize*pct->height()];
+    imgbuf.reset(new UByte[linesize*pct->height()]);
   }
   catch(std::bad_alloc)
   {
@@ -401,110 +393,106 @@ bool read32bit__(std::istream& is, polymnia::Picture* pct) throw()
 
   RgbColor* resbuf = pct->buffer();
 
-  is.read((char*)imgbuf, linesize*pct->height());
+  is.read((char*)(imgbuf.get()), linesize*pct->height());
 
 
-  for (int j=(pct->height()-1)*o, l=0; j>=0; j-=o, l+=linesize)
-    for (int i=0, k=0; i<w; i++, k+=4)
-      resbuf[i+j] = RgbColor(imgbuf[l+k+2], imgbuf[l+k+1], imgbuf[l+k]);
+  for (int j = (pct->height() - 1) * o, l = 0; j >= 0; j -= o, l += linesize)
+    for (int i = 0, k = 0; i < w; i++, k += 4)
+      resbuf[i + j]
+       = RgbColor(imgbuf[l + k + 2], imgbuf[l + k + 1], imgbuf[l + k]);
 
-  delete[] imgbuf;
   return true;
 }
 
 
-/* 1Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(8bit—p) */
-bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct) throw()
+/* 1Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ (Indexed Colorç”¨) */
+bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__((pct->width()+7)/8);
-  UByte* linebuf;
+  int bufsize = getBufSize__((pct->width() + 7) / 8);
+
+  std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf = new UByte[bufsize];
+    linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc)
   {
     return false;
   }
 
-  UByte* pctbuf = pct->buffer() + pct->offset() * (pct->height()-1);
-  int j;
-  for (j=0; j<pct->height(); j++, pctbuf-=pct->offset())
+  UByte* pctbuf = pct->buffer() + pct->offset() * (pct->height() - 1);
+  for (int j = 0; j < pct->height(); j++, pctbuf -= pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read01_oneline__(pctbuf, linebuf, pct->width());
+    read01_oneline__(pctbuf, linebuf.get(), pct->width());
   }
 
-  delete[] linebuf;
   return true;
 }
 
 
-/* 4Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(8bit—p) */
-bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct) throw()
+/* 4Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(8bitç”¨) */
+bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
 
   int bufsize = getBufSize__((pct->width()+1)/2);
-  UByte* linebuf;
+  std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf = new UByte[bufsize];
+    linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc)
   {
     return false;
   }
 
-  UByte* pctbuf = pct->buffer() + pct->offset()*(pct->height()-1);
-  int j;
-  for (j=0; j<pct->height(); j++, pctbuf-=pct->offset())
+  UByte* pctbuf = pct->buffer() + pct->offset() * (pct->height() - 1);
+  for (int j = 0; j < pct->height(); j++, pctbuf -= pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read04_oneline__(pctbuf, linebuf, pct->width());
+    read04_oneline__(pctbuf, linebuf.get(), pct->width());
   }
 
-  delete[] linebuf;
   return true;
 }
 
-/* 8Bit Bitmap ƒf[ƒ^“Ç‚İ‚İ(8bit—p) */
-bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct) throw()
+
+/* 8Bit Bitmap ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿(8bitç”¨) */
+bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
   using namespace std;
 
   int bufsize = getBufSize__(pct->width());
-  UByte* linebuf;
+  unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf = new UByte[bufsize];
+    linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc)
   {
     return false;
   }
 
-  UByte* pctbuf = pct->buffer() + pct->offset() * (pct->height()-1);
-  int j;
-  for (j=0; j<pct->height(); j++, pctbuf-=pct->offset())
+  UByte* pctbuf = pct->buffer() + pct->offset() * (pct->height() - 1);
+  for (int j=0; j < pct->height(); j++, pctbuf -= pct->offset())
   {
-    if (!is.read((char*)linebuf, bufsize))
+    if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    memcpy(pctbuf, linebuf, pct->width());
+    memcpy(pctbuf, linebuf.get(), pct->width());
   }
 
-  delete[] linebuf;
   return true;
 }
 
@@ -517,7 +505,7 @@ bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct) throw()
 
 /*===========================
  *  DibLoader::load_()
- *  DIB‚Ì“Ç‚İ‚İ
+ *  DIBã®èª­ã¿è¾¼ã¿
  */
 polymnia::Picture* polymnia::DibLoader::load_(const char* path)
 {
@@ -599,7 +587,7 @@ polymnia::Picture* polymnia::DibLoader::load_(const char* path)
 
 /*=================================
  *  IndexedDibLoader::load_()
- *  ƒpƒŒƒbƒgDIB‚Ì“Ç‚İ‚İ
+ *  ãƒ‘ãƒ¬ãƒƒãƒˆDIBã®èª­ã¿è¾¼ã¿
  */
 polymnia::PictureIndexed*
 polymnia::IndexedDibLoader::load_(const char* path)

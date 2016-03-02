@@ -5,10 +5,10 @@
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Image BUFfer template
- *  á`‘œƒoƒbƒtƒ@‚ÌƒNƒ‰ƒXƒeƒ“ƒvƒŒ[ƒg
+ *  ç•«åƒãƒãƒƒãƒ•ã‚¡ã®ã‚¯ãƒ©ã‚¹ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
  *
- *  —š—ğ
- *    2016.2.27  C++11/14›”œä(˜ï)
+ *  å±¥æ­´
+ *    2016.3.2  C++11/14å°æ‡‰(å‡)
  *************************************************************************/
 
 #ifndef INC_POLYMNIA_IMAGEBUFFER_H___
@@ -25,7 +25,7 @@ template<class C_> class ImageBuffer;
 
 /*--------------------------------------------------
 *  struct Point
-* uêyv\‘¢‘Ì
+* ã€Œé»ã€æ§‹é€ ä½“
 *-------------------------------------------------*/
 struct Point
 {
@@ -38,7 +38,7 @@ struct Point
 
 /*--------------------------------------------------
 *  struct Rect
-*  u’·•ûŒ`v\‘¢‘Ì
+*  ã€Œé•·æ–¹å½¢ã€æ§‹é€ ä½“
 *-------------------------------------------------*/
 struct Rect
 {
@@ -53,12 +53,12 @@ struct Rect
 
 /*---------------------------------
 *  class RangeOverException
-*  ”Íš¡ˆí’E—áŠO
+*  ç¯„åœé€¸è„±ä¾‹å¤–
 *--------------------------------*/
 class RangeOverException : public themis::EmptyException
 {
 public:
-  const char* what() const throw()
+  const char* what() const noexcept
   {
     static const char rstr[] = "polymnia::RangeOverException";
     return rstr;
@@ -73,8 +73,8 @@ public:
 
 /*----------------------------------------------------
 *  ImageBuffer<C_>
-*  á`‘œƒoƒbƒtƒ@Šî’êƒNƒ‰ƒXƒeƒ“ƒvƒŒ[ƒg
-*  ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚Í•s‰Â
+*  ç•«åƒãƒãƒƒãƒ•ã‚¡åŸºåº•ã‚¯ãƒ©ã‚¹ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
+*  ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã¯ä¸å¯
 *---------------------------------------------------*/
 template<class C_>
 class polymnia::ImageBuffer : boost::noncopyable
@@ -84,7 +84,7 @@ public:
 
   //-------------------------------------
   //  class Effecter
-  //  á`‘œŒø‰Ê’Ç‰Á—p‚Ì’ŠÛŠî’êƒNƒ‰ƒX
+  //  ç•«åƒåŠ¹æœè¿½åŠ ç”¨ã®æŠ½è±¡åŸºåº•ã‚¯ãƒ©ã‚¹
   //-------------------------------------
   //class Effecter
   //{
@@ -113,16 +113,16 @@ protected:
 public:
   virtual ~ImageBuffer() {}
 
-  int width() const throw() { return w_; }
-  int height() const throw() { return h_; }
-  int offset() const throw() { return offset_; }
+  int width() const noexcept { return w_; }
+  int height() const noexcept { return h_; }
+  int offset() const noexcept { return offset_; }
 
-  C_* buffer() throw() { return buf_; }
-  const C_* buffer() const throw() { return buf_; }
+  C_* buffer() noexcept { return buf_; }
+  const C_* buffer() const noexcept { return buf_; }
 
 
-  C_& pixel(int x, int y) throw() { return buf_[x + y * offset_]; }
-  const C_& pixel(int x, int y) const throw() { return buf_[x + y * offset_]; }
+  C_& pixel(int x, int y) noexcept { return buf_[x + y * offset_]; }
+  const C_& pixel(int x, int y) const noexcept { return buf_[x + y * offset_]; }
 
 
   C_& at(int x, int y) throw(polymnia::RangeOverException)
@@ -155,7 +155,7 @@ public:
 
 
   //======================================================================
-  //  š¤Œ`•`Ê
+  //  åœ–å½¢æå†™
   //======================================================================
   void line(int x1, int y1, int x2, int y2, const C_& col);
   void box(int x1, int y1, int x2, int y2, const C_& col, bool fl=false);
@@ -168,21 +168,21 @@ public:
 
 
   //=======================================================
-  //  “h‚è’×‚µ
+  //  å¡—ã‚Šæ½°ã—
   //=======================================================
   void paintFill(int x, int y, const C_& col);
 
 
   //==============================================
-  //  ‘Sá`–Ê“h‚è’×‚µ
+  //  å…¨ç•«é¢å¡—ã‚Šæ½°ã—
   //==============================================
   void clear(const C_& col);
 
 
   //===================================================================
-  //  çz‘—
-  //  tcol •‚«‚Ì‚à‚Ì‚Í, tcol ‚ğ“§–¾F‚ÆŠÅ˜ô‚µ‚Äçz‘—
-  //  mk •‚«‚Ì‚à‚Ì‚Í, mk ‚ğƒ}ƒXƒN‚Æ‚µ‚Äçz‘—
+  //  è½‰é€
+  //  tcol é™„ãã®ã‚‚ã®ã¯, tcol ã‚’é€æ˜è‰²ã¨çœ‹åšã—ã¦è½‰é€
+  //  mk é™„ãã®ã‚‚ã®ã¯, mk ã‚’ãƒã‚¹ã‚¯ã¨ã—ã¦è½‰é€
   //===================================================================
   void blt(int dx, int dy, CP_ src, int sx, int sy, int w, int h);
   void blt(
@@ -217,7 +217,7 @@ public:
 
 
   //===================================================
-  //  ƒGƒtƒFƒNƒg‚ğ‚©‚¯‚é
+  //  ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ã‚‹
   //===================================================
   //void addEffect(const Effecter& efc);
 };

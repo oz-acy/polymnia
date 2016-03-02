@@ -1,16 +1,17 @@
 /**************************************************************************
  *  reduce.cpp
  *
- *  (C) 2003-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2003-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Picture—pk¬ƒ‹[ƒ`ƒ“
+ *  Pictureç”¨ç¸®å°ãƒ«ãƒ¼ãƒãƒ³
  *
- *  —š—ğ
- *    27 Nov MMIV   resize.cpp ‚©‚çk¬›“—pƒ‹[ƒ`ƒ“‚ğØ‚è•ª‚¯
- *    27 Feb MMVIII LIBPOLYMNIA‚ÉˆÚ“®
- *    20 Apr MMVIII Picture‚ğLIBPOLYMNIA‚ÉˆÚ“®‚µ‚½‚±‚Æ‚É‚æ‚éC³
- *     8 Sep MMXI   NULL ‚ğ nullptr ‚ÉC³(C++11)
- *    28 Jul MMXII  ƒoƒOC³(ƒƒ‚ƒŠ•s³ƒAƒNƒZƒX)
+ *  å±¥æ­´
+ *    27 Nov MMIV    resize.cpp ã‹ã‚‰ç¸®å°å°ˆç”¨ãƒ«ãƒ¼ãƒãƒ³ã‚’åˆ‡ã‚Šåˆ†ã‘
+ *    27 Feb MMVIII  LIBPOLYMNIAã«ç§»å‹•
+ *    20 Apr MMVIII  Pictureã‚’LIBPOLYMNIAã«ç§»å‹•ã—ãŸã“ã¨ã«ã‚ˆã‚‹ä¿®æ­£
+ *     8 Sep MMXI    NULL ã‚’ nullptr ã«ä¿®æ­£(C++11)
+ *    28 Jul MMXII   ãƒã‚°ä¿®æ­£(ãƒ¡ãƒ¢ãƒªä¸æ­£ã‚¢ã‚¯ã‚»ã‚¹)
+ *     2 Mar MMXVI   throw()å‰Šé™¤
  *************************************************************************/
 
 #include "pictcvt.h"
@@ -35,7 +36,7 @@ toSmall__(
   if ((double)ey != y2)
     ey++;
 
-  double S = 0.0;  // ã`–ÊÏ
+  double S = 0.0;  // ç¸½é¢ç©
   double R = 0.0;
   double G = 0.0;
   double B = 0.0;
@@ -45,24 +46,24 @@ toSmall__(
     double e1 = (double)y;
     double e2 = (double)(y + 1);
     if (e1 < y1)
-      e1 = y1;  // ã’[
+      e1 = y1;  // ä¸Šç«¯
     if (e2 > y2)
-      e2 = y2;  // ‰º’[
+      e2 = y2;  // ä¸‹ç«¯
 
-    double ph = e2 - e1;  // ‚‚³
+    double ph = e2 - e1;  // é«˜ã•
 
     for (int x = sx; x < ex; x++)
     {
       double e3 = (double)x;
       double e4 = (double)(x + 1);
       if (e3 < x1)
-        e3 = x1;  // ¶’[
+        e3 = x1;  // å·¦ç«¯
       if (e4 > x2)
-        e4 = x2;  // ‰E’[
+        e4 = x2;  // å³ç«¯
 
-      double pw = e4 - e3;  // •
+      double pw = e4 - e3;  // å¹…
 
-      double ss = ph * pw;  // –ÊÏ
+      double ss = ph * pw;  // é¢ç©
       S += ss;
 
       R += (double)(orig->pixel(x, y).r) * ss;
@@ -86,11 +87,10 @@ toSmall__(
 
 /*================================================================
  *  createReducedPicture()
- *  á`‘œk¬ƒ‹[ƒ`ƒ“
+ *  ç•«åƒç¸®å°ãƒ«ãƒ¼ãƒãƒ³
  *==============================================================*/
 polymnia::Picture* 
 polymnia::createReducedPicture(int w, int h, const polymnia::Picture* src)
-throw()
 {
   using namespace polymnia;
 
