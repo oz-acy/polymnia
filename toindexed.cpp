@@ -4,10 +4,11 @@
  *  by oZ/acy
  *  (c) 2001-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Picture ==> PictureIndexed ‚ÌŒ¸F•¡›ƒ‹[ƒ`ƒ“
+ *  Picture ==> PictureIndexed ã®æ¸›è‰²è¤‡å¯«ãƒ«ãƒ¼ãƒãƒ³
  *
- *  —š—ğ
- *    2016.2.26 ƒtƒ@ƒCƒ‹–¼ÌXA‘¼C³
+ *  å±¥æ­´
+ *    2016.2.26  ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´ã€ä»–ä¿®æ­£
+ *    2016.3.2   throw()å‰Šé™¤
  *
  ************************************************************************/
 
@@ -19,13 +20,13 @@ namespace
 
 /*///////////////////////////////////////////////
  *
- *  ƒƒfƒBƒAƒ“ƒJƒbƒg‚É‚æ‚éƒpƒŒƒbƒgì¬ƒ‹[ƒ`ƒ“
+ *  ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆã«ã‚ˆã‚‹ãƒ‘ãƒ¬ãƒƒãƒˆä½œæˆãƒ«ãƒ¼ãƒãƒ³
  *
  *////////////////////////////////////////////*/
 
 /*-------------------------------------------
  *  struct ColorRange_
- *  F—v‘f‚É‚Â‚¢‚Ä‚ÌƒŒƒ“ƒWî•ñ
+ *  è‰²è¦ç´ ã«ã¤ã„ã¦ã®ãƒ¬ãƒ³ã‚¸æƒ…å ±
  *-----------------------------------------*/
 struct ColorRange_
 {
@@ -33,7 +34,7 @@ public:
   themis::UByte min;
   themis::UByte max;
   themis::UDWord bits[8];  // exist x in min..max <=> bits[x>>5]<x&0x1f> = 1
-  themis::UDWord sum;      // pixel ’l‚Ìã`Œv
+  themis::UDWord sum;      // pixel å€¤ã®ç¸½è¨ˆ
 
 public:
   int cutoff();
@@ -42,8 +43,8 @@ public:
 
 /*==========================================================================
  *  ColorRange_::cutoff()
- *  ƒqƒXƒgƒOƒ‰ƒ€Ø‚è‹l‚ß (ƒoƒEƒ“ƒfƒBƒ“ƒOEƒ{ƒbƒNƒX‚ğ‚Æ‚é)
- *  •Ô’l : ƒqƒXƒgƒOƒ‰ƒ€•
+ *  ãƒ’ã‚¹ãƒˆã‚°ãƒ©ãƒ åˆ‡ã‚Šè©°ã‚ (ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒ»ãƒœãƒƒã‚¯ã‚¹ã‚’ã¨ã‚‹)
+ *  è¿”å€¤ : ãƒ’ã‚¹ãƒˆã‚°ãƒ©ãƒ å¹…
  *========================================================================*/
 int ColorRange_::cutoff()
 {
@@ -51,7 +52,7 @@ int ColorRange_::cutoff()
 
   int i = 0, j, k;
 
-  // Å¬’l‚ğØ‚èã‚°‚Ä‚¢‚­
+  // æœ€å°å€¤ã‚’åˆ‡ã‚Šä¸Šã’ã¦ã„ã
   for (j = min >> 5; j < 8; j++)
     if (bits[j])
     {
@@ -64,7 +65,7 @@ int ColorRange_::cutoff()
   if (i <= (int)max)
     min = (UByte)i;
 
-  // Å‘å’l‚ğØ‚è‰º‚°‚Ä‚¢‚­
+  // æœ€å¤§å€¤ã‚’åˆ‡ã‚Šä¸‹ã’ã¦ã„ã
   for (j = max >> 5; j >= 0; j--)
     if (bits[j])
     {
@@ -77,19 +78,19 @@ int ColorRange_::cutoff()
   if (i >= (int)min)
     max = (UByte)i;
 
-  // ™½ŠÔ‚Ì•‚ğ•Ô‚·
+  // å€é–“ã®å¹…ã‚’è¿”ã™
   return max - min + 1;
 }
 
 
 /*----------------------------------------------------------
 *  struct PixelRange_
-*  ƒƒfƒBƒAƒ“ƒJƒbƒg‚Å—p‚î‚éƒqƒXƒgƒOƒ‰ƒ€‚ÌƒŒƒ“ƒWî•ñ
+*  ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆã§ç”¨ã‚ã‚‹ãƒ’ã‚¹ãƒˆã‚°ãƒ©ãƒ ã®ãƒ¬ãƒ³ã‚¸æƒ…å ±
 *---------------------------------------------------------*/
 struct PixelRange_
 {
-  unsigned count;        // ƒŒƒ“ƒW“à‚Ìá`‘fÉ
-  ColorRange_ r, g, b;   // ŠeF—v‘f‚ÌƒŒƒ“ƒWî•ñ
+  unsigned count;        // ãƒ¬ãƒ³ã‚¸å†…ã®ç•«ç´ æ•¸
+  ColorRange_ r, g, b;   // å„è‰²è¦ç´ ã®ãƒ¬ãƒ³ã‚¸æƒ…å ±
 
 public:
   void divide(PixelRange_& neu);
@@ -98,9 +99,9 @@ public:
 /*=============================================================
  *  PixelRange_::divide()
  *
- *  ƒNƒ‰ƒXƒ^•ªŠ„
+ *  ã‚¯ãƒ©ã‚¹ã‚¿åˆ†å‰²
  *
- *  *this ‚ğ *this ‚Æ neu ‚É“ñ•ªŠ„‚·‚é
+ *  *this ã‚’ *this ã¨ neu ã«äºŒåˆ†å‰²ã™ã‚‹
  *===========================================================*/
 void PixelRange_::divide(PixelRange_& neu)
 {
@@ -135,7 +136,7 @@ void PixelRange_::divide(PixelRange_& neu)
 
 /*========================================================================
  *  sumpling__()
- *  ƒTƒ“ƒvƒŠƒ“ƒO
+ *  ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
  *======================================================================*/
 void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
 {
@@ -172,7 +173,7 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
         UByte g = src->pixel(x, y).g;
         UByte b = src->pixel(x, y).b;
 
-        // r,g,b‚ª‘®‚·‚érange#‚ğ“¾‚é
+        // r,g,bãŒå±ã™ã‚‹range#ã‚’å¾—ã‚‹
         for (i=0; i<current_range; i++)
         {
           if (r < range[i].r.min || r > range[i].r.max)
@@ -185,17 +186,17 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
           break;
         }
 
-        // Pixel’l‚Ì‡Œv
+        // Pixelå€¤ã®åˆè¨ˆ
         range[i].r.sum += r;
         range[i].g.sum += g;
         range[i].b.sum += b;
 
-        // Pixel’l(r,g,b)‚Ì‘¶İƒtƒ‰ƒO‚ğ—§‚Ä‚é
+        // Pixelå€¤(r,g,b)ã®å­˜åœ¨ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
         range[i].r.bits[r>>5] |= (UDWord)1<<(r&0x1F);
         range[i].g.bits[g>>5] |= (UDWord)1<<(g&0x1F);
         range[i].b.bits[b>>5] |= (UDWord)1<<(b&0x1F);
 
-        // Pixel”
+        // Pixelæ•°
         range[i].count += 1;
       }
     }
@@ -221,7 +222,7 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
 
 /*================================
  *  sqr__()
- *  •½•û‚ğ‹‚ß‚é
+ *  å¹³æ–¹ã‚’æ±‚ã‚ã‚‹
  *==============================*/
 //inline
 //int sqr__(int x) { return x * x; }
@@ -238,7 +239,7 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
 
 /*==========================================
  *  rms_()
- *  RGBŠe¬•ª‚Ì·‚Ì“ñæ‚Ì˜a‚ğ‹‚ß‚é
+ *  RGBå„æˆåˆ†ã®å·®ã®äºŒä¹—ã®å’Œã‚’æ±‚ã‚ã‚‹
  *========================================*/
 const long pow2_G[NPAL]
   =
@@ -280,7 +281,7 @@ rms__(const polymnia::RgbColor& c1, const polymnia::RgbColor& c2)
 }
 
 
-/* sumdif_G[i] ‚ÍA RGB‘˜a‚Ì·‚ª i ‚Å‚ ‚é 2‚Â‚Ì RGB’l‚Ì Å¬‹——£ */
+/* sumdif_G[i] ã¯ã€ RGBç·å’Œã®å·®ãŒ i ã§ã‚ã‚‹ 2ã¤ã® RGBå€¤ã® æœ€å°è·é›¢ */
 const unsigned long sumdif_G[NCLASS]
   =
 {
@@ -360,18 +361,18 @@ const unsigned long sumdif_G[NCLASS]
 
 
 /*
- *  RGB¬•ª‚Ì˜a‚ª k ‚Å‚ ‚éƒpƒŒƒbƒg‚É‚Â‚¢‚Ä•Ğ•ûŒüƒŠƒ“ƒN‚ğ’£‚é
- *  index_G[k] ‚ª ƒŠƒ“ƒN‚Ìæ“ª‚ÌƒpƒŒƒbƒg‚Ì”Ô†‚É‚È‚é
- *  next_G[pal] ‚ª pal ‚ÌŸ‚ÌƒpƒŒƒbƒg”Ô†‚É‚È‚é
- *  next_G[]‚ğŸX’H‚èA next_G[x] ‚ª -1 ‚É‚È‚Á‚½‚Æ‚±‚ë‚Å
- *  ƒŠƒ“ƒN‚ÍI“_‚Å‚ ‚é
+ *  RGBæˆåˆ†ã®å’ŒãŒ k ã§ã‚ã‚‹ãƒ‘ãƒ¬ãƒƒãƒˆã«ã¤ã„ã¦ç‰‡æ–¹å‘ãƒªãƒ³ã‚¯ã‚’å¼µã‚‹
+ *  index_G[k] ãŒ ãƒªãƒ³ã‚¯ã®å…ˆé ­ã®ãƒ‘ãƒ¬ãƒƒãƒˆã®ç•ªå·ã«ãªã‚‹
+ *  next_G[pal] ãŒ pal ã®æ¬¡ã®ãƒ‘ãƒ¬ãƒƒãƒˆç•ªå·ã«ãªã‚‹
+ *  next_G[]ã‚’æ¬¡ã€…è¾¿ã‚Šã€ next_G[x] ãŒ -1 ã«ãªã£ãŸã¨ã“ã‚ã§
+ *  ãƒªãƒ³ã‚¯ã¯çµ‚ç‚¹ã§ã‚ã‚‹
  *
- *  ‚È‚¨Aindex_G[x] = -1 ‚È‚çA¬•ª˜a‚ª x ‚È‚éƒpƒŒƒbƒg‚Í‚È‚¢
+ *  ãªãŠã€index_G[x] = -1 ãªã‚‰ã€æˆåˆ†å’ŒãŒ x ãªã‚‹ãƒ‘ãƒ¬ãƒƒãƒˆã¯ãªã„
  */
 int next_G[NPAL];
 int index_G[NCLASS];
 
-/* next_G[], index_G[] ‚É‚æ‚éƒpƒŒƒbƒg’Tõ½‚ğ¶¬‚·‚é */
+/* next_G[], index_G[] ã«ã‚ˆã‚‹ãƒ‘ãƒ¬ãƒƒãƒˆæ¢ç´¢é–ã‚’ç”Ÿæˆã™ã‚‹ */
 void updateChain__(const polymnia::RgbColor pal[])
 {
   int i;
@@ -388,77 +389,77 @@ void updateChain__(const polymnia::RgbColor pal[])
 }
 
 
-/* äoRGB’l‚ÌÅ‹ßƒpƒŒƒbƒg‚ğ‹‚ß‚é */
+/* èˆ‡RGBå€¤ã®æœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆã‚’æ±‚ã‚ã‚‹ */
 themis::UByte findNearestPal__(
   const polymnia::RgbColor& col, const polymnia::RgbColor pal[])
 {
   using namespace themis;
 
-  // Œ»İ‚Ì‚Æ‚±‚ë‚Ì‹——£‚ÌÅ¬’l : "Å‚à‘å‚«‚¢®”" ‚Å‰Šú‰»
+  // ç¾åœ¨ã®ã¨ã“ã‚ã®è·é›¢ã®æœ€å°å€¤ : "æœ€ã‚‚å¤§ãã„æ•´æ•°" ã§åˆæœŸåŒ–
   unsigned long memdif = ~0;
 
-  // Œ»İ‚Ì‚Æ‚±‚ë‚ÌÅ‹ßƒpƒŒƒbƒg : æ‚è‚ ‚Ö‚¸ 0
+  // ç¾åœ¨ã®ã¨ã“ã‚ã®æœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆ : å–ã‚Šã‚ã¸ãš 0
   UByte mempos = 0;
 
-  // —^RGB’l‚Ì¬•ª˜a
+  // ä¸RGBå€¤ã®æˆåˆ†å’Œ
   int base = col.r + col.g + col.b;
 
 
   /*
-   *  ’Tõ›”Û‚ğ
-   *  äo RGB ’l‚Æ‚Ì RGB ¬•ª·‚Ì˜a‚ª
-   *  ¬‚³‚¢‚Æ‚±‚ë‚©‚ç‘å‚«‚¢‚Æ‚±‚ë‚É°‚°‚È‚ª‚ç’²‚×‚é
+   *  æ¢ç´¢å°è±¡ã‚’
+   *  èˆ‡ RGB å€¤ã¨ã® RGB æˆåˆ†å·®ã®å’ŒãŒ
+   *  å°ã•ã„ã¨ã“ã‚ã‹ã‚‰å¤§ãã„ã¨ã“ã‚ã«æ“´ã’ãªãŒã‚‰èª¿ã¹ã‚‹
    */
   for (int absval = 0; absval < NCLASS; absval++)
   {
     /*
-     *  Œ»İ‚ÌÅ‹ßƒpƒŒƒbƒg‚Æ‚Ì‹——£‚æ‚è
-     *  ‚±‚ê‚©‚ç’²‚×‚é›”Û (‚ÌÅ¬’l) ‚Æ‚Ì‹——£‚Ì•û‚ª
-     *  ‘å‚«‚¢‚Æ‚«‚Í‘Å‚¿Ø‚é
+     *  ç¾åœ¨ã®æœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆã¨ã®è·é›¢ã‚ˆã‚Š
+     *  ã“ã‚Œã‹ã‚‰èª¿ã¹ã‚‹å°è±¡ (ã®æœ€å°å€¤) ã¨ã®è·é›¢ã®æ–¹ãŒ
+     *  å¤§ãã„ã¨ãã¯æ‰“ã¡åˆ‡ã‚‹
      *
-     *  (¬•ª·‚Ì˜a‚Æ ‹——£‚Æ‚ÌŠÖŒW‚æ‚è ‹‚Ü‚é : subdif_G[]‚ÉŠi”[Ï)
+     *  (æˆåˆ†å·®ã®å’Œã¨ è·é›¢ã¨ã®é–¢ä¿‚ã‚ˆã‚Š æ±‚ã¾ã‚‹ : subdif_G[]ã«æ ¼ç´æ¸ˆ)
      */
     if (memdif < sumdif_G[absval])
       break;
 
-    unsigned long dif;  // col ‚Æ ”äŠr‘ÎÛ‚Ì ·‚Ì“ñæ‚Ì˜a
+    unsigned long dif;  // col ã¨ æ¯”è¼ƒå¯¾è±¡ã® å·®ã®äºŒä¹—ã®å’Œ
 
 
-    /* RGB‚Ìã`˜a‚ª col ‚æ‚è absval ‚¾‚¯‘å‚«‚¢ƒpƒŒƒbƒg‚ğ’²‚×‚Ä‰ô‚é */
+    /* RGBã®ç¸½å’ŒãŒ col ã‚ˆã‚Š absval ã ã‘å¤§ãã„ãƒ‘ãƒ¬ãƒƒãƒˆã‚’èª¿ã¹ã¦å»»ã‚‹ */
     int cc = (base+absval < NCLASS) ? index_G[base + absval] : -1;
     while (cc >= 0 && cc < NPAL)
     {
       dif = rms__(col, pal[cc]);
       if (dif == 0)
-        return (UByte)cc;  // ‹——£ 0 ‚È‚ç •¶‹å‚È‚µI—¹
+        return (UByte)cc;  // è·é›¢ 0 ãªã‚‰ æ–‡å¥ãªã—çµ‚äº†
       else if (dif<memdif)
       {
-        // Å‹ßƒpƒŒƒbƒg‚ÆÅ¬‹——£‚ğ•t‚¯‘Ö‚¦
+        // æœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆã¨æœ€å°è·é›¢ã‚’ä»˜ã‘æ›¿ãˆ
         mempos = (UByte)cc;
         memdif = dif;
       }
-      cc = next_G[cc];  // ƒŠƒ“ƒN‚ğ’H‚é
+      cc = next_G[cc];  // ãƒªãƒ³ã‚¯ã‚’è¾¿ã‚‹
     }
 
 
-    /* RGB‚Ìã`˜a‚ª col ‚æ‚è absval ‚¾‚¯¬‚³‚¢ƒpƒŒƒbƒg‚ğ’²‚×‚Ä‰ô‚é */
+    /* RGBã®ç¸½å’ŒãŒ col ã‚ˆã‚Š absval ã ã‘å°ã•ã„ãƒ‘ãƒ¬ãƒƒãƒˆã‚’èª¿ã¹ã¦å»»ã‚‹ */
     cc = (base - absval >= 0) ? index_G[base - absval] : -1;
     while (cc >= 0 && cc < NPAL)
     {
       dif = rms__(col, pal[cc]);
       if (dif == 0)
-        return (UByte)cc;  // ‹——£ 0 ‚È‚ç •¶‹å‚È‚µI—¹
+        return (UByte)cc;  // è·é›¢ 0 ãªã‚‰ æ–‡å¥ãªã—çµ‚äº†
       else if (dif < memdif)
       {
-        // Å‹ßƒpƒŒƒbƒg‚ÆÅ¬‹——£‚ğ•t‚¯‘Ö‚¦
+        // æœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆã¨æœ€å°è·é›¢ã‚’ä»˜ã‘æ›¿ãˆ
         mempos = (UByte)cc;
         memdif = dif;
       }
-      cc = next_G[cc];  // ƒŠƒ“ƒN‚ğ’H‚é
+      cc = next_G[cc];  // ãƒªãƒ³ã‚¯ã‚’è¾¿ã‚‹
     }
   }
 
-  return mempos;  /* ÅI“I‚ÈÅ‹ßƒpƒŒƒbƒg”Ôåj‚ğ•Ô‚· */
+  return mempos;  /* æœ€çµ‚çš„ãªæœ€è¿‘ãƒ‘ãƒ¬ãƒƒãƒˆç•ªè™Ÿã‚’è¿”ã™ */
 }// end of findNearestPal__()
 
 
@@ -467,10 +468,10 @@ themis::UByte findNearestPal__(
 
 
 #if DIFFUSE
-  /* Œë·°U–@‚É‚æ‚éŒ¸F™|— */
-#define PATX 5     // ƒpƒ^[ƒ“”z—ñ‚Ì•
-#define PATY 3     // ƒpƒ^[ƒ“”z—ñ‚Ì‚‚³
-#define D_AREA 2   // •ªU‚·‚éPixel‚Ì”Íš¡
+  /* èª¤å·®æ“´æ•£æ³•ã«ã‚ˆã‚‹æ¸›è‰²è™•ç† */
+#define PATX 5     // ãƒ‘ã‚¿ãƒ¼ãƒ³é…åˆ—ã®å¹…
+#define PATY 3     // ãƒ‘ã‚¿ãƒ¼ãƒ³é…åˆ—ã®é«˜ã•
+#define D_AREA 2   // åˆ†æ•£ã™ã‚‹Pixelã®ç¯„åœ
 #define ERR_PTN { 0, 0, 0, 7, 5,  3, 5, 7, 5, 3,  1, 3, 5, 3, 1 }
 void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 {
@@ -480,7 +481,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 
   int i;
 
-  // ƒoƒbƒtƒ@‚ÌŠm•Û‚Æ‰Šú‰»
+  // ãƒãƒƒãƒ•ã‚¡ã®ç¢ºä¿ã¨åˆæœŸåŒ–
   int mx = src->width() + D_AREA * 2;
   int sum = mx * PATY;
   int* rerr = new int[sum];
@@ -490,7 +491,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
   memset(gerr, 0, sizeof(int)*sum);
   memset(berr, 0, sizeof(int)*sum);
 
-  // •ªUƒpƒ^[ƒ“
+  // åˆ†æ•£ãƒ‘ã‚¿ãƒ¼ãƒ³
   int err_pat[PATX*PATY] = ERR_PTN;
   int pat_sum = 0;
   for (i = 0; i < PATX * PATY; i++)
@@ -521,7 +522,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
       int be = bb - dst->palette(bst).b;
 
 
-      // Œë·•ªU
+      // èª¤å·®åˆ†æ•£
       adr -= D_AREA;
       for (int iy = 0; iy < PATY; iy++, adr+=mx)
       {
@@ -536,7 +537,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
       dst->pixel(x, y) = bst;
     }
 
-    // ƒoƒbƒtƒ@‚Ì‚¸‚ç‚µ™|—
+    // ãƒãƒƒãƒ•ã‚¡ã®ãšã‚‰ã—è™•ç†
     for (i = 0; i < mx; i++)
     {
       for (int j = 0; j < PATY-1; j++)
@@ -556,7 +557,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
   delete[] berr;
 }
 #else
-  // šdƒ‹ß—‚É‚æ‚éŒ¸F
+  // å–®ç´”è¿‘ä¼¼ã«ã‚ˆã‚‹æ¸›è‰²
 void
 deColor__(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 {
@@ -582,12 +583,11 @@ deColor__(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 /*==========================================================
  *  PicturePal::reducePictureColors()
  *
- *  PictureƒIƒuƒWƒFƒNƒg‚ÉŒ¸F™|—‚ğ{‚µ‚Ä
- *  PictureIndexedƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éB
+ *  Pictureã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«æ¸›è‰²è™•ç†ã‚’æ–½ã—ã¦
+ *  PictureIndexedã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹ã€‚
  */
 polymnia::PictureIndexed*
 polymnia::reducePictureColors(const polymnia::Picture* src)
-throw()
 {
   PictureIndexed* pc = PictureIndexed::create(src->width(), src->height());
   if (!pc)

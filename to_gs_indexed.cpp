@@ -2,15 +2,16 @@
  *
  *  to_gs_indexed.cpp
  *  by oZ/acy
- *  (c) 2007-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2007-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  ƒOƒŒƒCƒXƒP[ƒ‹‰»‚µ‚½PictureIndexed‚Ì¶¬
+ *  ã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ«åŒ–ã—ãŸPictureIndexedã®ç”Ÿæˆ
  *
- *  —š—ğ
- *    2008.04.20 ì¬
- *    2008.10.03 C³
- *    2011.09.08 C³
- *    2016.02.26 ƒtƒ@ƒCƒ‹–¼ÌX
+ *  å±¥æ­´
+ *    2008.04.20 ä½œæˆ
+ *    2008.10.03 ä¿®æ­£
+ *    2011.09.08 ä¿®æ­£
+ *    2016.02.26 ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´
+ *    2016.03.02 C++11å°æ‡‰
  *
  ************************************************************************/
 
@@ -21,25 +22,25 @@
 
 /*================================================
  *  createPictureGrayScaleIndexed()
- *  ƒOƒŒƒCƒXƒP[ƒ‹ + Indexed‰»
+ *  ã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ« + IndexedåŒ–
  */
 polymnia::PictureIndexed*
 polymnia::createPictureGrayScaleIndexed(const polymnia::Picture* src)
-throw()
+noexcept
 {
   using namespace themis;
   using namespace polymnia;
 
-  /* PictureIndexed¶¬ */
+  /* PictureIndexedç”Ÿæˆ */
   PictureIndexed* pc = PictureIndexed::create(src->width(), src->height());
   if (!pc)
     return nullptr;
 
-  /* ƒpƒŒƒbƒgì¬ */
+  /* ãƒ‘ãƒ¬ãƒƒãƒˆä½œæˆ */
   for (int i = 0; i < 256; i++)
     pc->palette(i) = RgbColor((UByte)i, (UByte)i, (UByte)i);
 
-  /* ƒOƒŒƒCƒXƒP[ƒ‹‰» */
+  /* ã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ«åŒ– */
 
   for (int y = 0; y < src->height(); y++) {
     for (int x = 0; x < src->width(); x++) {

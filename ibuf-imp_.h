@@ -547,7 +547,7 @@ polymnia::ImageBuffer<C_>::ellipse(
     }
 
 
-    if (x - s2 < w_  &&  x + s2 >= 0  & & y - t2 < h_  &&  y + t2 >= 0)
+    if (x - s2 < w_  &&  x + s2 >= 0  && y - t2 < h_  &&  y + t2 >= 0)
     {
       if (fl)
       {

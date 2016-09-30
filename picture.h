@@ -2,12 +2,13 @@
  *
  *  picture.h
  *  by oZ/acy
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PICTURE buffer (RGB24bit, 256palRGB)
- *  RGB24bit ‚Æ RGB256ƒpƒŒƒbƒg—p‚Ìá`‘œƒoƒbƒtƒ@ƒNƒ‰ƒX
+ *  RGB24bit ã¨ RGB256ãƒ‘ãƒ¬ãƒƒãƒˆç”¨ã®ç•«åƒãƒãƒƒãƒ•ã‚¡ã‚¯ãƒ©ã‚¹
  *
- *  last update: 2012.3.1
+ *  å±¥æ­´
+ *    2016.3.2  C++11å°æ‡‰(å‡)
  *
  ************************************************************************/
 
@@ -29,19 +30,19 @@ namespace polymnia
 
 /*----------------------------
 *  class Picture
-*  RGB24bit—pá`‘œƒoƒbƒtƒ@
+*  RGB24bitç”¨ç•«åƒãƒãƒƒãƒ•ã‚¡
 *---------------------------*/
 class polymnia::Picture : public polymnia::ImageBuffer<polymnia::RgbColor>
 {
 protected:
   Picture(unsigned w, unsigned h)
     : polymnia::ImageBuffer<polymnia::RgbColor>(w, h, w)
-    { buf_ = new polymnia::RgbColor[w_*h_]; }
+    { buf_ = new polymnia::RgbColor[w_ * h_]; }
 
 public:
   ~Picture() { delete[] buf_; }
-  static Picture* create(unsigned w, unsigned h) throw();
-  Picture* clone() const throw();
+  static Picture* create(unsigned w, unsigned h) noexcept;
+  Picture* clone() const noexcept;
 };
 
 
@@ -49,7 +50,7 @@ public:
 
 /*---------------------------------
 *  class PictureIndexed
-*  RGB256ƒpƒŒƒbƒg—pá`‘œƒoƒbƒtƒ@
+*  RGB256ãƒ‘ãƒ¬ãƒƒãƒˆç”¨ç•«åƒãƒãƒƒãƒ•ã‚¡
 *--------------------------------*/
 class polymnia::PictureIndexed : public polymnia::ImageBuffer<themis::UByte>
 {
@@ -64,19 +65,19 @@ protected:
 public:
   ~PictureIndexed() { delete[] buf_; }
 
-  static PictureIndexed* create(unsigned w, unsigned h) throw();
+  static PictureIndexed* create(unsigned w, unsigned h) noexcept;
 
-  PictureIndexed* clone() const throw();
+  PictureIndexed* clone() const noexcept;
 
 
-  // ƒpƒŒƒbƒg‚Ö‚ÌƒAƒNƒZƒX
-  polymnia::RgbColor& palette(int id) throw() { return pal_[id]; }
-  const polymnia::RgbColor& palette(int id) const throw() { return pal_[id]; }
-  polymnia::RgbColor* paletteBuffer() throw() { return pal_; }
-  const polymnia::RgbColor* paletteBuffer() const throw() { return pal_; }
+  // ãƒ‘ãƒ¬ãƒƒãƒˆã¸ã®ã‚¢ã‚¯ã‚»ã‚¹
+  polymnia::RgbColor& palette(int id) noexcept { return pal_[id]; }
+  const polymnia::RgbColor& palette(int id) const noexcept { return pal_[id]; }
+  polymnia::RgbColor* paletteBuffer() noexcept { return pal_; }
+  const polymnia::RgbColor* paletteBuffer() const noexcept { return pal_; }
 
-  // “¯“à—e‚ÌPicture‚ğ¶¬
-  polymnia::Picture* duplicatePicture() const throw();
+  // åŒå†…å®¹ã®Pictureã‚’ç”Ÿæˆ
+  polymnia::Picture* duplicatePicture() const noexcept;
 };
 
 

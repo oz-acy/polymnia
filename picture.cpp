@@ -2,11 +2,12 @@
  *
  *  picture.cpp
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class Picture, class PictureIndexed ‚Ì¶¬E•¡»è—ü
+ *  class Picture, class PictureIndexed ã®ç”Ÿæˆãƒ»è¤‡è£½é—œè¯
  *
- *  last update: 2011.9.8
+ *  å±¥æ­´
+ *    2016.3.2  C++11å°æ‡‰(å‡)
  *
  *************************************************************************/
 
@@ -16,9 +17,9 @@
 
 /*========================================================
  *  Picture::create()
- *  •, ‚‚³‚ğw’è‚µ‚Ä Picture ƒIƒuƒWƒFƒNƒg‚ğ¶¬
+ *  å¹…, é«˜ã•ã‚’æŒ‡å®šã—ã¦ Picture ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
  *======================================================*/
-polymnia::Picture* polymnia::Picture::create(unsigned w, unsigned h) throw()
+polymnia::Picture* polymnia::Picture::create(unsigned w, unsigned h) noexcept
 {
   try
   {
@@ -33,9 +34,9 @@ polymnia::Picture* polymnia::Picture::create(unsigned w, unsigned h) throw()
 
 /*=================================
  *  Picture::clone()
- *  Picture ‚Ì©ŒÈ•¡»
+ *  Picture ã®è‡ªå·±è¤‡è£½
  *===============================*/
-polymnia::Picture* polymnia::Picture::clone() const throw()
+polymnia::Picture* polymnia::Picture::clone() const noexcept
 {
   using namespace std;
 
@@ -49,10 +50,10 @@ polymnia::Picture* polymnia::Picture::clone() const throw()
 
 /*==========================================================
  *  PictureIndexed::create()
- *  PictureIndexed ƒIƒuƒWƒFƒNƒg‚ğ•, ‚‚³‚ğw’è‚µ‚Ä¶¬
+ *  PictureIndexed ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å¹…, é«˜ã•ã‚’æŒ‡å®šã—ã¦ç”Ÿæˆ
  *========================================================*/
 polymnia::PictureIndexed* polymnia::PictureIndexed::create(
-  unsigned w, unsigned h) throw()
+  unsigned w, unsigned h) noexcept
 {
   try
   {
@@ -67,9 +68,9 @@ polymnia::PictureIndexed* polymnia::PictureIndexed::create(
 
 /*====================================================
  *  PictureIndexed::clone()
- *  PictureIndexed ƒIƒuƒWƒFƒNƒg‚Ì©ŒÈ•¡»
+ *  PictureIndexed ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è‡ªå·±è¤‡è£½
  *==================================================*/
-polymnia::PictureIndexed* polymnia::PictureIndexed::clone() const throw()
+polymnia::PictureIndexed* polymnia::PictureIndexed::clone() const noexcept
 {
   using namespace std;
 
@@ -77,7 +78,7 @@ polymnia::PictureIndexed* polymnia::PictureIndexed::clone() const throw()
   if (res)
   {
     copy(buf_, buf_ + h_ * offset_, res->buf_);
-    copy(pal_, pal_+256, res->pal_);
+    copy(pal_, pal_ + 256, res->pal_);
   }
 
   return res;
@@ -87,9 +88,9 @@ polymnia::PictureIndexed* polymnia::PictureIndexed::clone() const throw()
 
 /*=======================================================================
  *  PictureIndexed::duplicatePicture()
- *  PictureIndexed ‚©‚ç Picture ƒIƒuƒWƒFƒNƒg‚ğ•¡» (’A‚µFŒ`®‚Í•ÏX)
+ *  PictureIndexed ã‹ã‚‰ Picture ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¤‡è£½ (ä½†ã—è‰²å½¢å¼ã¯å¤‰æ›´)
  *=====================================================================*/
-polymnia::Picture* polymnia::PictureIndexed::duplicatePicture() const throw()
+polymnia::Picture* polymnia::PictureIndexed::duplicatePicture() const noexcept
 {
   Picture* pc = Picture::create(w_, h_);
 
@@ -99,7 +100,7 @@ polymnia::Picture* polymnia::PictureIndexed::duplicatePicture() const throw()
     for (int i = 0; i < area; i++)
       pc->buffer()[i] = pal_[buf_[i]];
 
-    //ã‹L‚Í‰º‹L‚©‚ç‚Ì‘‚«’¼‚µ
+    //ä¸Šè¨˜ã¯ä¸‹è¨˜ã‹ã‚‰ã®æ›¸ãç›´ã—
     //for (int y=0; y<h_; y++)
     //  for (int x=0; x<w_; x++)
     //    pc->pixel(x, y) = pal_[buf_[x+y*offset_]];

@@ -5,10 +5,10 @@
  *  (c) 2001-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
  *  RGB (24bit) color type
- *  Še8bit RGB Color Œ^
+ *  å„8bit RGB Color å‹
  *
- *  —š—ğ
- *    2016.2.27  C++11/14›”œä(˜ï)
+ *  å±¥æ­´
+ *    2016.3.2  C++11/14å°æ‡‰(å‡)
  *
  *************************************************************************/
 
@@ -21,7 +21,7 @@ namespace polymnia
 {
 /*--------------------------
 *  class RgbColor
-*  RGB24bitFî•ñƒNƒ‰ƒX
+*  RGB24bitè‰²æƒ…å ±ã‚¯ãƒ©ã‚¹
 *------------------------*/
 class RgbColor
 {
@@ -29,17 +29,17 @@ public:
   themis::Byte r, g, b;
 
 public:
-  constexpr RgbColor() throw() : r(0), g(0), b(0) {}
-  constexpr RgbColor(themis::Byte r0, themis::Byte g0, themis::Byte b0) throw()
+  constexpr RgbColor() noexcept : r(0), g(0), b(0) {}
+  constexpr RgbColor(themis::Byte r0, themis::Byte g0, themis::Byte b0) noexcept
     : r(r0), g(g0), b(b0)
     {}
 
-  bool operator==(const RgbColor& other) const throw()
+  bool operator==(const RgbColor& other) const noexcept
   {
     return r == other.r && g == other.g && b == other.b;
   }
 
-  bool operator!=(const RgbColor& other) const throw()
+  bool operator!=(const RgbColor& other) const noexcept
   {
     return !(*this == other);
   }

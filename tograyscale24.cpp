@@ -4,10 +4,11 @@
  *  by oZ/acy
  *  (c) 2007-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Picture ‚ÌFÌŠ·ƒ‹[ƒ`ƒ“
+ *  Picture ã®è‰²è®Šæ›ãƒ«ãƒ¼ãƒãƒ³
  *
- *  —š—ğ:
- *  2016.2.26 ƒtƒ@ƒCƒ‹–¼ÌX
+ *  å±¥æ­´:
+ *  2016.2.26 ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´
+ *  2016.3.2  C++å°æ‡‰
  *
  ************************************************************************/
 
@@ -16,9 +17,9 @@
 
 /*================================================
 *  convertToGrayScaled()
-*  ƒOƒŒƒCƒXƒP[ƒ‹‰»
+*  ã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ«åŒ–
 */
-void polymnia::convertToGrayScaled(polymnia::Picture* tgt) throw()
+void polymnia::convertToGrayScaled(polymnia::Picture* tgt) noexcept
 {
   using namespace themis;
 
