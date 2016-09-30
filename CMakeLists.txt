@@ -12,8 +12,10 @@ include_directories("${CMAKE_INSTALL_PREFIX}/include")
 ADD_LIBRARY(polymnia STATIC
   ibuf.cpp
   picture.cpp
-  tograyscale24.cpp to_gs_indexed.cpp
-  magnify.cpp reduce.cpp
+  tograyscale24.cpp
+  to_gs_indexed.cpp
+  magnify.cpp
+  reduce.cpp
   toindexed.cpp
   dibin.cpp dibout.cpp
   jpegin.cpp jpegout.cpp jpegio.cpp
