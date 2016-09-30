@@ -1,13 +1,12 @@
 # CMakeLists.txt for project POLYMNIA
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 SET(CMAKE_VERBOSE_MAKEFILE 1)
 
 #PROJECT(polymnia CXX)
 
-#SET(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-clang++)
-SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3")
-
+#SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3")
+SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3")
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 ADD_LIBRARY(polymnia STATIC
