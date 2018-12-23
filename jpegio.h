@@ -1,15 +1,13 @@
 /**************************************************************************
  *  jpegio.h
  *
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  JPEG IO
  *  JPEG形式画像入出力クラス (libjpegラッパ)
  *
- *  last update: 2012.3.1
- *
+ *  2018.12.23 C++17對應
  */
-
 #ifndef INC_POLYMNIA_JPEGIO_H__
 #define INC_POLYMNIA_JPEGIO_H__
 
@@ -33,8 +31,7 @@ public:
   JpegLoader() {}
   ~JpegLoader() {}
 
-protected:
-  polymnia::Picture* load_(const char* path);
+  polymnia::Picture* load(const std::filesystem::path& path) override;
 };
 
 
@@ -54,8 +51,9 @@ public:
   void setQuality(int q) { quality = q; }
   void setProgressive(bool g) { prog = g; }
 
-protected:
-  bool save_(const polymnia::Picture* p, const char* path);
+  bool
+    save(
+    const polymnia::Picture* p, const std::filesystem::path& path) override;
 };
 
 

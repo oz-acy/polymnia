@@ -2,15 +2,16 @@
  *
  *  pngoio.h
  *  by oZ/acy
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PNG IO for part "polymnia"
  *  PNG形式画像入出力クラス (libpngラッパ)
  *
- *  Classes defined in this file are used "libpng" library.
+ *  Classes defined in this file are inplemented with "libpng" library.
  *  The author thanks authors of "libpng."
  *
- *  last update: 2012.3.1
+ *  履歴
+ *    2018.12.23 C++17對應
  *
  *************************************************************************/
 #ifndef INC_POLYMNIA_PNGIO_H__
@@ -38,9 +39,7 @@ class polymnia::PngLoader : public polymnia::PictLoader<polymnia::Picture>
 public:
   PngLoader() {}
   ~PngLoader() {}
-
-protected:
-  polymnia::Picture* load_(const char* path);
+  polymnia::Picture* load(const std::filesystem::path& path) override;
 };
 
 
@@ -55,9 +54,7 @@ class polymnia::IndexedPngLoader
 public:
   IndexedPngLoader() {}
   ~IndexedPngLoader() {}
-
-protected:
-  polymnia::PictureIndexed* load_(const char* path);
+  polymnia::PictureIndexed* load(const std::filesystem::path& path) override;
 };
 
 
@@ -78,8 +75,9 @@ public:
   void enableInterlace() { interlace = true; }
   void disableInterlace() { interlace = false; }
 
-protected:
-  bool save_(const polymnia::Picture* p, const char* path);
+  bool
+    save(
+    const polymnia::Picture* p, const std::filesystem::path& path) override;
 };
 
 
@@ -104,8 +102,10 @@ public:
   void enableTransparent(themis::UByte pl) { trans = true; paltp = pl; }
   void disableTransparent() { trans = false; }
 
-protected:
-  bool save_(const polymnia::PictureIndexed* p, const char* path);
+  bool
+    save(
+    const polymnia::PictureIndexed* p,
+    const std::filesystem::path& path) override;
 };
 
 

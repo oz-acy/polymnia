@@ -5,8 +5,9 @@ SET(CMAKE_VERBOSE_MAKEFILE 1)
 
 #PROJECT(polymnia CXX)
 
+SET(CMAKE_CXX_FLAGS "-Wall -std=c++17 -O3")
 #SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3")
-SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3")
+#SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3")
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 ADD_LIBRARY(polymnia STATIC

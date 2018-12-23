@@ -2,14 +2,15 @@
  *
  *  dibin.cpp
  *
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  DIB INput
  *  DIB形式画像入力用クラス実装
  *
  *  履歴
- *    2016.3.2  C++11對應
- *************************************************************************/
+ *    2016.3.2    C++11對應
+ *    2018.12.23  C++17對應
+ */
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -245,7 +246,7 @@ read01bit__(
     linebuf.reset(new UByte[bufsize]);
     palbuf.reset(new UByte[pct->width()]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -284,7 +285,7 @@ read04bit__(
     linebuf.reset(new UByte[bufsize]);
     palbuf.reset(new UByte[pct->width()]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -318,7 +319,7 @@ read08bit__(
   {
     linebuf.reset(new UByte[bufsize]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -352,7 +353,7 @@ bool read24bit__(std::istream& is, polymnia::Picture* pct)
   {
     imgbuf.reset(new UByte[linesize * pct->height()]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -386,7 +387,7 @@ bool read32bit__(std::istream& is, polymnia::Picture* pct)
   {
     imgbuf.reset(new UByte[linesize*pct->height()]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -418,7 +419,7 @@ bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct)
   {
     linebuf.reset(new UByte[bufsize]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -448,7 +449,7 @@ bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct)
   {
     linebuf.reset(new UByte[bufsize]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -479,7 +480,7 @@ bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct)
   {
     linebuf.reset(new UByte[bufsize]);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return false;
   }
@@ -507,7 +508,7 @@ bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct)
  *  DibLoader::load_()
  *  DIBの読み込み
  */
-polymnia::Picture* polymnia::DibLoader::load_(const char* path)
+polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -590,7 +591,7 @@ polymnia::Picture* polymnia::DibLoader::load_(const char* path)
  *  パレットDIBの読み込み
  */
 polymnia::PictureIndexed*
-polymnia::IndexedDibLoader::load_(const char* path)
+polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -618,8 +619,8 @@ polymnia::IndexedDibLoader::load_(const char* path)
       throw Error();
 
     int np = info.npal;
-    if (np==0)
-      np = 1<<info.bit;
+    if (np == 0)
+      np = 1 << info.bit;
     if (!readPalette__(ifs, q->paletteBuffer(), np))
       throw Error();
 

@@ -2,11 +2,11 @@
 *
 *  jpegin.cpp
 *  by oZ/acy
-*  (c) 2002-2013 oZ/acy.  ALL RIGHTS RESERVED.
+*  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
 *
 *  JPEG 形式入力クラス
 *
-*  last update: 2013.3.29
+*  last update: 2018.12.23
 *
 **************************************************************************/
 
@@ -30,13 +30,33 @@ namespace polymnia
 }
 
 
-polymnia::Picture* polymnia::JpegLoader::load_(const char* path)
+namespace {
+
+// オーバーロードによつて fopen、_wfopenを切り替へる
+
+std::FILE* openfile(const char* path)
 {
   using namespace std;
+  return fopen(path, "rb");
+}
 
-  // File Open
+std::FILE* openfile(const wchar_t* path)
+{
+  using namespace std;
+  return _wfopen(path, L"rb");
+}
+
+
+}//end of namespace NONAME
+
+
+
+////////////////////////////////////////
+// JpegLoader::load_()の本體
+polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
+{
   FILE *infile;
-  infile = fopen(path,"rb");
+  infile = openfile(path.c_str());
   if (!infile)
     return nullptr;
 
@@ -45,7 +65,7 @@ polymnia::Picture* polymnia::JpegLoader::load_(const char* path)
   struct jpeg_error_mgr jerr;
 
   cinfo.err = jpeg_std_error(&jerr);
-  private___::jpegErrorSetup__(jerr);
+  polymnia::private___::jpegErrorSetup__(jerr);
 
   try
   {
@@ -57,7 +77,7 @@ polymnia::Picture* polymnia::JpegLoader::load_(const char* path)
     int ww = cinfo.output_width;
     int hh = cinfo.output_height;
     int bit = cinfo.output_components;
-    if (bit!=3)
+    if (bit != 3)
       throw themis::Exception("JPEGLoader","load()","bits!=3");
 
     Picture* q = Picture::create(ww,hh);
@@ -67,12 +87,12 @@ polymnia::Picture* polymnia::JpegLoader::load_(const char* path)
     JSAMPROW buf[1];
     RgbColor* resbuf = q->buffer();
     int o = q->offset();
-    int j=0;
+    int j = 0;
     while (cinfo.output_scanline < cinfo.output_height)
     {
       buf[0] = (JSAMPROW)&resbuf[j];
-      jpeg_read_scanlines(&cinfo,buf,1);
-      j+=o;
+      jpeg_read_scanlines(&cinfo, buf, 1);
+      j += o;
     }
 
     jpeg_finish_decompress(&cinfo);
@@ -81,7 +101,7 @@ polymnia::Picture* polymnia::JpegLoader::load_(const char* path)
 
     return q;
   }
-  catch(themis::Exception exp)
+  catch(themis::Exception& exp)
   {
     jpeg_destroy_decompress(&cinfo);
     fclose(infile);

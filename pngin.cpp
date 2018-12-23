@@ -2,14 +2,13 @@
  *
  *  pngin.cpp
  *  by oZ/acy
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PNG 形式入力クラス
  *
- *  last update: 2012.3.1
+ *  last update: 2018.12.23
  *
- *************************************************************************/
-
+ */
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -28,7 +27,7 @@ namespace
 {
 
 // PNGファイルかどうか調べる
-bool isPNG__(const char* path)
+bool isPNG__(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -131,7 +130,7 @@ void pngError__(png_structp png_ptr, png_const_charp str)
 /* 讀み込み處理の初期化 */
 bool
 pngReadInit__(
-  const char* path, std::ifstream& ifs, png_structp& png_ptr,
+  const std::filesystem::path& path, std::ifstream& ifs, png_structp& png_ptr,
   png_infop& info_ptr)
 {
   using namespace std;
@@ -171,10 +170,10 @@ pngReadInit__(
 
 
 
-}//end of namespace
+}//end of namespace NONAME
 
 
-polymnia::Picture* polymnia::PngLoader::load_(const char* path)
+polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -232,7 +231,7 @@ polymnia::Picture* polymnia::PngLoader::load_(const char* path)
 
 
 polymnia::PictureIndexed*
-polymnia::IndexedPngLoader::load_(const char* path)
+polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
   using namespace themis;

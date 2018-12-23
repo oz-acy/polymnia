@@ -2,14 +2,13 @@
  *
  *  pngout.cpp
  *  by oZ/acy
- *  (c) 2002-2012 oZ/acy. ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy. ALL RIGHTS RESERVED.
  *
  *  PNG 形式出力クラス
  *
- *  last update: 2012.3.1
+ *  last update: 2018.12.23
  *
- *************************************************************************/
-
+ */
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -50,7 +49,7 @@ void pngFlushDammy__(png_structp)
 
 /* 書き込みの初期處理 */
 bool pngWriteInit__(
-  const char* path, std::ofstream& ofs, png_structp& png_ptr,
+  const std::filesystem::path& path, std::ofstream& ofs, png_structp& png_ptr,
   png_infop& info_ptr)
 {
   ofs.open(path, std::ios::out|std::ios::binary);
@@ -75,10 +74,12 @@ bool pngWriteInit__(
 }
 
 
-}//end of namespace
+}//end of namespace NONAME
 
 
-bool polymnia::PngSaver::save_(const polymnia::Picture* pct, const char* path)
+bool
+polymnia::PngSaver::save(
+  const polymnia::Picture* pct, const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -125,8 +126,9 @@ bool polymnia::PngSaver::save_(const polymnia::Picture* pct, const char* path)
 }
 
 
-bool polymnia::IndexedPngSaver::save_(
-  const polymnia::PictureIndexed* pct, const char* path)
+bool
+polymnia::IndexedPngSaver::save(
+  const polymnia::PictureIndexed* pct, const std::filesystem::path& path)
 {
   using namespace std;
 

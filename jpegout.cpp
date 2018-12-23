@@ -2,11 +2,11 @@
  *
  *  jpegout.cpp
  *  by oZ/acy
- *  (c) 2002-2013 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  libjpegによるJPEG出力ルーチン
  *
- *  last update: 2013.3.29
+ *  last update: 2018.12.23
  *
  *************************************************************************/
 
@@ -29,20 +29,43 @@ namespace polymnia
 }
 
 
+namespace {
+
+// オーバーロードによつて fopen、_wfopenを切り替へる
+
+std::FILE* openfile(const char* path)
+{
+  using namespace std;
+  return fopen(path, "wb");
+}
+
+std::FILE* openfile(const wchar_t* path)
+{
+  using namespace std;
+  return _wfopen(path, L"wb");
+}
+
+}//end of namespace NONAME
+
+
+
+
 bool
-polymnia::JpegSaver::save_(const polymnia::Picture* pct, const char* path)
+polymnia::JpegSaver::save(
+  const polymnia::Picture* pct, const std::filesystem::path& path)
 {
   using namespace std;
 
-  FILE *outfile = fopen(path, "wb");
+  FILE *outfile = openfile(path.c_str());
   if (!outfile)
     return false;
+
 
   struct jpeg_compress_struct cinfo;
   struct jpeg_error_mgr jerr;
 
   cinfo.err = jpeg_std_error(&jerr);
-  private___::jpegErrorSetup__(jerr);
+  polymnia::private___::jpegErrorSetup__(jerr);
 
   try
   {
@@ -55,21 +78,21 @@ polymnia::JpegSaver::save_(const polymnia::Picture* pct, const char* path)
     cinfo.in_color_space = JCS_RGB;
 
     jpeg_set_defaults(&cinfo);
-    jpeg_set_quality(&cinfo,quality,TRUE);
+    jpeg_set_quality(&cinfo, quality, TRUE);
     if (prog)
       jpeg_simple_progression(&cinfo);
 
     jpeg_start_compress(&cinfo, TRUE);
 
     JSAMPROW buf[1];
-    const RgbColor* srcbuf = pct->buffer();
+    const polymnia::RgbColor* srcbuf = pct->buffer();
     int o = pct->offset();
-    int j=0;
-    while(cinfo.next_scanline<cinfo.image_height)
+    int j = 0;
+    while(cinfo.next_scanline < cinfo.image_height)
     {
       buf[0] = (JSAMPROW)&srcbuf[j];
-      jpeg_write_scanlines(&cinfo,buf,1);
-      j+=o;
+      jpeg_write_scanlines(&cinfo, buf, 1);
+      j += o;
     }
 
     jpeg_finish_compress(&cinfo);
@@ -78,13 +101,15 @@ polymnia::JpegSaver::save_(const polymnia::Picture* pct, const char* path)
 
     return true;
   }
-  catch(themis::Exception exp)
+  catch(themis::Exception& exp)
   {
     jpeg_destroy_compress(&cinfo);
     fclose(outfile);
     return false;
   }
 }
+
+
 
 
 //eof

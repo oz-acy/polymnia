@@ -2,13 +2,14 @@
  *
  *  ibuf.h
  *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Image BUFfer template
  *  畫像バッファのクラステンプレート
  *
  *  履歴
  *    2016.3.2  C++11/14對應(假)
+ *    2018.12.21  C++17對應(假)
  *************************************************************************/
 
 #ifndef INC_POLYMNIA_IMAGEBUFFER_H___
@@ -125,7 +126,7 @@ public:
   const C_& pixel(int x, int y) const noexcept { return buf_[x + y * offset_]; }
 
 
-  C_& at(int x, int y) throw(polymnia::RangeOverException)
+  C_& at(int x, int y) //throw(polymnia::RangeOverException)
   {
     if (x < 0)
       throw polymnia::RangeOverException();
@@ -139,7 +140,7 @@ public:
     return buf_[x + y * offset_];
   }
 
-  const C_& at(int x, int y) const throw(polymnia::RangeOverException)
+  const C_& at(int x, int y) const //throw(polymnia::RangeOverException)
   {
     if (x < 0)
       throw polymnia::RangeOverException();

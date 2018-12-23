@@ -2,14 +2,14 @@
  *
  *  dibout.cpp
  *
- *  (C) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  DIB OUTput
  *  DIB形式画像出力用クラス実装
  *
- *  last update: 2012.3.1
- *
- *************************************************************************/
+ *  履歴
+ *    2018.12.23 C++17對應
+ */
 
 #include<iostream>
 #include<fstream>
@@ -184,7 +184,8 @@ bool writeBits__(
  *  24bitDIBの保存
  */
 bool
-polymnia::DibSaver::save_(const polymnia::Picture* p,const char* path)
+polymnia::DibSaver::save(
+  const polymnia::Picture* p, const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -210,8 +211,8 @@ polymnia::DibSaver::save_(const polymnia::Picture* p,const char* path)
  *  パレットDIBの保存
  */
 bool
-polymnia::IndexedDibSaver::save_(
-  const polymnia::PictureIndexed* p,const char* path)
+polymnia::IndexedDibSaver::save(
+  const polymnia::PictureIndexed* p, const std::filesystem::path& path)
 {
   using namespace std;
 

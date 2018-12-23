@@ -2,20 +2,21 @@
  *
  *  pictio.h
  *  by oZ/acy
- *  (c) 2012-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2012-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PICTue buffer IO
  *  畫像バッファのロード、セーブ用基底クラステンプレート
  *
  *  履歴
- *    2016.3.2  C++11對應
- *
- ************************************************************************/
+ *    2016.3.2   C++11對應
+ *    2018.12.23 C++17對應 パスの渡し方を變更
+ */
 
 #ifndef INC_POLYMNIA_PICTURE_IO_H___
 #define INC_POLYMNIA_PICTURE_IO_H___
 
 #include <string>
+#include <filesystem>
 #include <boost/utility.hpp>
 
 
@@ -37,11 +38,7 @@ public:
   PictLoader() noexcept {}
   virtual ~PictLoader() {}
 
-  P_* load(const char* path) { return load_(path); }
-  P_* load(const std::string& path) { return load(path.c_str()); }
-
-protected:
-  virtual P_* load_(const char* path) =0;
+  virtual P_* load(const std::filesystem::path& path) =0;
 };
 
 
@@ -56,13 +53,7 @@ public:
   PictSaver() noexcept {}
   virtual ~PictSaver() {}
 
-  bool save(const P_* p, const char* path) { return save_(p, path); }
-
-  bool save(const P_* p, const std::string& path)
-    { return save_(p, path.c_str()); }
-
-protected:
-  virtual bool save_(const P_* p, const char* path) =0;
+  virtual bool save(const P_*, const std::filesystem::path& path) =0;
 };
 
 
