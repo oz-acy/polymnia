@@ -1,19 +1,17 @@
-/**************************************************************************
+/**********************************************************************//**
  *
- *  pngoio.h
- *  by oZ/acy
+ *  @file pngoio.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief PNG形式畫像入出力クラス (libpngのラッパー)
+ *
+ *  @date 2018.12.23 C++17對應
+ *
+ *//*
  *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
- *
- *  PNG IO for part "polymnia"
- *  PNG�`���摜���o�̓N���X (libpng���b�p)
  *
  *  Classes defined in this file are inplemented with "libpng" library.
  *  The author thanks authors of "libpng."
- *
- *  ����
- *    2018.12.23 C++17����
- *
- *************************************************************************/
+ */
 #ifndef INC_POLYMNIA_PNGIO_H__
 #define INC_POLYMNIA_PNGIO_H__
 
@@ -29,79 +27,114 @@ namespace polymnia
 }
 
 
-/*----------------------------------
- *  PngLoader
- *  PNG�`�����[�_
- *  RGB24bit�摜�Ƃ��Ď�荞��
+/*--------------------------------------------*//**
+ *  @brief PNG形式畫像の讀み込みクラス
+ *
+ *  RGB24bitカラーの畫像として讀み込む。
  */
 class polymnia::PngLoader : public polymnia::PictLoader<polymnia::Picture>
 {
 public:
+  /// @brief 構築子
   PngLoader() {}
+  /// @brief 解體子
   ~PngLoader() {}
+
+  /// @brief 讀み込み
+  ///
+  /// 指定されたファイルから畫像を讀み込む。
+  /// @param path ファイルパス
+  /// @return
+  ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
+  ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
   polymnia::Picture* load(const std::filesystem::path& path) override;
 };
 
 
-/*-----------------------------------------------
- *  IndexedPngLoader
- *  PNG�`�����[�_ (8bit�ȉ���indexed)
- *  8bit indexed �摜�Ƃ��Ď�荞��
+/*-----------------------------------------------*//**
+ *  @brief PNG形式畫像の讀み込みクラス
+ *
+ *  256パレットカラーの畫像として讀み込む。
  */
 class polymnia::IndexedPngLoader
 : public polymnia::PictLoader<polymnia::PictureIndexed>
 {
 public:
+  /// @brief 構築子
   IndexedPngLoader() {}
+  /// @brief 解體子
   ~IndexedPngLoader() {}
+
+  /// @brief 讀み込み
+  ///
+  /// 指定されたファイルから畫像を讀み込む。
+  /// @param path ファイルパス
+  /// @return
+  ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
+  ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
   polymnia::PictureIndexed* load(const std::filesystem::path& path) override;
 };
 
 
 
-/*-------------------------------------------
- *  PngSaver
- *  24bit RGB PNG�`���̃Z�[�o
- *  �C���^�[���X�̗L��/������ݒ�\
+/*-----------------------------------------------*//**
+ *  @brief 24bitカラーPNG形式の畫像保存クラス
  */
 class polymnia::PngSaver : public polymnia::PictSaver<polymnia::Picture>
 {
 private:
-  bool interlace;
+  bool interlace; ///< インターレース化するか否か
 
 public:
+  /// @brief 構築子
+  ///
+  /// デフォルトではインターレース化しないやうに設定する。
   PngSaver() : interlace(false) {}
+  /// @brief 解體子
   ~PngSaver() {}
+
+  /// @brief インターレース化するやうに設定
   void enableInterlace() { interlace = true; }
+  /// @brief インターレース化しないやうに設定
   void disableInterlace() { interlace = false; }
 
+  /// @brief 保存
   bool
     save(
     const polymnia::Picture* p, const std::filesystem::path& path) override;
 };
 
 
-/*--------------------------------------------------
- *  IndexedPngSaver
- *  8bit indexed PNG�`���̃Z�[�o
- *  �C���^�[���X�̗L��/����, ���ߐF��ݒ�\
+/*-------------------------------------------------------*//**
+ *  @brief 256パレットカラーPNG形式の畫像保存クラス
  */
 class polymnia::IndexedPngSaver
 : public polymnia::PictSaver<polymnia::PictureIndexed>
 {
 private:
-  bool interlace;
-  bool trans;
-  themis::UByte paltp;
+  bool interlace; ///< インターレース化するか否か
+  bool trans;  ///< 透過色を設定するか否か
+  themis::UByte paltp;  ///< 透過色
 
 public:
+  /// @brief 構築子
+  ///
+  /// デフォルトではインターレース化せず、透過色も持たぬやう設定する。
   IndexedPngSaver() : interlace(false), trans(false), paltp(0) {}
+  /// @brief 解體子
   ~IndexedPngSaver() {}
+
+  /// @brief インターレース化するやうに設定
   void enableInterlace() { interlace = true; }
+  /// @brief インターレース化しないやうに設定
   void disableInterlace() { interlace = false; }
+  
+  /// @brief 透過色を設定
   void enableTransparent(themis::UByte pl) { trans = true; paltp = pl; }
+  /// @brief 透過色を持たぬやう設定
   void disableTransparent() { trans = false; }
 
+  /// @brief 保存
   bool
     save(
     const polymnia::PictureIndexed* p,

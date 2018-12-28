@@ -10,6 +10,7 @@
  *  履歴
  *    2016.3.2    C++11對應
  *    2018.12.23  C++17對應
+ *    2018.12.28  資源管理をunique_ptrに移行
  */
 #include <iostream>
 #include <fstream>
@@ -21,14 +22,6 @@
 
 namespace
 {
-
-/*---------------------------------------------------
-*  class Error
-*  内部的に用いるエラーハンドルクラス
-*--------------------------------------------------*/
-class Error {};
-
-
 /*----------------------------------------------
 *  struct Info_
 *  DIBファイル情報(の一部)
@@ -505,89 +498,80 @@ bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct)
 
 
 /*===========================
- *  DibLoader::load_()
+ *  DibLoader::load()
  *  DIBの読み込み
  */
 polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
-  Picture* q = nullptr;
 
-  try
-  {
-    ifstream ifs(path, ios::in|ios::binary);
-    if (!ifs)
-      throw Error();
-
-    if (!readHeader__(ifs))
-      throw Error();
-
-    Info_ info;
-    if (!readInfo__(ifs, &info))
-      throw Error();
-
-    if (info.bit!=1 && info.bit!=4 && info.bit!=8 && info.bit!=24
-        && info.bit!=32)
-      throw Error();
-
-    RgbColor pal[256];
-    if (info.bit!=24 && info.bit!=32)
-    {
-      int np = info.npal;
-      if (np==0)
-        np = 1 << info.bit;
-      if (!readPalette__(ifs, pal, np))
-        throw Error();
-    }
-
-    q = Picture::create(info.w, info.h);
-    if (!q)
-      throw Error();
-
-    switch(info.bit)
-    {
-    case 1:
-      if (!read01bit__(ifs, q, pal))
-        throw Error();
-      break;
-
-    case 4:
-      if (!read04bit__(ifs, q, pal))
-        throw Error();
-      break;
-
-    case 8:
-      if (!read08bit__(ifs, q, pal))
-        throw Error();
-      break;
-
-    case 24:
-      if (!read24bit__(ifs, q))
-        throw Error();
-      break;
-
-    case 32:
-      if (!read32bit__(ifs, q))
-        throw Error();
-      break;
-
-    default:
-      throw Error();
-    }
-
-    return q;
-  }
-  catch(Error)
-  {
-    delete q;
+  ifstream ifs(path, ios::in|ios::binary);
+  if (!ifs)
     return nullptr;
+
+  if (!readHeader__(ifs))
+    return nullptr;
+
+  Info_ info;
+  if (!readInfo__(ifs, &info))
+    return nullptr;
+
+  if (info.bit!=1 && info.bit!=4 && info.bit!=8 && info.bit!=24
+      && info.bit!=32)
+    return nullptr;
+
+  RgbColor pal[256];
+  if (info.bit!=24 && info.bit!=32)
+  {
+    int np = info.npal;
+    if (np==0)
+      np = 1 << info.bit;
+    if (!readPalette__(ifs, pal, np))
+      return nullptr;
   }
+
+  unique_ptr<Picture> q(Picture::create(info.w, info.h));
+  if (!q)
+    return nullptr;
+
+  switch(info.bit)
+  {
+  case 1:
+    if (!read01bit__(ifs, q.get(), pal))
+      return nullptr;
+    break;
+
+  case 4:
+    if (!read04bit__(ifs, q.get(), pal))
+      return nullptr;
+    break;
+
+  case 8:
+    if (!read08bit__(ifs, q.get(), pal))
+      return nullptr;
+    break;
+
+  case 24:
+    if (!read24bit__(ifs, q.get()))
+      return nullptr;
+    break;
+
+  case 32:
+    if (!read32bit__(ifs, q.get()))
+      return nullptr;
+    break;
+
+  default:
+      return nullptr;
+  }
+
+  return q.release();
 }
 
 
 /*=================================
- *  IndexedDibLoader::load_()
+ *  IndexedDibLoader::load()
  *  パレットDIBの読み込み
  */
 polymnia::PictureIndexed*
@@ -595,63 +579,53 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
-  PictureIndexed* q = nullptr;
-  try
+  ifstream ifs(path, ios::in|ios::binary);
+  if (!ifs)
+    return nullptr;
+
+  if (!readHeader__(ifs))
+    return nullptr;
+
+  Info_ info;
+  if (!readInfo__(ifs, &info))
+    return nullptr;
+
+  if (info.bit!=1 && info.bit!=4 && info.bit!=8)
+    return nullptr;
+
+
+  unique_ptr<PictureIndexed> q(PictureIndexed::create(info.w, info.h));
+  if (!q)
+    return nullptr;
+
+  int np = info.npal;
+  if (np == 0)
+    np = 1 << info.bit;
+  if (!readPalette__(ifs, q->paletteBuffer(), np))
+    return nullptr;
+
+  switch(info.bit)
   {
-    ifstream ifs(path, ios::in|ios::binary);
-    if (!ifs)
-      throw Error();
+  case 1:
+    if (!read01bit__(ifs, q.get()))
+      return nullptr;
+    break;
 
-    if (!readHeader__(ifs))
-      throw Error();
+  case 4:
+    if (!read04bit__(ifs, q.get()))
+      return nullptr;
+    break;
 
-    Info_ info;
-    if (!readInfo__(ifs, &info))
-      throw Error();
+  case 8:
+    if (!read08bit__(ifs, q.get()))
+      return nullptr;
+    break;
 
-
-    if (info.bit!=1 && info.bit!=4 && info.bit!=8)
-      throw Error();
-
-
-    q = PictureIndexed::create(info.w, info.h);
-    if (!q)
-      throw Error();
-
-    int np = info.npal;
-    if (np == 0)
-      np = 1 << info.bit;
-    if (!readPalette__(ifs, q->paletteBuffer(), np))
-      throw Error();
-
-    switch(info.bit)
-    {
-    case 1:
-      if (!read01bit__(ifs, q))
-        throw Error();
-      break;
-
-    case 4:
-      if (!read04bit__(ifs, q))
-        throw Error();
-      break;
-
-    case 8:
-      if (!read08bit__(ifs,q))
-        throw Error();
-      break;
-
-    default:
-      throw Error();
-    }
-
-    return q;
-  }
-  catch(Error)
-  {
-    delete q;
+  default:
     return nullptr;
   }
+
+  return q.release();
 }
 
 

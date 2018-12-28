@@ -32,13 +32,14 @@ namespace polymnia
 namespace {
 
 // オーバーロードによつて fopen、_wfopenを切り替へる
-
+inline
 std::FILE* openfile(const char* path)
 {
   using namespace std;
   return fopen(path, "wb");
 }
 
+inline
 std::FILE* openfile(const wchar_t* path)
 {
   using namespace std;
