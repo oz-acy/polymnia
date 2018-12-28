@@ -2,17 +2,18 @@
  *
  *  toindexed.cpp
  *  by oZ/acy
- *  (c) 2001-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2001-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Picture ==> PictureIndexed の減色複寫ルーチン
  *
  *  履歴
  *    2016.2.26  ファイル名變更、他修正
  *    2016.3.2   throw()削除
- *
- ************************************************************************/
-
-#include "pictcvt.h"
+ *    2018.12.28
+ *      reducePictureColors()をPicture::duplicatePictureIndexed()に變更
+ */
+#include <memory>
+#include "picture.h"
 
 
 namespace
@@ -110,7 +111,7 @@ void PixelRange_::divide(PixelRange_& neu)
   int rw = r.cutoff();
   int gw = g.cutoff();
   int bw = b.cutoff();
-  if (count==0)
+  if (count == 0)
     count = 1;
 
   neu = *this;
@@ -144,18 +145,16 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
   using namespace polymnia;
   using namespace std;
 
-  int i;
   PixelRange_ range[256];
 
   memset(range, 0, sizeof(PixelRange_) * 256);
   range[0].r.max = range[0].g.max = range[0].b.max = 255;
 
+  int i;
   int current_range = 1;
 
-  for (int bits = 0; bits <= 8; bits++)
-  {
-    for (i=0; i<current_range; i++)
-    {
+  for (int bits = 0; bits <= 8; bits++) {
+    for (i = 0; i < current_range; i++) {
       memset(range[i].r.bits, 0, 32);
       memset(range[i].g.bits, 0, 32);
       memset(range[i].b.bits, 0, 32);
@@ -165,17 +164,14 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
       range[i].count = 0;
     }
 
-    for (int y=0; y < src->height(); y++)
-    {
-      for (int x=0; x < src->width(); x++)
-      {
+    for (int y = 0; y < src->height(); y++) {
+      for (int x = 0; x < src->width(); x++) {
         UByte r = src->pixel(x, y).r;
         UByte g = src->pixel(x, y).g;
         UByte b = src->pixel(x, y).b;
 
         // r,g,bが属するrange#を得る
-        for (i=0; i<current_range; i++)
-        {
+        for (i = 0; i < current_range; i++) {
           if (r < range[i].r.min || r > range[i].r.max)
             continue;
           if (g < range[i].g.min || g > range[i].g.max)
@@ -209,8 +205,7 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
       range[i].divide(range[current_range++]);
   }
 
-  for (i = 0; i < 256; i++)
-  {
+  for (i = 0; i < 256; i++) {
     if (range[i].count==0)
       range[i].count = 1;
     pal[i].r = (UByte)(range[i].r.sum / range[i].count);
@@ -361,13 +356,12 @@ const unsigned long sumdif_G[NCLASS]
 
 
 /*
- *  RGB成分の和が k であるパレットについて片方向リンクを張る
- *  index_G[k] が リンクの先頭のパレットの番号になる
- *  next_G[pal] が pal の次のパレット番号になる
- *  next_G[]を次々辿り、 next_G[x] が -1 になったところで
- *  リンクは終点である
+ *  RGB成分の和が k であるパレットについて片方向リンクを張る。
+ *  index_G[k] が リンクの先頭のパレットの番号になる。
+ *  next_G[pal] が pal の次のパレット番号になる。
+ *  next_G[]を次々辿り、 next_G[k] が -1 になったところがリンクの終點。
  *
- *  なお、index_G[x] = -1 なら、成分和が x なるパレットはない
+ *  なほ、index_G[k] = -1 なら、成分和が k であるパレットはない。
  */
 int next_G[NPAL];
 int index_G[NCLASS];
@@ -375,12 +369,10 @@ int index_G[NCLASS];
 /* next_G[], index_G[] によるパレット探索鎖を生成する */
 void updateChain__(const polymnia::RgbColor pal[])
 {
-  int i;
-
-  for (i = 0; i < NCLASS; i++)
+  for (int i = 0; i < NCLASS; i++)
     index_G[i] = -1;
 
-  for (i = 0; i < NPAL; i++)
+  for (int i = 0; i < NPAL; i++)
   {
     int k = pal[i].r + pal[i].g + pal[i].b;
     next_G[i] = index_G[k];
@@ -398,10 +390,10 @@ themis::UByte findNearestPal__(
   // 現在のところの距離の最小値 : "最も大きい整数" で初期化
   unsigned long memdif = ~0;
 
-  // 現在のところの最近パレット : 取りあへず 0
+  // 現在のところの最近パレット : 取りあへず 0で初期化
   UByte mempos = 0;
 
-  // 与RGB値の成分和
+  // 與RGB値の成分和
   int base = col.r + col.g + col.b;
 
 
@@ -415,7 +407,7 @@ themis::UByte findNearestPal__(
     /*
      *  現在の最近パレットとの距離より
      *  これから調べる對象 (の最小値) との距離の方が
-     *  大きいときは打ち切る
+     *  大きいときは打ち切る。
      *
      *  (成分差の和と 距離との関係より 求まる : subdif_G[]に格納済)
      */
@@ -479,28 +471,33 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
   using namespace polymnia;
   using namespace std;
 
-  int i;
+  //int i;
 
   // バッファの確保と初期化
   int mx = src->width() + D_AREA * 2;
   int sum = mx * PATY;
-  int* rerr = new int[sum];
-  int* gerr = new int[sum];
-  int* berr = new int[sum];
-  memset(rerr, 0, sizeof(int)*sum);
-  memset(gerr, 0, sizeof(int)*sum);
-  memset(berr, 0, sizeof(int)*sum);
+  
+  unique_ptr<int[]> rerr(new int[sum]);
+  unique_ptr<int[]> gerr(new int[sum]);
+  unique_ptr<int[]> berr(new int[sum]);
+  
+  //int* rerr = new int[sum];
+  //int* gerr = new int[sum];
+  //int* berr = new int[sum];
+  memset(rerr.get(), 0, sizeof(int)*sum);
+  memset(gerr.get(), 0, sizeof(int)*sum);
+  memset(berr.get(), 0, sizeof(int)*sum);
 
   // 分散パターン
   int err_pat[PATX*PATY] = ERR_PTN;
   int pat_sum = 0;
-  for (i = 0; i < PATX * PATY; i++)
+  for (int i = 0; i < PATX * PATY; i++)
     pat_sum += err_pat[i];
 
 
   for (int y = 0; y < src->height(); y++)
   {
-    for (int x=0; x < src->width(); x++)
+    for (int x = 0; x < src->width(); x++)
     {
       RgbColor col = src->pixel(x, y);
       int adr = x + D_AREA;
@@ -538,7 +535,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
     }
 
     // バッファのずらし處理
-    for (i = 0; i < mx; i++)
+    for (int i = 0; i < mx; i++)
     {
       for (int j = 0; j < PATY-1; j++)
       {
@@ -552,9 +549,9 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
     }
   }
 
-  delete[] rerr;
-  delete[] gerr;
-  delete[] berr;
+  //delete[] rerr;
+  //delete[] gerr;
+  //delete[] berr;
 }
 #else
   // 單純近似による減色
@@ -581,21 +578,21 @@ deColor__(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 
 
 /*==========================================================
- *  PicturePal::reducePictureColors()
+ *  Picture::duplicatePictureIndexed()
  *
- *  Pictureオブジェクトに減色處理を施して
+ *  Pictureに減色處理を施して
  *  PictureIndexedオブジェクトを生成する。
  */
 polymnia::PictureIndexed*
-polymnia::reducePictureColors(const polymnia::Picture* src)
+polymnia::Picture::duplicatePictureIndexed() const noexcept
 {
-  PictureIndexed* pc = PictureIndexed::create(src->width(), src->height());
+  PictureIndexed* pc = PictureIndexed::create(w_, h_);
   if (!pc)
     return nullptr;
 
-  sumpling__(pc->paletteBuffer(), src);
+  sumpling__(pc->paletteBuffer(), this);
   updateChain__(pc->paletteBuffer());
-  deColor__(pc, src);
+  deColor__(pc, this);
 
   return pc;
 }

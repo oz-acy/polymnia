@@ -1,17 +1,15 @@
 /**************************************************************************
-*
-*  ibuf.cpp
-*  by oZ/acy
-*  (c) 2002-2009 oZ/acy. ALL RIGHTS RESERVED.
-*
-*  畫像バッファのクリッピング
-*
-*  last update: 2009.11.7
-*
-**************************************************************************/
-
+ *
+ *  ibuf.cpp
+ *  by oZ/acy
+ *  (c) 2002-2009 oZ/acy. ALL RIGHTS RESERVED.
+ *
+ *  畫像バッファのクリッピング
+ *
+ *  last update: 2009.11.7
+ *
+ */
 #include "ibuf.h"
-//#include <iostream>
 
 polymnia::imp_::Clip_::Clip_(
   int ssx, int ssy, int ww, int hh, int ddx, int ddy, const Rect& mask)

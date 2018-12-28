@@ -1,7 +1,7 @@
 /**************************************************************************
  *  reduce.cpp
  *
- *  (C) 2003-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2003-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Picture用縮小ルーチン
  *
@@ -12,9 +12,9 @@
  *     8 Sep MMXI    NULL を nullptr に修正(C++11)
  *    28 Jul MMXII   バグ修正(メモリ不正アクセス)
  *     2 Mar MMXVI   throw()削除
- *************************************************************************/
-
-#include "pictcvt.h"
+ *    28 Dec MMXVIII createReducedPicture()をPictureのメンバ函數に編入
+ */
+#include "picture.h"
 
 
 namespace {
@@ -41,8 +41,7 @@ toSmall__(
   double G = 0.0;
   double B = 0.0;
 
-  for (int y = sy; y < ey; y++)
-  {
+  for (int y = sy; y < ey; y++) {
     double e1 = (double)y;
     double e2 = (double)(y + 1);
     if (e1 < y1)
@@ -52,8 +51,7 @@ toSmall__(
 
     double ph = e2 - e1;  // 高さ
 
-    for (int x = sx; x < ex; x++)
-    {
+    for (int x = sx; x < ex; x++) {
       double e3 = (double)x;
       double e4 = (double)(x + 1);
       if (e3 < x1)
@@ -90,7 +88,7 @@ toSmall__(
  *  畫像縮小ルーチン
  *==============================================================*/
 polymnia::Picture* 
-polymnia::createReducedPicture(int w, int h, const polymnia::Picture* src)
+polymnia::Picture::createReducedPicture(int w, int h) const noexcept
 {
   using namespace polymnia;
 
@@ -98,15 +96,15 @@ polymnia::createReducedPicture(int w, int h, const polymnia::Picture* src)
   if (!pict)
     return nullptr;
 
-  double dw = (double)(src->width()) / (double)w;
-  double dh = (double)(src->height()) / (double)h;
+  double dw = (double)width() / (double)w;
+  double dh = (double)height() / (double)h;
 
   for (int Y = 0; Y < h; Y++)
   {
     double y1 = (double)Y * dh;
     double y2 = (double)(Y + 1) * dh;
     
-    if (y2 > src->height())
+    if (y2 > height())
       break;
 
     for (int X = 0; X < w; X++)
@@ -114,15 +112,16 @@ polymnia::createReducedPicture(int w, int h, const polymnia::Picture* src)
       double x1 = (double)X * dw;
       double x2 = (double)(X + 1) * dw;
 
-      if (x2 > src->width())
+      if (x2 > width())
         break;
 
-      pict->pixel(X, Y) = toSmall__(src, x1, y1, x2, y2);
+      pict->pixel(X, Y) = toSmall__(this, x1, y1, x2, y2);
     }
   }
 
   return pict;
 }
+
 
 
 

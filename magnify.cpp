@@ -2,7 +2,7 @@
  *
  *  magnify.cpp
  *
- *  (C) 2003-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2003-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Picture用擴大縮小ルーチン
  *
@@ -13,9 +13,9 @@
  *     8 Sep MMXI    NULL を nullptr に修正 (C++11)
  *    26 Feb MMXVI   ファイル名變更
  *     2 Mar MMXVI   throw()を削除
- *************************************************************************/
-
-#include "pictcvt.h"
+ *    28 Dec MMXVIII createMagnifiedPictureをPictureのメンバ函數に編入
+ */
+#include "picture.h"
 
 namespace {
 
@@ -61,7 +61,7 @@ void productMat14_44__(double* res, double* vec, double* mat)
  *  擴大畫像生成ルーチン
  *==============================================*/
 polymnia::Picture* 
-polymnia::createMagnifiedPicture(int w, int h, const polymnia::Picture* src)
+polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
 {
   using namespace polymnia;
   using namespace themis;
@@ -70,8 +70,8 @@ polymnia::createMagnifiedPicture(int w, int h, const polymnia::Picture* src)
   if (!pict)
     return nullptr;
 
-  double nrx = src->width() / (double)w;
-  double nry = src->height() / (double)h;
+  double nrx = width() / (double)w;
+  double nry = height() / (double)h;
 
   for (int Y = 0; Y < h; Y++)
   {
@@ -90,8 +90,8 @@ polymnia::createMagnifiedPicture(int w, int h, const polymnia::Picture* src)
       py[i] = (int)y0 - 1 + i;
       if (py[i] < 0)
         py[i] = 0;
-      else if (py[i] >= src->height())
-        py[i] = src->height() - 1;
+      else if (py[i] >= height())
+        py[i] = height() - 1;
     }
 
     for (int X = 0; X < w; X++)
@@ -111,17 +111,17 @@ polymnia::createMagnifiedPicture(int w, int h, const polymnia::Picture* src)
         px[i] = (int)x0 - 1 + i;
         if (px[i] < 0)
           px[i] = 0;
-        else if (px[i] >= src->width())
-          px[i] = src->width() - 1;
+        else if (px[i] >= width())
+          px[i] = width() - 1;
       }
 
       double rbuf[16], gbuf[16], bbuf[16];
       for (int i=0; i < 4; i++)
         for (int j=0; j < 4; j++)
         {
-          rbuf[i + j * 4] = src->pixel(px[i], py[j]).r;
-          gbuf[i + j * 4] = src->pixel(px[i], py[j]).g;
-          bbuf[i + j * 4] = src->pixel(px[i], py[j]).b;
+          rbuf[i + j * 4] = pixel(px[i], py[j]).r;
+          gbuf[i + j * 4] = pixel(px[i], py[j]).g;
+          bbuf[i + j * 4] = pixel(px[i], py[j]).b;
         }
 
 

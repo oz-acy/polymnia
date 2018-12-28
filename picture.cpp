@@ -2,14 +2,14 @@
  *
  *  picture.cpp
  *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  class Picture, class PictureIndexed の生成・複製關聯
  *
  *  履歴
  *    2016.3.2  C++11對應(假)
- *
- *************************************************************************/
+ *    2018.12.27 catch(bad_alloc)をcatch(bad_alloc&)に修正
+ */
 
 #include <algorithm>
 #include "picture.h"
@@ -25,7 +25,7 @@ polymnia::Picture* polymnia::Picture::create(unsigned w, unsigned h) noexcept
   {
     return new Picture(w, h);
   }
-  catch (std::bad_alloc)
+  catch (std::bad_alloc&)
   {
     return nullptr;
   }
@@ -59,7 +59,7 @@ polymnia::PictureIndexed* polymnia::PictureIndexed::create(
   {
     return new PictureIndexed(w, h);
   }
-  catch(std::bad_alloc)
+  catch(std::bad_alloc&)
   {
     return nullptr;
   }
@@ -96,7 +96,7 @@ polymnia::Picture* polymnia::PictureIndexed::duplicatePicture() const noexcept
 
   if (pc)
   {
-    int area = w_ * h_;
+    int area = h_ * offset_;
     for (int i = 0; i < area; i++)
       pc->buffer()[i] = pal_[buf_[i]];
 

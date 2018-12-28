@@ -5,13 +5,11 @@
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  implement of Image BUFfer template
- *  á`‘œƒoƒbƒtƒ@ƒNƒ‰ƒXƒeƒ“ƒvƒŒ[ƒg›‰åä•”•ª
+ *  ç•«åƒãƒãƒƒãƒ•ã‚¡ã‚¯ãƒ©ã‚¹ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆå¯¦è£éƒ¨åˆ†
  *
- *  —š—ğ
- *    2016.2.26 ellipse()“à‚Ì•sg—pÌÉ‚ÌéŒ¾‚ğíœ
- *
- *************************************************************************/
-
+ *  å±¥æ­´
+ *    2016.2.26 ellipse()å†…ã®ä¸ä½¿ç”¨è®Šæ•¸ã®å®£è¨€ã‚’å‰Šé™¤
+ */
 #include <stack>
 #include <cstring>
 #include <cstdlib>
@@ -23,7 +21,7 @@ namespace imp_{
 
 /*----------------------------
 *  class Clip
-*  ƒNƒŠƒbƒsƒ“ƒO™|——pƒNƒ‰ƒX
+*  ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°è™•ç†ç”¨ã‚¯ãƒ©ã‚¹
 *---------------------------*/
 class Clip_
 {
@@ -47,14 +45,14 @@ public:
 
 
 
-
-
 /*=========================================
 *  ImageBuffer<C_>::blt()
-*  çz‘—
+*  è½‰é€
 *========================================*/
 template<class C_>
-inline void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C_>* src, int sx, int sy,
   int w, int h)
 {
@@ -63,7 +61,9 @@ inline void polymnia::ImageBuffer<C_>::blt(
 }
 
 template<class C_>
-void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C_>* src, int sx, int sy,
   int w, int h, const polymnia::Rect& mk)
 {
@@ -80,7 +80,9 @@ void polymnia::ImageBuffer<C_>::blt(
 
 
 template<class C_>
-inline void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C_>* src, int sx, int sy,
   int w, int h, const C_& tcol)
 {
@@ -89,7 +91,9 @@ inline void polymnia::ImageBuffer<C_>::blt(
 }
 
 template<class C_>
-void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C_>* src, int sx, int sy,
   int w, int h, const C_& tcol, const polymnia::Rect& mk)
 {
@@ -111,7 +115,9 @@ void polymnia::ImageBuffer<C_>::blt(
 
 
 template<class C_> template<class C2_>
-inline void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx,int dy, const polymnia::ImageBuffer<C2_>* src,
   int sx, int sy, int w, int h)
 {
@@ -120,7 +126,9 @@ inline void polymnia::ImageBuffer<C_>::blt(
 }
 
 template<class C_> template<class C2_>
-void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C2_>* src, int sx, int sy,
   int w, int h, const polymnia::Rect& mk)
 {
@@ -139,7 +147,9 @@ void polymnia::ImageBuffer<C_>::blt(
 
 
 template<class C_> template<class C2_>
-inline void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx,int dy, const polymnia::ImageBuffer<C2_>* src, int sx, int sy,
   int w, int h, const C2_& tcol)
 {
@@ -148,7 +158,9 @@ inline void polymnia::ImageBuffer<C_>::blt(
 }
 
 template<class C_> template<class C2_>
-void polymnia::ImageBuffer<C_>::blt(
+inline
+void
+polymnia::ImageBuffer<C_>::blt(
   int dx, int dy, const polymnia::ImageBuffer<C2_>* src, int sx, int sy,
   int w, int h, const C2_& tcol, const polymnia::Rect& mk)
 {
@@ -169,10 +181,10 @@ void polymnia::ImageBuffer<C_>::blt(
 
 /*===============================================
 *  ImageBuffer<C_>::clear()
-*  w’è‚µ‚½F‚Å‘Sˆæ‚ğƒNƒŠƒA
+*  æŒ‡å®šã—ãŸè‰²ã§å…¨åŸŸã‚’ã‚¯ãƒªã‚¢
 *==============================================*/
 template<class C_>
-void polymnia::ImageBuffer<C_>::clear(const C_& col)
+inline void polymnia::ImageBuffer<C_>::clear(const C_& col)
 {
   int dp = 0;
   for (int j = 0; j < h_; j++, dp += offset_)
@@ -184,7 +196,7 @@ void polymnia::ImageBuffer<C_>::clear(const C_& col)
 
 /*===============================================
 *  ImageBuffer<C>::addEffect()
-*  á`‘œ‚ÉŒø‰Ê™|—‚ğ‚©‚¯‚é
+*  ç•«åƒã«åŠ¹æœè™•ç†ã‚’ã‹ã‘ã‚‹
 *==============================================*/
 /*
 template<class C_>
@@ -201,11 +213,13 @@ inline void polymnia::ImageBuffer<C_>::addEffect(
 
 /*==========================================================
 *  ImageBuffer<C>::line()
-*  ’¼ü‚ğˆø‚­
-*  (Bresenham's Algorithm  ™Òl: C MAGAZINE Dec. 2000)
+*  ç›´ç·šã‚’å¼•ã
+*  (Bresenham's Algorithm  åƒè€ƒ: C MAGAZINE Dec. 2000)
 *=========================================================*/
 template<class C_>
-void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
+inline
+void
+polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
 {
   int dx, dy, sx, sy;
 
@@ -331,23 +345,25 @@ void polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& c
 
 /*===============================================
 *  ImageBuffer<C_>::box()
-*  ’·•ûŒ`‚ğ•`‚­
+*  é•·æ–¹å½¢ã‚’æã
 *==============================================*/
 template<class C_>
-void polymnia::ImageBuffer<C_>::box
-(int x1, int y1, int x2, int y2, const C_& col, bool fl)
+inline
+void
+polymnia::ImageBuffer<C_>::box(
+  int x1, int y1, int x2, int y2, const C_& col, bool fl)
 {
-  // À•W‚ÌŠÈ’P‰»
+  // åº§æ¨™ã®ç°¡å˜åŒ–
   if (x1>x2)
     std::swap(x1, x2);
   if (y1>y2)
     std::swap(y1, y2);
 
-  // ‘S•”‚ª”Íš¡ŠO‚È‚ç return
+  // å…¨éƒ¨ãŒç¯„åœå¤–ãªã‚‰ return
   if (x1>=w_ || x2<0 || y1>=h_ || y2<0)
     return;
 
-  // ”Íš¡“à‚ÉØ‚è‚Â‚ß‚½’l
+  // ç¯„åœå†…ã«åˆ‡ã‚Šã¤ã‚ãŸå€¤
   int xx1, xx2, yy1, yy2;
 
   if (x1<0)
@@ -371,7 +387,7 @@ void polymnia::ImageBuffer<C_>::box
     yy2 = y2;
 
   if (fl)
-  { // “h‚è’×‚µ
+  { // å¡—ã‚Šæ½°ã—
     int i, j;
     int p = yy1 * offset_;
     //int w = xx2 - xx1;
@@ -383,7 +399,7 @@ void polymnia::ImageBuffer<C_>::box
   {
     int i, p, q;
 
-    // ‰¡˜g‚ğ•`‚­
+    // æ¨ªæ ã‚’æã
     p = xx1 + y1*offset_;
     q = xx1 + y2*offset_;
     if (y1>=0)
@@ -402,7 +418,7 @@ void polymnia::ImageBuffer<C_>::box
           buf_[q] = col;
     }
 
-    // c˜g‚ğ•`‚­
+    // ç¸¦æ ã‚’æã
     p = x1 + yy1*offset_;
     q = x2 + yy1*offset_;
     if (x1>=0)
@@ -426,14 +442,15 @@ void polymnia::ImageBuffer<C_>::box
 
 /*============================================
 *  ImageBuffer<C>::ellipse()
-*  ‘È‰~‚Ì•`á` (‘¼‚ÌƒAƒ‹ƒSƒŠƒYƒ€‚ğ—vû“¢?)
+*  æ¥•å††ã®æç•« (ä»–ã®ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è¦æª¢è¨?)
 *===========================================*/
 /*     1 2
  *   3     4
- *   5     6       <-- ƒRƒƒ“ƒg’†‚Å—p‚¢‚½”Ô†
+ *   5     6       <-- ã‚³ãƒ¡ãƒ³ãƒˆä¸­ã§ç”¨ã„ãŸç•ªå·
  *     7 8
  */
 template<class C_>
+inline
 void
 polymnia::ImageBuffer<C_>::ellipse(
   int x, int y, int a, int b, const C_& col, bool fl)
@@ -609,10 +626,10 @@ polymnia::ImageBuffer<C_>::ellipse(
 
 /*====================================================
 *  ImageBuffer<C>::paintFill()
-*  Šˆà“h‚è’×‚µ
+*  æ‰€è¬‚å¡—ã‚Šæ½°ã—
 *===================================================*/
 template<class C_>
-void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
+inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
 {
   if (x < 0 || y < 0 || x >= w_ || y >= h_)
     return;

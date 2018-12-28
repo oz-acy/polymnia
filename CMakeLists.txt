@@ -28,11 +28,11 @@ INSTALL(FILES
     ibuf.h ibuf-imp_.h
     rgb.h
     picture.h
-    pictcvt.h
     pictio.h
     dibio.h
     jpegio.h
     pngio.h
+    hex.h
   DESTINATION
     include/polymnia
 )
