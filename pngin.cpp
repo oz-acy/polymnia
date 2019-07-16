@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  PNG Œ`®“ü—ÍƒNƒ‰ƒX
+ *  PNG å½¢å¼å…¥åŠ›ã‚¯ãƒ©ã‚¹
  *
  *  last update: 2018.12.23
  *
@@ -26,7 +26,7 @@ extern "C" {
 namespace
 {
 
-// PNGƒtƒ@ƒCƒ‹‚©‚Ç‚¤‚©’²‚×‚é
+// PNGãƒ•ã‚¡ã‚¤ãƒ«ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 bool isPNG__(const std::filesystem::path& path)
 {
   using namespace std;
@@ -43,7 +43,7 @@ bool isPNG__(const std::filesystem::path& path)
 }
 
 
-// PNG‚Ìƒf[ƒ^Œ`®‚ğ“Á’è‚·‚é
+// PNGã®ãƒ‡ãƒ¼ã‚¿å½¢å¼ã‚’ç‰¹å®šã™ã‚‹
 struct PNGColorBitType_
 {
   int cbits;
@@ -72,7 +72,7 @@ PNGColorBitType_ pngtype_G[]
 };
 
 
-/* color format ‚Ìƒ`ƒFƒbƒN */
+/* color format ã®ãƒã‚§ãƒƒã‚¯ */
 void checkColorFormat__(bool* alpha, int* type, int* obits, int bits, int ctype)
 {
   *alpha = false;
@@ -105,7 +105,7 @@ void checkColorFormat__(bool* alpha, int* type, int* obits, int bits, int ctype)
 
 /*________________________________________________________
  *  
- *  ifstream‚©‚ç‚Ìæ¤‚İ‚İ
+ *  ifstreamã‹ã‚‰ã®è®€ã¿è¾¼ã¿
  *
  *  H23.4.24 update for libpng-1.5.x
  */
@@ -120,14 +120,14 @@ void pngRead__(png_structp png_ptr, png_bytep data, png_size_t length)
 }
 
 
-/* ƒGƒ‰[‚ÉŒÄ‚Ño‚³‚ê‚é */
+/* ã‚¨ãƒ©ãƒ¼æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ */
 void pngError__(png_structp png_ptr, png_const_charp str)
 {
   std::cerr << str << std::endl;
 }
 
 
-/* æ¤‚İ‚İ™|—‚Ì‰Šú‰» */
+/* è®€ã¿è¾¼ã¿è™•ç†ã®åˆæœŸåŒ– */
 bool
 pngReadInit__(
   const std::filesystem::path& path, std::ifstream& ifs, png_structp& png_ptr,
@@ -135,7 +135,7 @@ pngReadInit__(
 {
   using namespace std;
 
-  // ƒtƒ@ƒCƒ‹ƒ`ƒFƒbƒN‚ÆƒI[ƒvƒ“
+  // ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚§ãƒƒã‚¯ã¨ã‚ªãƒ¼ãƒ—ãƒ³
   if (!isPNG__(path))
     return false;
 
@@ -144,7 +144,7 @@ pngReadInit__(
     return false;
 
 
-  // PNG“ü—Í—p\‘¢‘Ì‚Ì¶¬
+  // PNGå…¥åŠ›ç”¨æ§‹é€ ä½“ã®ç”Ÿæˆ
   png_ptr
     = png_create_read_struct(
         PNG_LIBPNG_VER_STRING, nullptr, pngError__, pngError__);
@@ -158,10 +158,10 @@ pngReadInit__(
     return false;
   }
 
-  // “ü—ÍŠÖ”‚Ìİ’è
+  // å…¥åŠ›é–¢æ•°ã®è¨­å®š
   png_set_read_fn(png_ptr, (void *)&ifs, pngRead__);
 
-  // “ü—ÍŠJn
+  // å…¥åŠ›é–‹å§‹
   png_read_info(png_ptr, info_ptr);
 
 
@@ -193,13 +193,13 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
     png_ptr, info_ptr, &ww, &hh, &bits, &ctype, &itype, nullptr, nullptr);
   checkColorFormat__(&alpha, &type, &obits, bits, ctype);
 
-  png_set_strip_alpha(png_ptr);  // Alpha—v‘f‚Í–³‹‚·‚é
+  png_set_strip_alpha(png_ptr);  // Alphaè¦ç´ ã¯ç„¡è¦–ã™ã‚‹
 
   if (bits == 16)
-    png_set_strip_16(png_ptr);     // 16bit‰æ‘œ‚Í8bit‚É’¼‚·
+    png_set_strip_16(png_ptr);     // 16bitç”»åƒã¯8bitã«ç›´ã™
 
   if (type == PNG_GRY__)
-    png_set_gray_to_rgb(png_ptr);  // ƒOƒŒ[ƒXƒP[ƒ‹ -> TrueColor
+    png_set_gray_to_rgb(png_ptr);  // ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ« -> TrueColor
 
   if (type == PNG_PAL__) {
     //if (obits == 16) {
@@ -210,7 +210,7 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
     png_set_palette_to_rgb(png_ptr);  // Indexed -> TrueColor
   }
 
-  int n_pass = png_set_interlace_handling(png_ptr); // ƒCƒ“ƒ^[ƒŒƒX‰æ‘œ—p
+  int n_pass = png_set_interlace_handling(png_ptr); // ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ¬ã‚¹ç”»åƒç”¨
 
   png_read_update_info(png_ptr, info_ptr);
 
@@ -253,7 +253,7 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
     png_ptr, info_ptr, &ww, &hh, &bits, &ctype, &itype, nullptr, nullptr);
   checkColorFormat__(&alpha, &type, &obits, bits, ctype);
 
-  if (type == PNG_RGB__)  // TrueColor‚Í‘Ê–Ú
+  if (type == PNG_RGB__)  // TrueColorã¯é§„ç›®
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return nullptr;
@@ -261,17 +261,17 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
 
   if (obits == 16)
   {
-    png_set_strip_16(png_ptr); // 16bit‰æ‘œ‚Í8bit‚É’¼‚·
+    png_set_strip_16(png_ptr); // 16bitç”»åƒã¯8bitã«ç›´ã™
     obits = 8;
   }
   if (alpha)
-    png_set_strip_alpha(png_ptr); // Alpha—v‘f‚Í–³‹‚·‚é
+    png_set_strip_alpha(png_ptr); // Alphaè¦ç´ ã¯ç„¡è¦–ã™ã‚‹
   if (type == PNG_PAL__ && obits < 8)
-    png_set_packing(png_ptr); // PAL8bit‚É“ˆê
+    png_set_packing(png_ptr); // PAL8bitã«çµ±ä¸€
   if (type == PNG_GRY__ && obits < 8)
-    png_set_expand(png_ptr); // GRAY8bit‚É“ˆê
+    png_set_expand(png_ptr); // GRAY8bitã«çµ±ä¸€
 
-  int n_pass = png_set_interlace_handling(png_ptr); // ƒCƒ“ƒ^[ƒŒƒX‰æ‘œ—p
+  int n_pass = png_set_interlace_handling(png_ptr); // ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ¬ã‚¹ç”»åƒç”¨
 
   png_read_update_info(png_ptr, info_ptr);
 
@@ -280,11 +280,11 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
   PictureIndexed* pct = PictureIndexed::create(ww, hh);
 
 
-  // Palette‚Ìƒ[ƒh
+  // Paletteã®ãƒ­ãƒ¼ãƒ‰
   RgbColor* pal = pct->paletteBuffer();
   if (type == PNG_GRY__)
   {
-    //ƒOƒŒƒCƒXƒP[ƒ‹‚È‚ç©•ª‚Å—pˆÓ‚·‚é
+    //ã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ«ãªã‚‰è‡ªåˆ†ã§ç”¨æ„ã™ã‚‹
     int d = 255 / ((1<<obits) - 1);
     for (int i = 0, c = 0; c < 256; i++, c += d)
       pal[i] = RgbColor((UByte)c, (UByte)c, (UByte)c);

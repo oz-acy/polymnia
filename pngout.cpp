@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2018 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  PNG Œ`®o—ÍƒNƒ‰ƒX
+ *  PNG å½¢å¼å‡ºåŠ›ã‚¯ãƒ©ã‚¹
  *
  *  last update: 2018.12.23
  *
@@ -25,7 +25,7 @@ namespace
 
 /*________________________________________
  *
- *  ofstream ‚É›”‚·‚é‘‚«‚İ
+ *  ofstream ã«å°ã™ã‚‹æ›¸ãè¾¼ã¿
  *
  *  H23.4.24 update for libpng-1.5.x
  */
@@ -40,14 +40,14 @@ void pngWrite__(png_structp png_ptr, png_bytep data, png_size_t length)
 }
 
 
-/* flush‘€ì (’A‚µƒ_ƒ~[) */
+/* flushæ“ä½œ (ä½†ã—ãƒ€ãƒŸãƒ¼) */
 void pngFlushDammy__(png_structp)
 {
   /* none */
 }
 
 
-/* ‘‚«‚İ‚Ì‰Šú™|— */
+/* æ›¸ãè¾¼ã¿ã®åˆæœŸè™•ç† */
 bool pngWriteInit__(
   const std::filesystem::path& path, std::ofstream& ofs, png_structp& png_ptr,
   png_infop& info_ptr)
@@ -102,7 +102,7 @@ polymnia::PngSaver::save(
 
   png_write_info(png_ptr, info_ptr);
 
-  // ƒCƒ“ƒ^[ƒŒƒX‰»‚·‚éê‡‚ÌŒJ‚è•Ô‚µ™dÉ‚ğæ“¾ (‚µ‚È‚¢ê‡‚Í1ŒÅ’è)
+  // ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ¬ã‚¹åŒ–ã™ã‚‹å ´åˆã®ç¹°ã‚Šè¿”ã—å›˜æ•¸ã‚’å–å¾— (ã—ãªã„å ´åˆã¯1å›ºå®š)
   int n_pass;
   if (interlace)
     n_pass = png_set_interlace_handling(png_ptr);
@@ -149,7 +149,7 @@ polymnia::IndexedPngSaver::save(
     PNG_FILTER_TYPE_BASE);
 
 
-  // ƒpƒŒƒbƒgŠÖŒW
+  // ãƒ‘ãƒ¬ãƒƒãƒˆé–¢ä¿‚
   png_colorp palette = new png_color[256];
   for (int i=0; i<256; i++)
   {
@@ -159,7 +159,7 @@ polymnia::IndexedPngSaver::save(
   }
   png_set_PLTE(png_ptr, info_ptr, palette, 256);
 
-  // “§‰ßˆ—
+  // é€éå‡¦ç†
   png_bytep transbf = new png_byte[256];
   if (trans)
   {
@@ -175,7 +175,7 @@ polymnia::IndexedPngSaver::save(
   png_write_info(png_ptr,info_ptr);
 
 
-  // ƒCƒ“ƒ^[ƒŒƒX‰»‚·‚éê‡‚ÌŒJ‚è•Ô‚µ™dÉ‚ğæ“¾ (‚µ‚È‚¢ê‡‚Í1ŒÅ’è)
+  // ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ¬ã‚¹åŒ–ã™ã‚‹å ´åˆã®ç¹°ã‚Šè¿”ã—å›˜æ•¸ã‚’å–å¾— (ã—ãªã„å ´åˆã¯1å›ºå®š)
   int n_pass;
   if(interlace)
     n_pass = png_set_interlace_handling(png_ptr);

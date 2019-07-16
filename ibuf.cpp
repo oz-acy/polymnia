@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2009 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  畫像バッファのクリッピング
+ *  逡ｫ蜒上ヰ繝�繝輔ぃ縺ｮ繧ｯ繝ｪ繝�繝斐Φ繧ｰ
  *
  *  last update: 2009.11.7
  *

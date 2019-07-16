@@ -5,10 +5,10 @@
  *  (C) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  DIB OUTput
- *  DIBŒ`®‰æ‘œo—Í—pƒNƒ‰ƒXÀ‘•
+ *  DIBå½¢å¼ç”»åƒå‡ºåŠ›ç”¨ã‚¯ãƒ©ã‚¹å®Ÿè£…
  *
- *  —š—ğ
- *    2018.12.23 C++17›”œä
+ *  å±¥æ­´
+ *    2018.12.23 C++17å°æ‡‰
  */
 
 #include<iostream>
@@ -20,17 +20,17 @@
 namespace
 {
 
-// DIBƒtƒ@ƒCƒ‹î•ñ(‚Ìˆê•”)
+// DIBãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±(ã®ä¸€éƒ¨)
 struct Info_
 {
-  int w;    //•
-  int h;    //‚‚³
+  int w;    //å¹…
+  int h;    //é«˜ã•
   int bit;  //Bit per Pixel
-  int npal; //ƒpƒŒƒbƒg”
+  int npal; //ãƒ‘ãƒ¬ãƒƒãƒˆæ•°
 };
 
 
-/* DIBƒwƒbƒ_‘‚«o‚µ */
+/* DIBãƒ˜ãƒƒãƒ€æ›¸ãå‡ºã— */
 bool writeHeader__(std::ostream& os, int bitsize, int npal)
 {
   using namespace themis;
@@ -38,20 +38,20 @@ bool writeHeader__(std::ostream& os, int bitsize, int npal)
   UDWord dword;
   UWord word;
 
-  // ƒ}ƒWƒbƒNƒiƒ“ƒo[‘‚«o‚µ
+  // ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼æ›¸ãå‡ºã—
   word = *(UWord*)("BM");
   os.write((char*)(&word), sizeof(UWord));
 
-  // ƒtƒ@ƒCƒ‹ƒTƒCƒY‘‚«o‚µ
+  // ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºæ›¸ãå‡ºã—
   dword = 54 + bitsize + 4 * npal;
   os.write((char*)(&dword), sizeof(UDWord));
 
-  // —\–ñÏƒ[ƒh(2‚Â)‚ğ0‚Å‘‚«o‚µ
+  // äºˆç´„æ¸ˆãƒ¯ãƒ¼ãƒ‰(2ã¤)ã‚’0ã§æ›¸ãå‡ºã—
   word = 0;
   os.write((char*)(&word), sizeof(UWord));
   os.write((char*)(&word), sizeof(UWord));
 
-  // BitData‚Ö‚ÌƒIƒtƒZƒbƒg‘‚«o‚µ
+  // BitDataã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆæ›¸ãå‡ºã—
   dword = 54 + 4 * npal;
   os.write((char*)(&dword), sizeof(UDWord));
 
@@ -59,7 +59,7 @@ bool writeHeader__(std::ostream& os, int bitsize, int npal)
 }
 
 
-/* BMP-Infoƒwƒbƒ_‘‚«o‚µ */
+/* BMP-Infoãƒ˜ãƒƒãƒ€æ›¸ãå‡ºã— */
 bool writeInfo__(std::ostream& os, int w, int h, themis::UWord bits, int npal)
 {
   using namespace themis;
@@ -94,7 +94,7 @@ bool writeInfo__(std::ostream& os, int w, int h, themis::UWord bits, int npal)
 }
 
 
-/* 8bitƒpƒŒƒbƒg‘‚«o‚µ */
+/* 8bitãƒ‘ãƒ¬ãƒƒãƒˆæ›¸ãå‡ºã— */
 bool writePalette__(std::ostream& os, const polymnia::RgbColor pal[], int np)
 {
   using namespace themis;
@@ -121,7 +121,7 @@ bool writePalette__(std::ostream& os, const polymnia::RgbColor pal[], int np)
 }
 
 
-/* 24bit Bitmapƒf[ƒ^‘‚«o‚µ */
+/* 24bit Bitmapãƒ‡ãƒ¼ã‚¿æ›¸ãå‡ºã— */
 bool writeBits__(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 {
   using namespace themis;
@@ -150,7 +150,7 @@ bool writeBits__(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 }
 
 
-/* 8bit Bitmap ‘‚«o‚µ */
+/* 8bit Bitmap æ›¸ãå‡ºã— */
 bool writeBits__(
   std::ostream& os, const polymnia::PictureIndexed* pct, int bufsize)
 {
@@ -181,7 +181,7 @@ bool writeBits__(
 
 /*==============================
  *  DibSaver::save_()
- *  24bitDIB‚Ì•Û‘¶
+ *  24bitDIBã®ä¿å­˜
  */
 bool
 polymnia::DibSaver::save(
@@ -208,7 +208,7 @@ polymnia::DibSaver::save(
 
 /*=============================
  *  IndexedDibSaver::save_()
- *  ƒpƒŒƒbƒgDIB‚Ì•Û‘¶
+ *  ãƒ‘ãƒ¬ãƒƒãƒˆDIBã®ä¿å­˜
  */
 bool
 polymnia::IndexedDibSaver::save(

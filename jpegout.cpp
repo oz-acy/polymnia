@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  libjpeg‚É‚æ‚éJPEGo—Íƒ‹[ƒ`ƒ“
+ *  libjpegã«ã‚ˆã‚‹JPEGå‡ºåŠ›ãƒ«ãƒ¼ãƒãƒ³
  *
  *  last update: 2018.12.23
  *
@@ -31,7 +31,7 @@ namespace polymnia
 
 namespace {
 
-// ƒI[ƒo[ƒ[ƒh‚É‚æ‚Â‚Ä fopenA_wfopen‚ğØ‚è‘Ö‚Ö‚é
+// ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã«ã‚ˆã¤ã¦ fopenã€_wfopenã‚’åˆ‡ã‚Šæ›¿ã¸ã‚‹
 inline
 std::FILE* openfile(const char* path)
 {

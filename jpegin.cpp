@@ -4,7 +4,7 @@
 *  by oZ/acy
 *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
 *
-*  JPEG Œ`®“ü—ÍƒNƒ‰ƒX
+*  JPEG å½¢å¼å…¥åŠ›ã‚¯ãƒ©ã‚¹
 *
 *  last update: 2018.12.23
 *
@@ -32,7 +32,7 @@ namespace polymnia
 
 namespace {
 
-// ƒI[ƒo[ƒ[ƒh‚É‚æ‚Â‚Ä fopenA_wfopen‚ğØ‚è‘Ö‚Ö‚é
+// ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã«ã‚ˆã¤ã¦ fopenã€_wfopenã‚’åˆ‡ã‚Šæ›¿ã¸ã‚‹
 inline
 std::FILE* openfile(const char* path)
 {
@@ -53,7 +53,7 @@ std::FILE* openfile(const wchar_t* path)
 
 
 ////////////////////////////////////////
-// JpegLoader::load_()‚Ì–{é“
+// JpegLoader::load_()ã®æœ¬é«”
 polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
 {
   FILE *infile;
@@ -61,7 +61,7 @@ polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
   if (!infile)
     return nullptr;
 
-  // ƒGƒ‰[ƒ‹[ƒ`ƒ“ƒZƒbƒgƒAƒbƒv
+  // ã‚¨ãƒ©ãƒ¼ãƒ«ãƒ¼ãƒãƒ³ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
 
@@ -70,10 +70,10 @@ polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
 
   try
   {
-    jpeg_create_decompress(&cinfo); // cinfoî•ñ‚ÌƒAƒƒP[ƒg‚Æ‰Šú‰»
-    jpeg_stdio_src(&cinfo, infile); // ƒf[ƒ^ƒ\[ƒX‚Ìw’è
-    jpeg_read_header(&cinfo, TRUE); // JPEGƒtƒ@ƒCƒ‹‚Ìƒpƒ‰ƒ[ƒ^î•ñ‚Ì“Ç‚İ‚İ
-    jpeg_start_decompress(&cinfo);  // ‰ğ“€ŠJn
+    jpeg_create_decompress(&cinfo); // cinfoæƒ…å ±ã®ã‚¢ãƒ­ã‚±ãƒ¼ãƒˆã¨åˆæœŸåŒ–
+    jpeg_stdio_src(&cinfo, infile); // ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã®æŒ‡å®š
+    jpeg_read_header(&cinfo, TRUE); // JPEGãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±ã®èª­ã¿è¾¼ã¿
+    jpeg_start_decompress(&cinfo);  // è§£å‡é–‹å§‹
 
     int ww = cinfo.output_width;
     int hh = cinfo.output_height;

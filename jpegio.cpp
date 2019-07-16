@@ -3,7 +3,7 @@
  *
  *  (C) 2002-2013 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  JPEGŒ`Ž®“üo—Í ƒGƒ‰[ƒnƒ“ƒhƒ‰
+ *  JPEGå½¢å¼å…¥å‡ºåŠ› ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒ©
  *
  *  last update: 2013.3.29
  *
