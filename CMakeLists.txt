@@ -2,13 +2,11 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 SET(CMAKE_VERBOSE_MAKEFILE 1)
+PROJECT(polymnia CXX)
 
-#PROJECT(polymnia CXX)
+ENABLE_LANGUAGE(CXX)
+SET(CMAKE_CXX_STANDARD 17)
 
-SET(CMAKE_CXX_FLAGS "-Wall -std=c++17 -O3")
-#SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3")
-#SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3")
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 ADD_LIBRARY(polymnia STATIC
   ibuf.cpp
@@ -23,18 +21,48 @@ ADD_LIBRARY(polymnia STATIC
   pngin.cpp pngout.cpp
 )
 
-INSTALL(TARGETS polymnia DESTINATION lib)
-INSTALL(FILES
-    ibuf.h ibuf-imp_.h
-    rgb.h
-    picture.h
-    pictio.h
-    dibio.h
-    jpegio.h
-    pngio.h
-    hex.h
-  DESTINATION
-    include/polymnia
+SET(POLYMNIA_HEADERS
+  ibuf.h
+  ibuf-imp_.h
+  rgb.h
+  picture.h
+  pictio.h
+  dibio.h
+  jpegio.h
+  pngio.h
+  hex.h
+)
+
+SET_TARGET_PROPERTIES(polymnia
+  PROPERTIES PUBLIC_HEADER "${POLYMNIA_HEADERS}"
+)
+
+
+TARGET_COMPILE_OPTIONS(polymnia PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
+  $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
+)
+
+TARGET_LINK_OPTIONS(polymnia PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-static>
+  $<$<CXX_COMPILER_ID:GNU>:-static>
+)
+
+TARGET_INCLUDE_DIRECTORIES(polymnia PRIVATE ${CMAKE_INSTALL_PREFIX}/include)
+
+
+INSTALL(TARGETS polymnia
+  EXPORT polymnia-export
+  ARCHIVE DESTINATION lib
+  INCLUDES DESTINATION include
+  PUBLIC_HEADER DESTINATION include/polymnia
+)
+
+INSTALL(EXPORT polymnia-export
+  FILE themis-config.cmake
+  DESTINATION share/cmake/themis/
+#  EXPORT_LINK_INTERFACE_LIBRARIES
 )
 
 
