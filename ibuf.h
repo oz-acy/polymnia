@@ -6,12 +6,10 @@
  *
  *  @date 2016.3.2  C++11/14對應(假)
  *  @date 2018.12.21  C++17對應(假)
- *
- *//*
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_IMAGEBUFFER_H___
-#define INC_POLYMNIA_IMAGEBUFFER_H___
+#ifndef INCLUDE_GUARD_POLYMNIA_IMAGEBUFFER_H
+#define INCLUDE_GUARD_POLYMNIA_IMAGEBUFFER_H
 
 #include <boost/utility.hpp>
 #include <themis/except.h>
@@ -331,4 +329,4 @@ public:
 #include "ibuf-imp_.h"
 
 
-#endif // INC_POLYMNIA_IMAGEBUFFER_H___
+#endif // INCLUDE_GUARD_POLYMNIA_IMAGEBUFFER_H

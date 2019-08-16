@@ -5,9 +5,10 @@
  *  @brief 正六角形マス描畫クラス
  *
  *  @date 2018.12.28 新規實裝
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_HEX_H__
-#define INC_POLYMNIA_HEX_H__
+#ifndef INCLUDE_GUARD_POLYMNIA_HEX_H
+#define INCLUDE_GUARD_POLYMNIA_HEX_H
 
 #include <algorithm>
 #include <cmath>
@@ -651,4 +652,4 @@ polymnia::HexPainter<C_>::getHexPosition(int& x, int& y, int p, int q)
 
 
 
-#endif // INC_POLYMNIA_HEX_H__
+#endif // INCLUDE_GUARD_POLYMNIA_HEX_H

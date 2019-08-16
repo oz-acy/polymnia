@@ -5,11 +5,10 @@
  *  @brief JPEG畫像入出力クラス (libjpegのラッパー)
  *
  *  @date 2018.12.23 C++17對應
- *//*
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_JPEGIO_H__
-#define INC_POLYMNIA_JPEGIO_H__
+#ifndef INCLUDE_GUARD_POLYMNIA_JPEGIO_H
+#define INCLUDE_GUARD_POLYMNIA_JPEGIO_H
 
 #include "picture.h"
 #include "pictio.h"
@@ -79,4 +78,6 @@ public:
 };
 
 
-#endif // INC_POLYMNIA_JPEGIO_H__
+
+
+#endif // INCLUDE_GUARD_POLYMNIA_JPEGIO_H

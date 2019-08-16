@@ -5,15 +5,14 @@
  *  @brief PNG形式畫像入出力クラス (libpngのラッパー)
  *
  *  @date 2018.12.23 C++17對應
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  *
  *//*
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
- *
  *  Classes defined in this file are inplemented with "libpng" library.
  *  The author thanks authors of "libpng."
  */
-#ifndef INC_POLYMNIA_PNGIO_H__
-#define INC_POLYMNIA_PNGIO_H__
+#ifndef INCLUDE_GUARD_POLYMNIA_PNGIO_H
+#define INCLUDE_GUARD_POLYMNIA_PNGIO_H
 
 #include "picture.h"
 #include "pictio.h"
@@ -142,5 +141,6 @@ public:
 };
 
 
-#endif
-//eof
+
+
+#endif // INCLUDE_GUARD_POLYMNIA_PNGIO_H

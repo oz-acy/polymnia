@@ -1,18 +1,28 @@
 # CMakeLists.txt for project POLYMNIA
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
-SET(CMAKE_VERBOSE_MAKEFILE 1)
-PROJECT(polymnia CXX)
+cmake_minimum_required(VERSION 3.10)
+set(CMAKE_VERBOSE_MAKEFILE 1)
+project(polymnia CXX)
 
-ENABLE_LANGUAGE(CXX)
-SET(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_EXTENSIONS OFF)
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-SET(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS ON)
 
 
-ADD_LIBRARY(polymnia STATIC
+
+# 依存するライブラリ
+find_package(themis REQUIRED)
+find_package(ZLIB_REQUIRED)
+find_package(PNG REQUIRED)
+find_package(JPEG REQUIRED)
+find_package(Boost REQUIRED)
+
+
+# ソースファイルとヘッダファイル
+set(POLYMNIA_SOURCES
   ibuf.cpp
   picture.cpp
   tograyscale24.cpp
@@ -25,7 +35,7 @@ ADD_LIBRARY(polymnia STATIC
   pngin.cpp pngout.cpp
 )
 
-SET(POLYMNIA_HEADERS
+set(POLYMNIA_HEADERS
   ibuf.h
   ibuf-imp_.h
   rgb.h
@@ -37,40 +47,69 @@ SET(POLYMNIA_HEADERS
   hex.h
 )
 
-SET_TARGET_PROPERTIES(polymnia
+
+
+# Release版ライブラリ
+add_library(polymnia STATIC ${POLYMNIA_SOURCES})
+
+set_target_properties(polymnia
   PROPERTIES PUBLIC_HEADER "${POLYMNIA_HEADERS}"
 )
 
-FIND_PACKAGE(themis REQUIRED)
-FIND_PACKAGE(PNG REQUIRED)
-FIND_PACKAGE(JPEG REQUIRED)
-FIND_PACKAGE(Boost REQUIRED)
-TARGET_INCLUDE_DIRECTORIES(polymnia PUBLIC ${Boost_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(polymnia themis png jpeg)
+target_include_directories(polymnia PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(polymnia themis png jpeg z)
 
-TARGET_COMPILE_OPTIONS(polymnia PRIVATE
+target_compile_options(polymnia PRIVATE
   $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
   $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
 )
 
-TARGET_LINK_OPTIONS(polymnia PRIVATE
+target_compile_definitions(polymnia PRIVATE NDEBUG)
+
+target_link_options(polymnia PRIVATE
   $<$<CXX_COMPILER_ID:Clang>:-static>
   $<$<CXX_COMPILER_ID:GNU>:-static>
 )
 
 
-INSTALL(TARGETS polymnia
+# Debug版ライブラリ
+add_library(polymnia-debug STATIC ${POLYMNIA_SOURCES})
+
+target_include_directories(polymnia-debug PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(polymnia-debug themis png jpeg z)
+
+target_compile_options(polymnia-debug PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-Wall -g3 -ggdb>
+  $<$<CXX_COMPILER_ID:GNU>:-Wall -g3 -ggdb>
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
+)
+
+target_link_options(polymnia-debug PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-static>
+  $<$<CXX_COMPILER_ID:GNU>:-static>
+)
+
+
+
+
+# インストールの設定
+
+install(TARGETS polymnia
   EXPORT polymnia-export
   ARCHIVE DESTINATION lib
   INCLUDES DESTINATION include
   PUBLIC_HEADER DESTINATION include/polymnia
 )
 
-INSTALL(EXPORT polymnia-export
+install(EXPORT polymnia-export
   FILE polymnia-config.cmake
   DESTINATION share/cmake/polymnia/
 #  EXPORT_LINK_INTERFACE_LIBRARIES
+)
+
+install(TARGETS polymnia-debug
+  ARCHIVE DESTINATION lib
 )
 
 

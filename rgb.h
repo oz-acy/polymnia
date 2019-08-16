@@ -5,11 +5,10 @@
  *  @brief RGB24bitカラー型
  *
  *  @date 2016.3.2  C++11/14對應(假)
- *//*
- *  (c) 2001-2016 oZ/acy. ALL RIGHTS RESERVED.
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_RGBCOL_H___
-#define INC_POLYMNIA_RGBCOL_H___
+#ifndef INCLUDE_GUARD_POLYMNIA_RGBCOLOUR_H
+#define INCLUDE_GUARD_POLYMNIA_RGBCOLOUR_H
 
 #include <themis/inttype.h>
 
@@ -40,12 +39,14 @@ public:
     {}
 
   /// @brief 等値比較演算子
+  constexpr
   bool operator==(const RgbColor& other) const noexcept
   {
     return r == other.r && g == other.g && b == other.b;
   }
 
   /// @brief 非等値比較演算子
+  constexpr
   bool operator!=(const RgbColor& other) const noexcept
   {
     return !(*this == other);
@@ -56,4 +57,4 @@ public:
 }//end of namespace polymnia
 
 
-#endif // INC_POLYMNIA_RGBCOL_H___
+#endif // INCLUDE_GUARD_POLYMNIA_RGBCOLOUR_H

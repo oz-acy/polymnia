@@ -6,11 +6,10 @@
  *
  *  @date 2016.3.2   C++11對應
  *  @date 2018.12.23 C++17對應 パスの渡し方を變更
- *//*
- *  (c) 2012-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_PICTURE_IO_H___
-#define INC_POLYMNIA_PICTURE_IO_H___
+#ifndef INCLUDE_GUARD_POLYMNIA_PICTURE_IO_H
+#define INCLUDE_GUARD_POLYMNIA_PICTURE_IO_H
 
 #include <string>
 #include <filesystem>
@@ -64,4 +63,4 @@ public:
 
 
 
-#endif // INC_POLYMNIA_PICTURE_IO_H___
+#endif // INCLUDE_GUARD_POLYMNIA_PICTURE_IO_H

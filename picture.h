@@ -1,16 +1,15 @@
 /**********************************************************************//**
  *
- * @file picture.h
- * @author oZ/acy (名賀月晃嗣)
- * @brief RGB24bit色とRGB256パレットカラーの畫像バッファクラス
+ *  @file picture.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief RGB24bit色とRGB256パレットカラーの畫像バッファクラス
  * 
- * @date 2016.3.2  C++11對應(假)
- * @date 2018.12.28 グレイスケール化、擴大、縮小函數をメンバ函數化
- *//*
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @date 2016.3.2  C++11對應(假)
+ *  @date 2018.12.28 グレイスケール化、擴大、縮小函數をメンバ函數化
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_PICTURE_H___
-#define INC_POLYMNIA_PICTURE_H___
+#ifndef INCLUDE_GUARD_POLYMNIA_PICTURE_H
+#define INCLUDE_GUARD_POLYMNIA_PICTURE_H
 
 #include <string>
 #include <cstring>
@@ -116,4 +115,4 @@ public:
 
 
 
-#endif // INC_POLYMNIA_PICTURE_H___
+#endif // INCLUDE_GUARD_POLYMNIA_PICTURE_H

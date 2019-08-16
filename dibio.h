@@ -5,11 +5,10 @@
  *  @brief DIB形式畫像入出力用クラス
  *
  *  @date 2018.12.23 C++17對應 pathの渡し方を變更
- *//*
- *  (c) 2002-2018 oZ/acy. ALL RIGHTS RESERVED.
+ *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  */
-#ifndef INC_POLYMNIA_DIBIO_H___
-#define INC_POLYMNIA_DIBIO_H___
+#ifndef INCLUDE_GUARD_POLYMNIA_DIBIO_H
+#define INCLUDE_GUARD_POLYMNIA_DIBIO_H
 
 #include "picture.h"
 #include "pictio.h"
@@ -76,6 +75,8 @@ public:
 
 /*---------------------------------------------------*//**
  *  @brief 24bitカラーDIB形式の畫像保存クラス
+ *
+ *  畫像を24ビットカラーDIB形式で保存する。
  */
 class polymnia::DibSaver : public polymnia::PictSaver<polymnia::Picture>
 {
@@ -99,6 +100,8 @@ public:
 
 /*------------------------------------------------------*//**
  *  @brief 256パレットカラーDIB形式の畫像保存クラス
+ *
+ *  畫像を256パレットカラーのDIB形式で保存する。
  */
 class polymnia::IndexedDibSaver
 : public polymnia::PictSaver<polymnia::PictureIndexed>
@@ -124,4 +127,4 @@ public:
 
 
 
-#endif // INC_POLYMNIA_DIBIO_H___
+#endif // INCLUDE_GUARD_POLYMNIA_DIBIO_H
