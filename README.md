@@ -23,6 +23,7 @@ DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの�
 
 
 ## 依存してゐるライブラリ
+* [boost](https://www.boost.org/)
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [zlib](https://www.zlib.net/)
 * [libjpeg](http://libjpeg.sourceforge.net/)
