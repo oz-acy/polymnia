@@ -26,7 +26,7 @@ DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの�
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [zlib](https://www.zlib.net/)
 * [ligjpeg](http://libjpeg.sourceforge.net/)
-* libthemis
+* [libthemis](https://github.com/oz-acy/themis)
 
 (自身を除く)各ライブラリの作者には謝意と敬意を表する。
 
