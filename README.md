@@ -53,7 +53,7 @@ DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの�
 
 ヘッダファイルのincludeは
 
-    #include <themis/except.h>
+    #include <polymnia/picture.h>
 
 のやうにする。
 
