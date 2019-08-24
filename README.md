@@ -8,18 +8,32 @@
 
 ## 内容
 
+|ヘッダファイル|内容|
+|:---|:---|
+|polymnia/ibuf.h|ピクセル表現をテンプレートパラメタとする畫像バッファクラステンプレート|
+|polymnia/picture.h|RGB24bitColorと256IndexedColorの畫像バッファクラス|
+|polymnia/pictio.h|畫像入出力基底クラス|
+|polymnia/dibio.h|DIB形式の入出力|
+|polymnia/pngio.h|PNG形式の入出力|
+|polymnia/jpegio.h|JPEG形式の入出力|
+|polymnia/hex.h|ヘックスマップ描畫用クラステンプレート|
+
+
 ### 畫像バッファ
 ピクセル表現をテンプレートパラメタとするクラステンプレートと、
-RGB24bitColor、256 Indexed Colorの特殊化を提供する。
+それを基底とする
+RGB24bitColor、256IndexedColorの畫像バッファを提供する。
+
+24bitColor畫像バッファは、
+256IndexedColorへの減色、グレイスケール化(結果は256IndexedColor)、擴大、縮小の
+各處理を實裝する。
 
 ### 畫像バッファの入出力
 DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの機能の全てを網羅してゐるわけではない。
 
-### 畫像バッファに對する處理
-次の處理を實裝してゐる。
-* グレイスケール化
-* 24bitColorから256 Indexed Colorへの減色
-* 擴大、縮小
+### ヘックスマップ描畫
+畫像バッファクラステンプレートに對して
+シミュレーションゲームで見られるヘックスマップを描畫するためのクラステンプレートを提供する。
 
 
 ## 依存してゐるライブラリ
