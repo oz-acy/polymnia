@@ -24,7 +24,7 @@ DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの�
 
 ## 依存してゐるライブラリ
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
-** [zlib](https://www.zlib.net/)
+* [zlib](https://www.zlib.net/)
 * [ligjpeg](http://libjpeg.sourceforge.net/)
 * libthemis
 
