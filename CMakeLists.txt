@@ -15,7 +15,7 @@ set(Boost_USE_STATIC_LIBS ON)
 
 # 依存するライブラリ
 find_package(themis REQUIRED)
-find_package(ZLIB_REQUIRED)
+find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(Boost REQUIRED)
@@ -91,6 +91,26 @@ target_link_options(polymnia-debug PRIVATE
 )
 
 
+# Resizer (Releaseのみ)
+add_executable(resizer
+  resizer_main.cpp
+  resizer_loadsave.cpp
+)
+
+target_compile_options(resizer PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
+  $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
+)
+
+target_link_options(resizer PRIVATE
+  $<$<CXX_COMPILER_ID:Clang>:-static>
+  $<$<CXX_COMPILER_ID:GNU>:-static>
+)
+target_compile_definitions(resizer PRIVATE NDEBUG)
+target_link_libraries(resizer polymnia themis)
+
+
 
 
 # インストールの設定
@@ -111,6 +131,12 @@ install(EXPORT polymnia-export
 install(TARGETS polymnia-debug
   ARCHIVE DESTINATION lib
 )
+
+install(TARGETS resizer
+  DESTINATION bin
+)
+
+
 
 
 #eof
