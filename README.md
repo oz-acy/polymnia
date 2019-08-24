@@ -47,7 +47,7 @@ DIB、PNG、JPEGの入出力に對應。とはいへ、各フォーマットの�
     find_package(themis REQUIRED)
     find_package(polymnia REQUIRED)
     # ...
-    target_link_libraries(targetname themis polymnia ...)
+    target_link_libraries(targetname polymnia themis ...)
 
 のやうに書けば、include pathやlibrary pathを設定し、ライブラリをリンクしてくれる、はず。
 
