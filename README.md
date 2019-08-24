@@ -11,6 +11,7 @@
 |ヘッダファイル|内容|
 |:---|:---|
 |polymnia/ibuf.h|ピクセル表現をテンプレートパラメタとする畫像バッファクラステンプレート|
+|polymnia/rgb.h|RGB24bitColor表現クラス|
 |polymnia/picture.h|RGB24bitColorと256IndexedColorの畫像バッファクラス|
 |polymnia/pictio.h|畫像入出力基底クラス|
 |polymnia/dibio.h|DIB形式の入出力|
