@@ -54,7 +54,7 @@ libpolymniaを用ゐた畫像の擴大縮小を行ふコンソールアプリケ
 * [Boost](https://www.boost.org/)
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [zlib](https://www.zlib.net/)
-* [libjpeg](http://libjpeg.sourceforge.net/)
+* [libjpeg](http://www.ijg.org/)
 * [libthemis](https://github.com/oz-acy/themis)
 
 (自身を除く)各ライブラリの作者には謝意と敬意を表する。
