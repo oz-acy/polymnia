@@ -9,7 +9,7 @@
  *
  ************************************************************************/
 
-#include <themis/except.h>
+#include <themis/exception.h>
 
 extern "C" {
 #include <jpeglib.h>
@@ -20,12 +20,12 @@ extern "C" {
 namespace
 {
 
-void myErrorOutput__(j_common_ptr)
+void myErrorOutput_(j_common_ptr)
 {
   /* nothing done */
 }
 
-void myErrorExit__(j_common_ptr cinfo)
+void myErrorExit_(j_common_ptr cinfo)
 {
   char buf[JMSG_LENGTH_MAX];
 
@@ -40,17 +40,17 @@ void myErrorExit__(j_common_ptr cinfo)
 
 namespace polymnia
 {
-namespace private___
+namespace private_
 {
 
-void jpegErrorSetup__(jpeg_error_mgr& jerr)
+void jpegErrorSetup_(jpeg_error_mgr& jerr)
 {
-  jerr.error_exit = myErrorExit__;
-  jerr.output_message = myErrorOutput__;
+  jerr.error_exit = myErrorExit_;
+  jerr.output_message = myErrorOutput_;
 }
 
 
-}//end of namespace private___
+}//end of namespace private_
 }//end of namespace polymnia
 
 

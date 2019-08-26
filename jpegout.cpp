@@ -17,14 +17,14 @@ extern "C" {
 #include <jpeglib.h>
 #include <jerror.h>
 }
-#include <themis/except.h>
+#include <themis/exception.h>
 
 
 namespace polymnia
 {
-  namespace private___
+  namespace private_
   {
-    void jpegErrorSetup__(jpeg_error_mgr& jerr);
+    void jpegErrorSetup_(jpeg_error_mgr& jerr);
   }
 }
 
@@ -66,7 +66,7 @@ polymnia::JpegSaver::save(
   struct jpeg_error_mgr jerr;
 
   cinfo.err = jpeg_std_error(&jerr);
-  polymnia::private___::jpegErrorSetup__(jerr);
+  polymnia::private_::jpegErrorSetup_(jerr);
 
   try
   {

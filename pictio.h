@@ -7,13 +7,14 @@
  *  @date 2016.3.2   C++11對應
  *  @date 2018.12.23 C++17對應 パスの渡し方を變更
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *  @date 2019.8.26 boost::noncopyableをthemis::Noncopyable<>に差し替へ
  */
 #ifndef INCLUDE_GUARD_POLYMNIA_PICTURE_IO_H
 #define INCLUDE_GUARD_POLYMNIA_PICTURE_IO_H
 
 #include <string>
 #include <filesystem>
-#include <boost/utility.hpp>
+#include <themis/noncopyable.h>
 
 
 namespace polymnia
@@ -27,7 +28,7 @@ namespace polymnia
  *  @brief 畫像讀み込み用基底クラステンプレート
  */
 template<class P_>
-class polymnia::PictLoader : boost::noncopyable
+class polymnia::PictLoader : themis::Noncopyable<polymnia::PictLoader<P_>>
 {
 public:
   /// @brief 構築子
@@ -46,7 +47,7 @@ public:
  *  @brief 畫像保存用基底クラステンプレート
  */
 template<class P_>
-class polymnia::PictSaver : boost::noncopyable
+class polymnia::PictSaver : themis::Noncopyable<polymnia::PictSaver<P_>>
 {
 public:
   /// @brief 構築子

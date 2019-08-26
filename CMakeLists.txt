@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(Boost_USE_STATIC_LIBS ON)
+#set(Boost_USE_STATIC_LIBS ON)
 
 
 
@@ -18,7 +18,7 @@ find_package(themis REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
-find_package(Boost REQUIRED)
+#find_package(Boost REQUIRED)
 
 
 # ソースファイルとヘッダファイル
@@ -56,7 +56,7 @@ set_target_properties(polymnia
   PROPERTIES PUBLIC_HEADER "${POLYMNIA_HEADERS}"
 )
 
-target_include_directories(polymnia PUBLIC ${Boost_INCLUDE_DIRS})
+#target_include_directories(polymnia PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(polymnia themis png jpeg z)
 
 target_compile_options(polymnia PRIVATE
@@ -76,7 +76,7 @@ target_link_options(polymnia PRIVATE
 # Debug版ライブラリ
 add_library(polymnia-debug STATIC ${POLYMNIA_SOURCES})
 
-target_include_directories(polymnia-debug PUBLIC ${Boost_INCLUDE_DIRS})
+#target_include_directories(polymnia-debug PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(polymnia-debug themis png jpeg z)
 
 target_compile_options(polymnia-debug PRIVATE

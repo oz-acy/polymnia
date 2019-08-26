@@ -7,12 +7,13 @@
  *  @date 2016.3.2  C++11/14對應(假)
  *  @date 2018.12.21  C++17對應(假)
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *  @date 2019.8.26 boost::noncopyableをthemis::Noncopyable<>に差し替へ
  */
 #ifndef INCLUDE_GUARD_POLYMNIA_IMAGEBUFFER_H
 #define INCLUDE_GUARD_POLYMNIA_IMAGEBUFFER_H
 
-#include <boost/utility.hpp>
-#include <themis/except.h>
+#include <themis/exception.h>
+#include <themis/noncopyable.h>
 
 
 namespace polymnia
@@ -72,7 +73,7 @@ public:
  *  @brief 畫像バッファ基底クラステンプレート
  */
 template<class C_>
-class polymnia::ImageBuffer : boost::noncopyable
+class polymnia::ImageBuffer : themis::Noncopyable<polymnia::ImageBuffer<C_>>
 {
 public:
   typedef C_ ColorType;
@@ -94,7 +95,7 @@ public:
 //private:
 //  typedef polymnia::ImageBuffer<C_>& Ref_;
 //  typedef const polymnia::ImageBuffer<C_>& CR_;
-  //typedef const polymnia::ImageBuffer<C_>* CP_;
+//  typedef const polymnia::ImageBuffer<C_>* CP_;
 
 
 protected:
