@@ -43,8 +43,8 @@ libpolymniaを用ゐた畫像の擴大縮小を行ふコンソールアプリケ
 次のやうに對象ファイルやオプションを指定して使用する。
 
 ```bash
-$ resizer -p <倍率> <入力path> <出力path>
-$ resizer -l <處理後の畫像の幅> <處理後の畫像の高さ> <入力path> <出力path>
+$ resizer -p 倍率 入力path 出力path
+$ resizer -l 處理後の畫像の幅 處理後の畫像の高さ 入力path 出力path
 ```
 
 畫像フォーマットは擴張子で判別する。出力ファイルのフォーマットが入力ファイルとは違つてゐても構はない。
@@ -67,25 +67,27 @@ $ resizer -l <處理後の畫像の幅> <處理後の畫像の高さ> <入力pat
 
 それから、CMakeを用ゐてインストールする。
 
-    $ cmake -G "Unix Makefiles" .
-    $ make
-    $ make install
+```bash
+$ cmake -G "Unix Makefiles" .
+$ make
+$ make install
+```
 
 ジェネレータは環境に應じて適宜變更すること。他にもcmakeにあれこれオプション指定する必要があるかもしれない。
 
 利用するときには、CMakeLists.txtに
-
-    find_package(themis REQUIRED)
-    find_package(polymnia REQUIRED)
-    # ...
-    target_link_libraries(targetname polymnia themis ...)
-
+```CMake
+find_package(themis REQUIRED)
+find_package(polymnia REQUIRED)
+# ...
+target_link_libraries(targetname polymnia themis ...)
+```
 のやうに書けば、include pathやlibrary pathを設定し、ライブラリをリンクしてくれる、はず。
 
 ヘッダファイルのincludeは
-
-    #include <polymnia/picture.h>
-
+```C++
+#include <polymnia/picture.h>
+```
 のやうにする。
 
 resizerの使ひ方は上述のとほり。
