@@ -2,11 +2,11 @@
  *
  *  pngout.cpp
  *  by oZ/acy
- *  (c) 2002-2018 oZ/acy. ALL RIGHTS RESERVED.
+ *  (c) 2002-2019 oZ/acy. ALL RIGHTS RESERVED.
  *
  *  PNG 形式出力クラス
  *
- *  last update: 2018.12.23
+ *  last update: 2019.8.27
  *
  */
 #include <cstdio>
@@ -29,7 +29,7 @@ namespace
  *
  *  H23.4.24 update for libpng-1.5.x
  */
-void pngWrite__(png_structp png_ptr, png_bytep data, png_size_t length)
+void pngWrite_(png_structp png_ptr, png_bytep data, png_size_t length)
 {
   using namespace std;
   ofstream* pofs = reinterpret_cast<ofstream*>(png_get_io_ptr(png_ptr));
@@ -41,14 +41,14 @@ void pngWrite__(png_structp png_ptr, png_bytep data, png_size_t length)
 
 
 /* flush操作 (但しダミー) */
-void pngFlushDammy__(png_structp)
+void pngFlushDammy_(png_structp)
 {
   /* none */
 }
 
 
 /* 書き込みの初期處理 */
-bool pngWriteInit__(
+bool pngWriteInit_(
   const std::filesystem::path& path, std::ofstream& ofs, png_structp& png_ptr,
   png_infop& info_ptr)
 {
@@ -68,7 +68,7 @@ bool pngWriteInit__(
     return false;
   }
 
-  png_set_write_fn(png_ptr, (void *)&ofs, pngWrite__, pngFlushDammy__);
+  png_set_write_fn(png_ptr, (void *)&ofs, pngWrite_, pngFlushDammy_);
 
   return true;
 }
@@ -87,7 +87,7 @@ polymnia::PngSaver::save(
   png_structp png_ptr;
   png_infop info_ptr;
 
-  if (!pngWriteInit__(path, ofs, png_ptr, info_ptr))
+  if (!pngWriteInit_(path, ofs, png_ptr, info_ptr))
     return false;
 
   int bits = 8;
@@ -136,7 +136,7 @@ polymnia::IndexedPngSaver::save(
   png_structp png_ptr;
   png_infop info_ptr;
 
-  if (!pngWriteInit__(path, ofs, png_ptr, info_ptr))
+  if (!pngWriteInit_(path, ofs, png_ptr, info_ptr))
     return false;
 
   int bits=8;

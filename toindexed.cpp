@@ -2,15 +2,16 @@
  *
  *  toindexed.cpp
  *  by oZ/acy
- *  (c) 2001-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2001-2019 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Picture ==> PictureIndexed の減色複寫ルーチン
+ *  Picture -> PictureIndexed の減色複寫ルーチン
  *
  *  履歴
  *    2016.2.26  ファイル名變更、他修正
  *    2016.3.2   throw()削除
  *    2018.12.28
  *      reducePictureColors()をPicture::duplicatePictureIndexed()に變更
+ *    2019.8.27  __を含む名前を修正
  */
 #include <memory>
 #include "picture.h"
@@ -136,10 +137,10 @@ void PixelRange_::divide(PixelRange_& neu)
 
 
 /*========================================================================
- *  sumpling__()
+ *  sumpling_()
  *  サンプリング
  *======================================================================*/
-void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
+void sumpling_(polymnia::RgbColor pal[], const polymnia::Picture* src)
 {
   using namespace themis;
   using namespace polymnia;
@@ -212,31 +213,19 @@ void sumpling__(polymnia::RgbColor pal[], const polymnia::Picture* src)
     pal[i].g = (UByte)(range[i].g.sum / range[i].count);
     pal[i].b = (UByte)(range[i].b.sum / range[i].count);
   }
-}// end of sampling__()
+}// end of sampling_()
 
 
-/*================================
- *  sqr__()
- *  平方を求める
- *==============================*/
-//inline
-//int sqr__(int x) { return x * x; }
-
-
-
-
-
-#define NPAL 256
-#define SAMPLE_MAX (NPAL-1)
-#define NCLASS (SAMPLE_MAX*3 + 1)
-
+constexpr int NPAL = 256;
+constexpr int SAMPLE_MAX = NPAL - 1;
+constexpr int NCLASS = SAMPLE_MAX * 3 + 1;
 
 
 /*==========================================
  *  rms_()
  *  RGB各成分の差の二乗の和を求める
  *========================================*/
-const long pow2_G[NPAL]
+constexpr long pow2_G[NPAL]
   =
 {
   0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225,
@@ -267,12 +256,12 @@ const long pow2_G[NPAL]
 
 inline
 unsigned long
-rms__(const polymnia::RgbColor& c1, const polymnia::RgbColor& c2)
+rms_(const polymnia::RgbColor& c1, const polymnia::RgbColor& c2)
 {
-  using namespace std;
-
   return 
-    pow2_G[abs(c1.r-c2.r)] + pow2_G[abs(c1.g-c2.g)] + pow2_G[abs(c1.b-c2.b)];
+      pow2_G[std::abs(c1.r - c2.r)]
+    + pow2_G[std::abs(c1.g - c2.g)]
+    + pow2_G[std::abs(c1.b - c2.b)];
 }
 
 
@@ -367,7 +356,7 @@ int next_G[NPAL];
 int index_G[NCLASS];
 
 /* next_G[], index_G[] によるパレット探索鎖を生成する */
-void updateChain__(const polymnia::RgbColor pal[])
+void updateChain_(const polymnia::RgbColor pal[])
 {
   for (int i = 0; i < NCLASS; i++)
     index_G[i] = -1;
@@ -382,7 +371,7 @@ void updateChain__(const polymnia::RgbColor pal[])
 
 
 /* 與RGB値の最近パレットを求める */
-themis::UByte findNearestPal__(
+themis::UByte findNearestPal_(
   const polymnia::RgbColor& col, const polymnia::RgbColor pal[])
 {
   using namespace themis;
@@ -421,7 +410,7 @@ themis::UByte findNearestPal__(
     int cc = (base+absval < NCLASS) ? index_G[base + absval] : -1;
     while (cc >= 0 && cc < NPAL)
     {
-      dif = rms__(col, pal[cc]);
+      dif = rms_(col, pal[cc]);
       if (dif == 0)
         return (UByte)cc;  // 距離 0 なら 文句なし終了
       else if (dif<memdif)
@@ -438,7 +427,7 @@ themis::UByte findNearestPal__(
     cc = (base - absval >= 0) ? index_G[base - absval] : -1;
     while (cc >= 0 && cc < NPAL)
     {
-      dif = rms__(col, pal[cc]);
+      dif = rms_(col, pal[cc]);
       if (dif == 0)
         return (UByte)cc;  // 距離 0 なら 文句なし終了
       else if (dif < memdif)
@@ -452,7 +441,7 @@ themis::UByte findNearestPal__(
   }
 
   return mempos;  /* 最終的な最近パレット番號を返す */
-}// end of findNearestPal__()
+}// end of findNearestPal_()
 
 
 
@@ -465,7 +454,7 @@ themis::UByte findNearestPal__(
 #define PATY 3     // パターン配列の高さ
 #define D_AREA 2   // 分散するPixelの範圍
 #define ERR_PTN { 0, 0, 0, 7, 5,  3, 5, 7, 5, 3,  1, 3, 5, 3, 1 }
-void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
+void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 {
   using namespace themis;
   using namespace polymnia;
@@ -510,7 +499,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
       int b2 = bb > 255 ? 255 : bb;   b2 = b2 < 0 ? 0 : b2;
 
       UByte bst
-        = findNearestPal__(
+        = findNearestPal_(
             RgbColor((UByte)r2, (UByte)g2, (UByte)b2),
             dst->paletteBuffer());
 
@@ -556,7 +545,7 @@ void deColor__(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 #else
   // 單純近似による減色
 void
-deColor__(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
+deColor_(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 {
   using namespace themis;
 
@@ -565,7 +554,7 @@ deColor__(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
     for (int x = 0; x < src->width(); x++)
     {
       UByte bst
-        = findNearestPal__(src->pixel(x, y), dst->paletteBuffer());
+        = findNearestPal_(src->pixel(x, y), dst->paletteBuffer());
       dst->pixel(x, y) = bst;
     }
   }
@@ -590,9 +579,9 @@ polymnia::Picture::duplicatePictureIndexed() const noexcept
   if (!pc)
     return nullptr;
 
-  sumpling__(pc->paletteBuffer(), this);
-  updateChain__(pc->paletteBuffer());
-  deColor__(pc, this);
+  sumpling_(pc->paletteBuffer(), this);
+  updateChain_(pc->paletteBuffer());
+  deColor_(pc, this);
 
   return pc;
 }

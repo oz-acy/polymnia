@@ -2,11 +2,11 @@
  *
  *  pngin.cpp
  *  by oZ/acy
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2019 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  PNG 形式入力クラス
  *
- *  last update: 2018.12.23
+ *  last update: 2019.8.27
  *
  */
 #include <cstdio>
@@ -27,7 +27,7 @@ namespace
 {
 
 // PNGファイルかどうか調べる
-bool isPNG__(const std::filesystem::path& path)
+bool isPNG_(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -52,32 +52,32 @@ struct PNGColorBitType_
   int bits;
 };
 
-enum { PNG_NUL__, PNG_RGB__, PNG_GRY__, PNG_PAL__ };
+enum { PNG_NUL_, PNG_RGB_, PNG_GRY_, PNG_PAL_ };
 
 PNGColorBitType_ pngtype_G[]
  =
 {
-  {  1, PNG_COLOR_TYPE_PALETTE,  PNG_PAL__,  1 },
-  {  2, PNG_COLOR_TYPE_PALETTE,  PNG_PAL__,  2 },
-  {  4, PNG_COLOR_TYPE_PALETTE,  PNG_PAL__,  4 },
-  {  8, PNG_COLOR_TYPE_PALETTE,  PNG_PAL__,  8 },
-  {  8, PNG_COLOR_TYPE_RGB,      PNG_RGB__, 24 },
-  { 16, PNG_COLOR_TYPE_RGB,      PNG_RGB__, 48 },
-  {  1, PNG_COLOR_TYPE_GRAY,     PNG_GRY__,  1 },
-  {  2, PNG_COLOR_TYPE_GRAY,     PNG_GRY__,  2 },
-  {  4, PNG_COLOR_TYPE_GRAY,     PNG_GRY__,  4 },
-  {  8, PNG_COLOR_TYPE_GRAY,     PNG_GRY__,  8 },
-  { 16, PNG_COLOR_TYPE_GRAY,     PNG_GRY__, 16 },
-  { 0, -1, PNG_NUL__, 0 }
+  {  1, PNG_COLOR_TYPE_PALETTE,  PNG_PAL_,  1 },
+  {  2, PNG_COLOR_TYPE_PALETTE,  PNG_PAL_,  2 },
+  {  4, PNG_COLOR_TYPE_PALETTE,  PNG_PAL_,  4 },
+  {  8, PNG_COLOR_TYPE_PALETTE,  PNG_PAL_,  8 },
+  {  8, PNG_COLOR_TYPE_RGB,      PNG_RGB_, 24 },
+  { 16, PNG_COLOR_TYPE_RGB,      PNG_RGB_, 48 },
+  {  1, PNG_COLOR_TYPE_GRAY,     PNG_GRY_,  1 },
+  {  2, PNG_COLOR_TYPE_GRAY,     PNG_GRY_,  2 },
+  {  4, PNG_COLOR_TYPE_GRAY,     PNG_GRY_,  4 },
+  {  8, PNG_COLOR_TYPE_GRAY,     PNG_GRY_,  8 },
+  { 16, PNG_COLOR_TYPE_GRAY,     PNG_GRY_, 16 },
+  { 0, -1, PNG_NUL_, 0 }
 };
 
 
 /* color format のチェック */
-void checkColorFormat__(bool* alpha, int* type, int* obits, int bits, int ctype)
+void checkColorFormat_(bool* alpha, int* type, int* obits, int bits, int ctype)
 {
   *alpha = false;
 
-  *type = PNG_NUL__;
+  *type = PNG_NUL_;
   *obits = -1;
 
   if (ctype == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -109,7 +109,7 @@ void checkColorFormat__(bool* alpha, int* type, int* obits, int bits, int ctype)
  *
  *  H23.4.24 update for libpng-1.5.x
  */
-void pngRead__(png_structp png_ptr, png_bytep data, png_size_t length)
+void pngRead_(png_structp png_ptr, png_bytep data, png_size_t length)
 {
   using namespace std;
   ifstream* pifs = reinterpret_cast<ifstream*>(png_get_io_ptr(png_ptr));
@@ -121,7 +121,7 @@ void pngRead__(png_structp png_ptr, png_bytep data, png_size_t length)
 
 
 /* エラー時に呼び出される */
-void pngError__(png_structp png_ptr, png_const_charp str)
+void pngError_(png_structp png_ptr, png_const_charp str)
 {
   std::cerr << str << std::endl;
 }
@@ -129,14 +129,14 @@ void pngError__(png_structp png_ptr, png_const_charp str)
 
 /* 讀み込み處理の初期化 */
 bool
-pngReadInit__(
+pngReadInit_(
   const std::filesystem::path& path, std::ifstream& ifs, png_structp& png_ptr,
   png_infop& info_ptr)
 {
   using namespace std;
 
   // ファイルチェックとオープン
-  if (!isPNG__(path))
+  if (!isPNG_(path))
     return false;
 
   ifs.open(path, ios::in | ios::binary);
@@ -147,7 +147,7 @@ pngReadInit__(
   // PNG入力用構造体の生成
   png_ptr
     = png_create_read_struct(
-        PNG_LIBPNG_VER_STRING, nullptr, pngError__, pngError__);
+        PNG_LIBPNG_VER_STRING, nullptr, pngError_, pngError_);
   if (!png_ptr)
     return false;
 
@@ -159,7 +159,7 @@ pngReadInit__(
   }
 
   // 入力関数の設定
-  png_set_read_fn(png_ptr, (void *)&ifs, pngRead__);
+  png_set_read_fn(png_ptr, (void *)&ifs, pngRead_);
 
   // 入力開始
   png_read_info(png_ptr, info_ptr);
@@ -181,7 +181,7 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
   png_structp png_ptr;
   png_infop info_ptr;
 
-  if (!pngReadInit__(path, ifs, png_ptr, info_ptr))
+  if (!pngReadInit_(path, ifs, png_ptr, info_ptr))
     return nullptr;
 
   png_uint_32 ww, hh;
@@ -191,17 +191,17 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
 
   png_get_IHDR(
     png_ptr, info_ptr, &ww, &hh, &bits, &ctype, &itype, nullptr, nullptr);
-  checkColorFormat__(&alpha, &type, &obits, bits, ctype);
+  checkColorFormat_(&alpha, &type, &obits, bits, ctype);
 
   png_set_strip_alpha(png_ptr);  // Alpha要素は無視する
 
   if (bits == 16)
     png_set_strip_16(png_ptr);     // 16bit画像は8bitに直す
 
-  if (type == PNG_GRY__)
+  if (type == PNG_GRY_)
     png_set_gray_to_rgb(png_ptr);  // グレースケール -> TrueColor
 
-  if (type == PNG_PAL__) {
+  if (type == PNG_PAL_) {
     //if (obits == 16) {
     //  png_set_strip_16(png_ptr);
     //  obits = 8;
@@ -240,7 +240,7 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
   png_structp png_ptr;
   png_infop info_ptr;
 
-  if (!pngReadInit__(path, ifs, png_ptr, info_ptr))
+  if (!pngReadInit_(path, ifs, png_ptr, info_ptr))
     return nullptr;
 
 
@@ -251,9 +251,9 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
 
   png_get_IHDR(
     png_ptr, info_ptr, &ww, &hh, &bits, &ctype, &itype, nullptr, nullptr);
-  checkColorFormat__(&alpha, &type, &obits, bits, ctype);
+  checkColorFormat_(&alpha, &type, &obits, bits, ctype);
 
-  if (type == PNG_RGB__)  // TrueColorは駄目
+  if (type == PNG_RGB_)  // TrueColorは駄目
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return nullptr;
@@ -266,9 +266,9 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
   }
   if (alpha)
     png_set_strip_alpha(png_ptr); // Alpha要素は無視する
-  if (type == PNG_PAL__ && obits < 8)
+  if (type == PNG_PAL_ && obits < 8)
     png_set_packing(png_ptr); // PAL8bitに統一
-  if (type == PNG_GRY__ && obits < 8)
+  if (type == PNG_GRY_ && obits < 8)
     png_set_expand(png_ptr); // GRAY8bitに統一
 
   int n_pass = png_set_interlace_handling(png_ptr); // インターレス画像用
@@ -282,14 +282,14 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
 
   // Paletteのロード
   RgbColor* pal = pct->paletteBuffer();
-  if (type == PNG_GRY__)
+  if (type == PNG_GRY_)
   {
     //グレイスケールなら自分で用意する
     int d = 255 / ((1<<obits) - 1);
     for (int i = 0, c = 0; c < 256; i++, c += d)
       pal[i] = RgbColor((UByte)c, (UByte)c, (UByte)c);
   }
-  else if (type == PNG_PAL__)
+  else if (type == PNG_PAL_)
   {
     int npal;
     png_colorp pngpal;

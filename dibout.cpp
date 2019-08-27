@@ -31,7 +31,7 @@ struct Info_
 
 
 /* DIBヘッダ書き出し */
-bool writeHeader__(std::ostream& os, int bitsize, int npal)
+bool writeHeader_(std::ostream& os, int bitsize, int npal)
 {
   using namespace themis;
 
@@ -60,7 +60,7 @@ bool writeHeader__(std::ostream& os, int bitsize, int npal)
 
 
 /* BMP-Infoヘッダ書き出し */
-bool writeInfo__(std::ostream& os, int w, int h, themis::UWord bits, int npal)
+bool writeInfo_(std::ostream& os, int w, int h, themis::UWord bits, int npal)
 {
   using namespace themis;
 
@@ -95,7 +95,7 @@ bool writeInfo__(std::ostream& os, int w, int h, themis::UWord bits, int npal)
 
 
 /* 8bitパレット書き出し */
-bool writePalette__(std::ostream& os, const polymnia::RgbColor pal[], int np)
+bool writePalette_(std::ostream& os, const polymnia::RgbColor pal[], int np)
 {
   using namespace themis;
 
@@ -122,7 +122,7 @@ bool writePalette__(std::ostream& os, const polymnia::RgbColor pal[], int np)
 
 
 /* 24bit Bitmapデータ書き出し */
-bool writeBits__(std::ostream& os, const polymnia::Picture* pct, int bufsize)
+bool writeBits_(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 {
   using namespace themis;
   using namespace std;
@@ -151,7 +151,7 @@ bool writeBits__(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 
 
 /* 8bit Bitmap 書き出し */
-bool writeBits__(
+bool writeBits_(
   std::ostream& os, const polymnia::PictureIndexed* pct, int bufsize)
 {
   using namespace themis;
@@ -198,9 +198,9 @@ polymnia::DibSaver::save(
 
   int mapsize = bufsize * p->height();
 
-  writeHeader__(ofs, mapsize, 0);
-  writeInfo__(ofs, p->width(), p->height(), 24, 0);
-  writeBits__(ofs, p, bufsize);
+  writeHeader_(ofs, mapsize, 0);
+  writeInfo_(ofs, p->width(), p->height(), 24, 0);
+  writeBits_(ofs, p, bufsize);
 
   return true;
 }
@@ -225,10 +225,10 @@ polymnia::IndexedDibSaver::save(
 
   int mapsize = bufsize * p->height();
 
-  writeHeader__(ofs, mapsize, 256);
-  writeInfo__(ofs, p->width(), p->height(), 8, 0);
-  writePalette__(ofs, p->paletteBuffer(), 256);
-  writeBits__(ofs, p, bufsize);
+  writeHeader_(ofs, mapsize, 256);
+  writeInfo_(ofs, p->width(), p->height(), 8, 0);
+  writePalette_(ofs, p->paletteBuffer(), 256);
+  writeBits_(ofs, p, bufsize);
 
   return true;
 }

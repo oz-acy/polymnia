@@ -40,10 +40,10 @@ struct Info_
 //////////////////////////////////////////////////
 
 /*==============================================
-*  readHeader__()
+*  readHeader_()
 *  DIBヘッダ読み込み 
 *=============================================*/
-bool readHeader__(std::istream& is)
+bool readHeader_(std::istream& is)
 {
   using namespace themis;
 
@@ -74,10 +74,10 @@ bool readHeader__(std::istream& is)
 }
 
 /*========================================================
-*  readInfo__()
+*  readInfo_()
 *  BMP-Infoヘッダを讀み込む (struct Info に値を設定)
 *=======================================================*/
-bool readInfo__(std::istream& is, Info_* pi)
+bool readInfo_(std::istream& is, Info_* pi)
 {
   using namespace themis;
 
@@ -129,10 +129,10 @@ bool readInfo__(std::istream& is, Info_* pi)
 }
 
 /*==============================================
-*  readPalette__()
+*  readPalette_()
 *  パレット読み込み
 *=============================================*/
-bool readPalette__(std::istream& is, polymnia::RgbColor pal[], int npal)
+bool readPalette_(std::istream& is, polymnia::RgbColor pal[], int npal)
 {
   using namespace themis;
 
@@ -154,10 +154,10 @@ bool readPalette__(std::istream& is, polymnia::RgbColor pal[], int npal)
 }
 
 /*===================================================
-*  getBufSize__()
+*  getBufSize_()
 *  Bitmap の 1line のバッファ長を求める
 *==================================================*/
-inline int getBufSize__(int l)
+inline int getBufSize_(int l)
 {
   return (l + 3) & ~3;
 }
@@ -167,7 +167,7 @@ inline int getBufSize__(int l)
 *  パレット -> RGB 處理
 *================================================*/
 void
-palpaint__(
+palpaint_(
   polymnia::RgbColor dbuf[], const themis::UByte sbuf[], int w,
   const polymnia::RgbColor pal[])
 {
@@ -176,11 +176,11 @@ palpaint__(
 }
 
 /*=============================================
-*  read01_oneline__()
+*  read01_oneline_()
 *  1bit bitmap データを1ライン読み込み
 *============================================*/
 void
-read01_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
+read01_oneline_(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 {
   for (int i = 0; i < w / 8; i++)
     for (int j = 7; j >= 0; j--)
@@ -200,11 +200,11 @@ read01_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 
 
 /*================================================
-*  read04_oneline__()
+*  read04_oneline_()
 *  4bit bitmap データを1ライン読み込み
 *===============================================*/
 void
-read04_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
+read04_oneline_(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 {
   using namespace themis;
 
@@ -220,17 +220,17 @@ read04_oneline__(themis::UByte dbuf[], themis::UByte sbuf[], int w)
 
 
 /*====================================================
-*  read01bit__()
+*  read01bit_()
 *  1Bit Bitmap データ読み込み(24bit用)
 *===================================================*/
 bool
-read01bit__(
+read01bit_(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__((pct->width() + 7) / 8);
+  int bufsize = getBufSize_((pct->width() + 7) / 8);
 
   std::unique_ptr<UByte[]> linebuf;
   std::unique_ptr<UByte[]> palbuf;
@@ -250,8 +250,8 @@ read01bit__(
     if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read01_oneline__(palbuf.get(), linebuf.get(), pct->width());
-    palpaint__(pctbuf, palbuf.get(), pct->width(), pal);
+    read01_oneline_(palbuf.get(), linebuf.get(), pct->width());
+    palpaint_(pctbuf, palbuf.get(), pct->width(), pal);
   }
 
   return true;
@@ -259,17 +259,17 @@ read01bit__(
 
 
 /*=============================================
-*  read04bit__()
+*  read04bit_()
 *  4Bit Bitmap データ読み込み(24bit用)
 *============================================*/
 bool
-read04bit__(
+read04bit_(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__((pct->width()+1)/2);
+  int bufsize = getBufSize_((pct->width()+1)/2);
 
   std::unique_ptr<UByte[]> linebuf;
   std::unique_ptr<UByte[]> palbuf;
@@ -289,8 +289,8 @@ read04bit__(
     if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read04_oneline__(palbuf.get(), linebuf.get(), pct->width());
-    palpaint__(pctbuf, palbuf.get(), pct->width(), pal);
+    read04_oneline_(palbuf.get(), linebuf.get(), pct->width());
+    palpaint_(pctbuf, palbuf.get(), pct->width(), pal);
   }
 
   return true;
@@ -299,13 +299,13 @@ read04bit__(
 
 /* 8Bit Bitmap データ読み込み(24bit用) */
 bool
-read08bit__(
+read08bit_(
   std::istream& is, polymnia::Picture* pct, const polymnia::RgbColor pal[])
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__(pct->width());
+  int bufsize = getBufSize_(pct->width());
 
   std::unique_ptr<UByte[]> linebuf;
   try
@@ -323,7 +323,7 @@ read08bit__(
     if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    palpaint__(pctbuf, linebuf.get(), pct->width(), pal);
+    palpaint_(pctbuf, linebuf.get(), pct->width(), pal);
   }
 
   return true;
@@ -331,7 +331,7 @@ read08bit__(
 
 
 /* 24Bit Bitmap データ読み込み(24bit用) */
-bool read24bit__(std::istream& is, polymnia::Picture* pct)
+bool read24bit_(std::istream& is, polymnia::Picture* pct)
 {
   using namespace themis;
   using namespace polymnia;
@@ -339,7 +339,7 @@ bool read24bit__(std::istream& is, polymnia::Picture* pct)
   int w = pct->width();
   int o = pct->offset();
 
-  int linesize = getBufSize__(w * 3);
+  int linesize = getBufSize_(w * 3);
 
   std::unique_ptr<UByte[]> imgbuf;
   try
@@ -365,7 +365,7 @@ bool read24bit__(std::istream& is, polymnia::Picture* pct)
 
 
 /* 32Bit Bitmap データ読み込み(32bit用) */
-bool read32bit__(std::istream& is, polymnia::Picture* pct)
+bool read32bit_(std::istream& is, polymnia::Picture* pct)
 {
   using namespace themis;
   using namespace polymnia;
@@ -373,7 +373,7 @@ bool read32bit__(std::istream& is, polymnia::Picture* pct)
   int w = pct->width();
   int o = pct->offset();
 
-  int linesize = getBufSize__(w * 4);
+  int linesize = getBufSize_(w * 4);
 
   std::unique_ptr<UByte[]> imgbuf;
   try
@@ -400,12 +400,12 @@ bool read32bit__(std::istream& is, polymnia::Picture* pct)
 
 
 /* 1Bit Bitmap データ読み込み (Indexed Color用) */
-bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct)
+bool read01bit_(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__((pct->width() + 7) / 8);
+  int bufsize = getBufSize_((pct->width() + 7) / 8);
 
   std::unique_ptr<UByte[]> linebuf;
   try
@@ -423,7 +423,7 @@ bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct)
     if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read01_oneline__(pctbuf, linebuf.get(), pct->width());
+    read01_oneline_(pctbuf, linebuf.get(), pct->width());
   }
 
   return true;
@@ -431,12 +431,12 @@ bool read01bit__(std::istream& is, polymnia::PictureIndexed* pct)
 
 
 /* 4Bit Bitmap データ読み込み(8bit用) */
-bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct)
+bool read04bit_(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize__((pct->width()+1)/2);
+  int bufsize = getBufSize_((pct->width()+1)/2);
   std::unique_ptr<UByte[]> linebuf;
   try
   {
@@ -453,7 +453,7 @@ bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct)
     if (!is.read((char*)(linebuf.get()), bufsize))
       return false;
 
-    read04_oneline__(pctbuf, linebuf.get(), pct->width());
+    read04_oneline_(pctbuf, linebuf.get(), pct->width());
   }
 
   return true;
@@ -461,13 +461,13 @@ bool read04bit__(std::istream& is, polymnia::PictureIndexed* pct)
 
 
 /* 8Bit Bitmap データ読み込み(8bit用) */
-bool read08bit__(std::istream& is, polymnia::PictureIndexed* pct)
+bool read08bit_(std::istream& is, polymnia::PictureIndexed* pct)
 {
   using namespace themis;
   using namespace polymnia;
   using namespace std;
 
-  int bufsize = getBufSize__(pct->width());
+  int bufsize = getBufSize_(pct->width());
   unique_ptr<UByte[]> linebuf;
   try
   {
@@ -510,11 +510,11 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
   if (!ifs)
     return nullptr;
 
-  if (!readHeader__(ifs))
+  if (!readHeader_(ifs))
     return nullptr;
 
   Info_ info;
-  if (!readInfo__(ifs, &info))
+  if (!readInfo_(ifs, &info))
     return nullptr;
 
   if (info.bit!=1 && info.bit!=4 && info.bit!=8 && info.bit!=24
@@ -527,7 +527,7 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
     int np = info.npal;
     if (np==0)
       np = 1 << info.bit;
-    if (!readPalette__(ifs, pal, np))
+    if (!readPalette_(ifs, pal, np))
       return nullptr;
   }
 
@@ -538,27 +538,27 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
   switch(info.bit)
   {
   case 1:
-    if (!read01bit__(ifs, q.get(), pal))
+    if (!read01bit_(ifs, q.get(), pal))
       return nullptr;
     break;
 
   case 4:
-    if (!read04bit__(ifs, q.get(), pal))
+    if (!read04bit_(ifs, q.get(), pal))
       return nullptr;
     break;
 
   case 8:
-    if (!read08bit__(ifs, q.get(), pal))
+    if (!read08bit_(ifs, q.get(), pal))
       return nullptr;
     break;
 
   case 24:
-    if (!read24bit__(ifs, q.get()))
+    if (!read24bit_(ifs, q.get()))
       return nullptr;
     break;
 
   case 32:
-    if (!read32bit__(ifs, q.get()))
+    if (!read32bit_(ifs, q.get()))
       return nullptr;
     break;
 
@@ -583,11 +583,11 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
   if (!ifs)
     return nullptr;
 
-  if (!readHeader__(ifs))
+  if (!readHeader_(ifs))
     return nullptr;
 
   Info_ info;
-  if (!readInfo__(ifs, &info))
+  if (!readInfo_(ifs, &info))
     return nullptr;
 
   if (info.bit!=1 && info.bit!=4 && info.bit!=8)
@@ -601,23 +601,23 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
   int np = info.npal;
   if (np == 0)
     np = 1 << info.bit;
-  if (!readPalette__(ifs, q->paletteBuffer(), np))
+  if (!readPalette_(ifs, q->paletteBuffer(), np))
     return nullptr;
 
   switch(info.bit)
   {
   case 1:
-    if (!read01bit__(ifs, q.get()))
+    if (!read01bit_(ifs, q.get()))
       return nullptr;
     break;
 
   case 4:
-    if (!read04bit__(ifs, q.get()))
+    if (!read04bit_(ifs, q.get()))
       return nullptr;
     break;
 
   case 8:
-    if (!read08bit__(ifs, q.get()))
+    if (!read08bit_(ifs, q.get()))
       return nullptr;
     break;
 

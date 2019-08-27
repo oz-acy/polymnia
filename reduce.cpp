@@ -1,7 +1,7 @@
 /**************************************************************************
  *  reduce.cpp
  *
- *  (C) 2003-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2003-2019 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Picture用縮小ルーチン
  *
@@ -13,6 +13,7 @@
  *    28 Jul MMXII   バグ修正(メモリ不正アクセス)
  *     2 Mar MMXVI   throw()削除
  *    28 Dec MMXVIII createReducedPicture()をPictureのメンバ函數に編入
+ *    27 Aug MMXIX   __を含む名前を修正
  */
 #include "picture.h"
 
@@ -21,7 +22,7 @@ namespace {
 
 
 polymnia::RgbColor
-toSmall__(
+toSmall_(
   const polymnia::Picture* orig, double x1, double y1, double x2, double y2)
 {
   using namespace polymnia;
@@ -115,7 +116,7 @@ polymnia::Picture::createReducedPicture(int w, int h) const noexcept
       if (x2 > width())
         break;
 
-      pict->pixel(X, Y) = toSmall__(this, x1, y1, x2, y2);
+      pict->pixel(X, Y) = toSmall_(this, x1, y1, x2, y2);
     }
   }
 

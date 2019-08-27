@@ -19,7 +19,7 @@
 
 namespace {
 
-double fCubic__(double t)
+double fCubic_(double t)
 {
   if (t < 0)
     t = -t;
@@ -32,7 +32,7 @@ double fCubic__(double t)
     return 0.0;
 }
 
-double innerProduct__(int n, double* x, double* y)
+double innerProduct_(int n, double* x, double* y)
 {
   double res = 0.0;
   for (int i=0; i < n; i++)
@@ -40,7 +40,7 @@ double innerProduct__(int n, double* x, double* y)
   return res;
 }
 
-void productMat14_44__(double* res, double* vec, double* mat)
+void productMat14_44_(double* res, double* vec, double* mat)
 {
   for (int i=0; i < 4; i++)
   {
@@ -79,10 +79,10 @@ polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
     double dy = y0 - (int)y0;
 
     double fy[4];
-    fy[0] = fCubic__(1.0 + dy);
-    fy[1] = fCubic__(dy);
-    fy[2] = fCubic__(1.0 - dy);
-    fy[3] = fCubic__(2.0 - dy);
+    fy[0] = fCubic_(1.0 + dy);
+    fy[1] = fCubic_(dy);
+    fy[2] = fCubic_(1.0 - dy);
+    fy[3] = fCubic_(2.0 - dy);
 
     int py[4];
     for (int i=0; i < 4; i++)
@@ -100,10 +100,10 @@ polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
       double dx = x0 - (int)x0;
 
       double fx[4];
-      fx[0] = fCubic__(1.0 + dx);
-      fx[1] = fCubic__(dx);
-      fx[2] = fCubic__(1.0 - dx);
-      fx[3] = fCubic__(2.0 - dx);
+      fx[0] = fCubic_(1.0 + dx);
+      fx[1] = fCubic_(dx);
+      fx[2] = fCubic_(1.0 - dx);
+      fx[3] = fCubic_(2.0 - dx);
 
       int px[4];
       for (int i=0; i < 4; i++)
@@ -126,13 +126,13 @@ polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
 
 
       double tmpR[4], tmpG[4], tmpB[4];
-      productMat14_44__(tmpR, fy, rbuf);
-      productMat14_44__(tmpG, fy, gbuf);
-      productMat14_44__(tmpB, fy, bbuf);
+      productMat14_44_(tmpR, fy, rbuf);
+      productMat14_44_(tmpG, fy, gbuf);
+      productMat14_44_(tmpB, fy, bbuf);
 
-      double R = innerProduct__(4, tmpR, fx);
-      double G = innerProduct__(4, tmpG, fx);
-      double B = innerProduct__(4, tmpB, fx);
+      double R = innerProduct_(4, tmpR, fx);
+      double G = innerProduct_(4, tmpG, fx);
+      double B = innerProduct_(4, tmpB, fx);
 
       UByte r, g, b;
       if (R < 0.0)
