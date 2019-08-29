@@ -6,6 +6,7 @@
  *
  *  @date 2018.12.23 C++17對應 pathの渡し方を變更
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *  @date 2019.8.29 Loaderのload()の返却型をunique_ptrに變更
  */
 #ifndef INCLUDE_GUARD_POLYMNIA_DIBIO_H
 #define INCLUDE_GUARD_POLYMNIA_DIBIO_H
@@ -43,7 +44,7 @@ public:
   /// @return
   ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
   ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
-  polymnia::Picture* load(const std::filesystem::path& path) override;
+  std::unique_ptr<Picture> load(const std::filesystem::path& path) override;
 };
 
 
@@ -69,7 +70,8 @@ public:
   /// @return
   ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
   ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
-  polymnia::PictureIndexed* load(const std::filesystem::path& path) override;
+  std::unique_ptr<PictureIndexed> 
+  load(const std::filesystem::path& path) override;
 };
 
 

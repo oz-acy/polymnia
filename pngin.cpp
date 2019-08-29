@@ -1,12 +1,11 @@
 /**************************************************************************
  *
  *  pngin.cpp
- *  by oZ/acy
- *  (c) 2002-2019 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  PNG 形式入力クラス
  *
- *  last update: 2019.8.27
+ *  last update: 2019.8.29
  *
  */
 #include <cstdio>
@@ -20,11 +19,10 @@ extern "C" {
 #include "pngio.h"
 
 
-
-#define PNG_CHECK_BYTES 8
-
 namespace
 {
+constexpr int PNG_CHECK_BYTES = 8;
+
 
 // PNGファイルかどうか調べる
 bool isPNG_(const std::filesystem::path& path)
@@ -173,7 +171,8 @@ pngReadInit_(
 }//end of namespace NONAME
 
 
-polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
+std::unique_ptr<polymnia::Picture>
+polymnia::PngLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -214,15 +213,14 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
 
   png_read_update_info(png_ptr, info_ptr);
 
-  Picture* pct = Picture::create(ww, hh);
+  auto pct = Picture::create(ww, hh);
 
   RgbColor* buf = pct->buffer();
   int o = pct->offset();
   for (int pass = 0; pass < n_pass; pass++)
     for (unsigned j = 0, y = 0;  y < hh;  y++, j += o)
-    {
       png_read_row(png_ptr, (png_bytep)(buf + j), nullptr);
-    }
+
   png_read_end(png_ptr, info_ptr);
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
@@ -230,7 +228,7 @@ polymnia::Picture* polymnia::PngLoader::load(const std::filesystem::path& path)
 }
 
 
-polymnia::PictureIndexed*
+std::unique_ptr<polymnia::PictureIndexed>
 polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
@@ -253,14 +251,12 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
     png_ptr, info_ptr, &ww, &hh, &bits, &ctype, &itype, nullptr, nullptr);
   checkColorFormat_(&alpha, &type, &obits, bits, ctype);
 
-  if (type == PNG_RGB_)  // TrueColorは駄目
-  {
+  if (type == PNG_RGB_) { // TrueColorは駄目
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return nullptr;
   }
 
-  if (obits == 16)
-  {
+  if (obits == 16) {
     png_set_strip_16(png_ptr); // 16bit画像は8bitに直す
     obits = 8;
   }
@@ -276,21 +272,17 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
   png_read_update_info(png_ptr, info_ptr);
 
 
-
-  PictureIndexed* pct = PictureIndexed::create(ww, hh);
-
+  auto pct = PictureIndexed::create(ww, hh);
 
   // Paletteのロード
   RgbColor* pal = pct->paletteBuffer();
-  if (type == PNG_GRY_)
-  {
+  if (type == PNG_GRY_) {
     //グレイスケールなら自分で用意する
     int d = 255 / ((1<<obits) - 1);
     for (int i = 0, c = 0; c < 256; i++, c += d)
       pal[i] = RgbColor((UByte)c, (UByte)c, (UByte)c);
   }
-  else if (type == PNG_PAL_)
-  {
+  else if (type == PNG_PAL_) {
     int npal;
     png_colorp pngpal;
     png_get_PLTE(png_ptr, info_ptr, &pngpal, &npal);

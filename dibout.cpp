@@ -2,18 +2,20 @@
  *
  *  dibout.cpp
  *
- *  (C) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2002-2019 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  DIB OUTput
  *  DIB形式画像出力用クラス実装
  *
  *  履歴
  *    2018.12.23 C++17對應
+ *    2019.8.29  new[]をmake_uniqueに置換
  */
 
 #include<iostream>
 #include<fstream>
 #include<cstring>
+#include<memory>
 #include "dibio.h"
 
 
@@ -128,24 +130,23 @@ bool writeBits_(std::ostream& os, const polymnia::Picture* pct, int bufsize)
   using namespace std;
 
   int w = pct->width();
-  UByte* linebuf = new UByte[bufsize];
+  auto linebuf = std::make_unique<UByte[]>(bufsize);
+  //UByte* linebuf = new UByte[bufsize];
 
-  memset(linebuf, 0, bufsize);
+  memset(linebuf.get(), 0, bufsize);
 
-  for (int j = pct->height() - 1; j>=0; j--)
-  {
+  for (int j = pct->height() - 1; j >= 0; --j) {
     int p = w * j;
-    for (int i=0; i<w; i++)
-    {
+    for (int i = 0; i < w; ++i) {
       const polymnia::RgbColor& c = pct->buffer()[p+i];
-      linebuf[3*i] = c.b;
-      linebuf[3*i+1] = c.g;
-      linebuf[3*i+2] = c.r;
+      linebuf[3 * i] = c.b;
+      linebuf[3 * i + 1] = c.g;
+      linebuf[3 * i + 2] = c.r;
     }
-    os.write((char*)linebuf, bufsize);
+    os.write((char*)(linebuf.get()), bufsize);
   }
 
-  delete[] linebuf;
+  //delete[] linebuf;
   return true;
 }
 
@@ -158,17 +159,17 @@ bool writeBits_(
   using namespace std;
 
   int w = pct->width();
-  UByte* linebuf = new UByte[bufsize];
+  auto linebuf = std::make_unique<UByte[]>(bufsize);
+  //UByte* linebuf = new UByte[bufsize];
 
-  memset(linebuf, 0, bufsize);
+  memset(linebuf.get(), 0, bufsize);
 
-  for (int j = pct->height() - 1; j>=0; j--)
-  {
-    memcpy(linebuf, pct->buffer()+w*j, w);
-    os.write((char*)linebuf, bufsize);
+  for (int j = pct->height() - 1; j>=0; j--) {
+    memcpy(linebuf.get(), pct->buffer() + w * j, w);
+    os.write((char*)(linebuf.get()), bufsize);
   }
 
-  delete[] linebuf;
+  //delete[] linebuf;
   return true;
 }
 
@@ -194,7 +195,7 @@ polymnia::DibSaver::save(
     return false;
 
   int bufsize = p->width() * 3;
-  bufsize = (bufsize % 4) ? 4 * (bufsize/4 + 1) : bufsize;
+  bufsize = (bufsize % 4) ? 4 * (bufsize / 4 + 1) : bufsize;
 
   int mapsize = bufsize * p->height();
 
@@ -221,7 +222,7 @@ polymnia::IndexedDibSaver::save(
     return false;
 
   int bufsize = p->width();
-  bufsize = (bufsize % 4) ? 4 * (bufsize/4 + 1) : bufsize;
+  bufsize = (bufsize % 4) ? 4 * (bufsize / 4 + 1) : bufsize;
 
   int mapsize = bufsize * p->height();
 
@@ -232,6 +233,8 @@ polymnia::IndexedDibSaver::save(
 
   return true;
 }
+
+
 
 
 //eof

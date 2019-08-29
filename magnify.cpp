@@ -1,8 +1,7 @@
 /**************************************************************************
  *
  *  magnify.cpp
- *
- *  (C) 2003-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  Picture用擴大縮小ルーチン
  *
@@ -14,6 +13,7 @@
  *    26 Feb MMXVI   ファイル名變更
  *     2 Mar MMXVI   throw()を削除
  *    28 Dec MMXVIII createMagnifiedPictureをPictureのメンバ函數に編入
+ *    29 Aug MMXIX   createMagnifiedPictureの返却型をunique_ptrに變更
  */
 #include "picture.h"
 
@@ -60,18 +60,17 @@ void productMat14_44_(double* res, double* vec, double* mat)
  *  createMagnifiedPicture()
  *  擴大畫像生成ルーチン
  *==============================================*/
-polymnia::Picture* 
+std::unique_ptr<polymnia::Picture> 
 polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
 {
-  using namespace polymnia;
   using namespace themis;
 
-  Picture* pict = Picture::create(w, h);
+  auto pict = Picture::create(w, h);
   if (!pict)
     return nullptr;
 
-  double nrx = width() / (double)w;
-  double nry = height() / (double)h;
+  double nrx = (double)width() / (double)w;
+  double nry = (double)height() / (double)h;
 
   for (int Y = 0; Y < h; Y++)
   {

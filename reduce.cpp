@@ -1,7 +1,7 @@
 /**************************************************************************
- *  reduce.cpp
  *
- *  (C) 2003-2019 oZ/acy.  ALL RIGHTS RESERVED.
+ *  reduce.cpp
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  Picture用縮小ルーチン
  *
@@ -14,6 +14,7 @@
  *     2 Mar MMXVI   throw()削除
  *    28 Dec MMXVIII createReducedPicture()をPictureのメンバ函數に編入
  *    27 Aug MMXIX   __を含む名前を修正
+ *    29 Aug MMXIX   createReducedPicture()の返却型をunique_ptrに變更
  */
 #include "picture.h"
 
@@ -88,12 +89,12 @@ toSmall_(
  *  createReducedPicture()
  *  畫像縮小ルーチン
  *==============================================================*/
-polymnia::Picture* 
+std::unique_ptr<polymnia::Picture>
 polymnia::Picture::createReducedPicture(int w, int h) const noexcept
 {
   using namespace polymnia;
 
-  Picture* pict = Picture::create(w, h);
+  auto pict = Picture::create(w, h);
   if (!pict)
     return nullptr;
 

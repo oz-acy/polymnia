@@ -7,12 +7,14 @@
  *  @date 2016.3.2  C++11對應(假)
  *  @date 2018.12.28 グレイスケール化、擴大、縮小函數をメンバ函數化
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *  @date 2019.8.29 createなどの返却型をunique_ptrに變更
  */
 #ifndef INCLUDE_GUARD_POLYMNIA_PICTURE_H
 #define INCLUDE_GUARD_POLYMNIA_PICTURE_H
 
 #include <string>
 #include <cstring>
+#include <memory>
 #include "ibuf.h"
 #include "rgb.h"
 
@@ -40,25 +42,29 @@ protected:
 public:
   /// @brief 解體子
   ~Picture() { delete[] buf_; }
-  /// @brief 畫像バッファの生成
-  static Picture* create(unsigned w, unsigned h) noexcept;
-  /// @brief 複製
-  Picture* clone() const noexcept;
 
-  /// @brief 256色に減色したPictureIndexedオブジェクトを生成
-  polymnia::PictureIndexed* duplicatePictureIndexed() const noexcept;
+  /// 畫像バッファを生成する。
+  static std::unique_ptr<Picture> create(unsigned w, unsigned h) noexcept;
 
-  /// @brief グレイスケール化
+  /// 複製する。
+  std::unique_ptr<Picture> clone() const noexcept;
+
+  /// 256色に減色したPictureIndexedオブジェクトを生成する。
+  std::unique_ptr<PictureIndexed> duplicatePictureIndexed() const noexcept;
+
+  /// グレイスケール化する。
   void convertToGrayScaled() noexcept;
 
-  /// @brief 内容をグレイスケール化したPictureIndexedオブジェクトを生成
-  polymnia::PictureIndexed* createPictureGrayScaleIndexed() const noexcept;
+  /// 内容をグレイスケール化したPictureIndexedオブジェクトを生成する。
+  std::unique_ptr<polymnia::PictureIndexed>
+  createPictureGrayScaleIndexed() const noexcept;
 
-  /// @brief 縮小したPictureを生成
-  Picture* createReducedPicture(int w, int h) const noexcept;
 
-  /// @brief 擴大したPictureを生成
-  Picture* createMagnifiedPicture(int w, int h) const noexcept;
+  /// 縮小したPictureを生成する。
+  std::unique_ptr<Picture> createReducedPicture(int w, int h) const noexcept;
+
+  /// 擴大したPictureを生成する。
+  std::unique_ptr<Picture> createMagnifiedPicture(int w, int h) const noexcept;
 };
 
 
@@ -81,36 +87,33 @@ protected:
 
 
 public:
-  /// @brief 解體子
+  /// 解體子
   ~PictureIndexed() { delete[] buf_; }
 
-  /// @brief 画像バッファの生成
-  static PictureIndexed* create(unsigned w, unsigned h) noexcept;
+  /// 畫像バッファを生成する。
+  static
+  std::unique_ptr<PictureIndexed> create(unsigned w, unsigned h) noexcept;
 
-  /// @brief 複製
-  PictureIndexed* clone() const noexcept;
+  /// 複製する。
+  std::unique_ptr<PictureIndexed> clone() const noexcept;
 
 
   // パレットへのアクセス
-  /// @brief パレットを參照
+  /// パレットを參照する。
   /// @param id パレットID
   /// @return IDで指定されるパレットへの參照
   polymnia::RgbColor& palette(int id) noexcept { return pal_[id]; }
-  /// @brief パレットを參照
+  /// パレットを參照する。
   /// @param id パレットID
   /// @return IDで指定されるパレットへの參照
   const polymnia::RgbColor& palette(int id) const noexcept { return pal_[id]; }
-  /// @brief パレットを參照
-  /// @param id パレットID
-  /// @return IDで指定されるパレットへの參照
+  /// パレットのバッファへのポインタを得る。
   polymnia::RgbColor* paletteBuffer() noexcept { return pal_; }
-  /// @brief パレットを參照
-  /// @param id パレットID
-  /// @return IDで指定されるパレットへの參照
+  /// パレットのバッファへのポインタを得る。
   const polymnia::RgbColor* paletteBuffer() const noexcept { return pal_; }
 
-  /// @brief 同内容のPictureを生成
-  polymnia::Picture* duplicatePicture() const noexcept;
+  /// 同内容のPictureを生成する。
+  std::unique_ptr<Picture> duplicatePicture() const noexcept;
 };
 
 

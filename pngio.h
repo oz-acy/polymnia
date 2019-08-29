@@ -6,6 +6,7 @@
  *
  *  @date 2018.12.23 C++17對應
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *  @date 2019.8.29 Loaderのload()の返却型をunique_ptrに變更
  *
  *//*
  *  Classes defined in this file are inplemented with "libpng" library.
@@ -46,7 +47,8 @@ public:
   /// @return
   ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
   ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
-  polymnia::Picture* load(const std::filesystem::path& path) override;
+  std::unique_ptr<polymnia::Picture>
+  load(const std::filesystem::path& path) override;
 };
 
 
@@ -71,7 +73,8 @@ public:
   /// @return
   ///  讀み込んだ畫像を格納した畫像バッファオブジェクトを返す。
   ///  ファイル形式が異なるなど讀み込めない場合にはnullptrを返す。
-  polymnia::PictureIndexed* load(const std::filesystem::path& path) override;
+  std::unique_ptr<polymnia::PictureIndexed>
+  load(const std::filesystem::path& path) override;
 };
 
 
@@ -99,7 +102,7 @@ public:
 
   /// @brief 保存
   bool
-    save(
+  save(
     const polymnia::Picture* p, const std::filesystem::path& path) override;
 };
 
@@ -135,7 +138,7 @@ public:
 
   /// @brief 保存
   bool
-    save(
+  save(
     const polymnia::PictureIndexed* p,
     const std::filesystem::path& path) override;
 };

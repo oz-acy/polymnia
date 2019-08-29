@@ -31,14 +31,11 @@ int main(int argc, char** argv)
 
 
   valid = false;
-  if (argc > 2)
-  {
+  if (argc > 2) {
     std::string opt = argv[1];
-    if (opt == "-p" && argc == 5)
-    {
+    if (opt == "-p" && argc == 5) {
       r = std::atof(argv[2]);
-      if (r <= 0)
-      {
+      if (r <= 0) {
         std::cerr << "bad magnifying power.\n";
         return 1;
       }
@@ -47,12 +44,10 @@ int main(int argc, char** argv)
       dst = argv[4];
       valid = true;
     }
-    else if (opt == "-l" && argc == 6)
-    {
+    else if (opt == "-l" && argc == 6) {
       w = std::atoi(argv[2]);
       h = std::atoi(argv[3]);
-      if (w <= 0 || h <= 0)
-      {
+      if (w <= 0 || h <= 0) {
         std::cerr << "bad width or height.\n";
         return 1;
       }
@@ -63,48 +58,42 @@ int main(int argc, char** argv)
     }
   }
 
-  if (!valid)
-  {
+  if (!valid) {
     std::cerr << "usage: resizer -p power infile outfile\n";
     std::cerr << "       resizer -l width height infile outfile\n";
     return 1;
   }
 
-  Picture* pict = loadImage(src);
-  if (!pict)
-  {
+  std::unique_ptr<Picture> pict = loadImage(src);
+  if (!pict) {
     std::cerr << "cannot open file " << src << ".\n";
     return 1;
   }
 
   bool issmall;
-  if (isP)
-  {
+  if (isP) {
     w = (int)(pict->width() * r);
     h = (int)(pict->height() * r);
     issmall = r < 1.0;
   }
-  else
-  {
+  else {
     issmall = w < pict->width() && h < pict->height();
   }
 
-  Picture* pict2;
+  std::unique_ptr<Picture> pict2;
   if (issmall)
     pict2 = pict->createReducedPicture(w, h);
   else
     pict2 = pict->createMagnifiedPicture(w, h);
 
   if (pict2)
-    saveImage(dst, pict2);
-  else
-  {
+    saveImage(dst, pict2.get());
+  else {
     std::cerr << "cannot resize image.\n";
     return 1;
   }
 
-  delete pict;
-  delete pict2;
+
   return 0;
 }
 

@@ -103,30 +103,27 @@ std::string getFileExt(const std::string& file)
  *  EIViewer::loadImage()
  *  畫像ファイルを擴張子に應じてロードする
  *==========================================*/
-polymnia::Picture* loadImage(const std::string& file)
+std::unique_ptr<polymnia::Picture> loadImage(const std::string& file)
 {
   using namespace polymnia;
 
-  Picture* pict;
+  std::unique_ptr<Picture> pict;
   std::string ext = getFileExt(file);
 
-  if (ext=="bmp")
-  {
+  if (ext=="bmp") {
     DibLoader bload;
     pict = bload.load(file);
   }
-  else if (ext=="png")
-  {
+  else if (ext=="png") {
     PngLoader pload;
     pict = pload.load(file);
   }
-  else if (ext=="jpg" || ext=="jpeg")
-  {
+  else if (ext=="jpg" || ext=="jpeg") {
     JpegLoader jload;
     pict = jload.load(file);
   }
-  else
-    pict = nullptr;
+  //else
+  //  pict = nullptr;
 
   return pict;
 }

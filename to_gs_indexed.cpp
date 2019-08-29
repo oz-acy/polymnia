@@ -1,8 +1,7 @@
 /*************************************************************************
  *
  *  to_gs_indexed.cpp
- *  by oZ/acy
- *  (c) 2007-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  グレイスケール化したPictureIndexedの生成
  *
@@ -13,6 +12,7 @@
  *    2016.02.26 ファイル名變更
  *    2016.03.02 C++11對應
  *    2018.12.28 createPictureGrayScaleIndexed()をPictureのメンバ函數に編入
+ *    2019.8.29  返却型をunique_ptrに變更
  */
 #include "picture.h"
 
@@ -20,13 +20,14 @@
 /*================================================
  *  グレイスケール + Indexed化
  */
-polymnia::PictureIndexed*
+std::unique_ptr<polymnia::PictureIndexed>
 polymnia::Picture::createPictureGrayScaleIndexed() const noexcept
 {
   using namespace themis;
 
   /* PictureIndexed生成 */
-  PictureIndexed* pc = PictureIndexed::create(w_, h_);
+  auto pc = PictureIndexed::create(w_, h_);
+  //PictureIndexed* pc = PictureIndexed::create(w_, h_);
   if (!pc)
     return nullptr;
 

@@ -1,15 +1,11 @@
 /**************************************************************************
 *
 *  jpegin.cpp
-*  by oZ/acy
-*  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+*  by oZ/acy (名賀月晃嗣)
 *
 *  JPEG 形式入力クラス
 *
-*  last update: 2018.12.23
-*
-**************************************************************************/
-
+*/
 #include<cstdio>
 #include"jpegio.h"
 
@@ -54,7 +50,9 @@ std::FILE* openfile(const wchar_t* path)
 
 ////////////////////////////////////////
 // JpegLoader::load_()の本體
-polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
+//
+std::unique_ptr<polymnia::Picture>
+polymnia::JpegLoader::load(const std::filesystem::path& path)
 {
   FILE *infile;
   infile = openfile(path.c_str());
@@ -81,7 +79,7 @@ polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
     if (bit != 3)
       throw themis::Exception("JPEGLoader","load()","bits!=3");
 
-    Picture* q = Picture::create(ww,hh);
+    auto q = Picture::create(ww,hh);
     if (!q)
       throw themis::Exception("JPEGLoader", "load()", "object creating fault.");
 
@@ -89,8 +87,7 @@ polymnia::Picture* polymnia::JpegLoader::load(const std::filesystem::path& path)
     RgbColor* resbuf = q->buffer();
     int o = q->offset();
     int j = 0;
-    while (cinfo.output_scanline < cinfo.output_height)
-    {
+    while (cinfo.output_scanline < cinfo.output_height) {
       buf[0] = (JSAMPROW)&resbuf[j];
       jpeg_read_scanlines(&cinfo, buf, 1);
       j += o;

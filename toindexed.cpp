@@ -1,8 +1,7 @@
 /*************************************************************************
  *
  *  toindexed.cpp
- *  by oZ/acy
- *  (c) 2001-2019 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  Picture -> PictureIndexed の減色複寫ルーチン
  *
@@ -12,6 +11,7 @@
  *    2018.12.28
  *      reducePictureColors()をPicture::duplicatePictureIndexed()に變更
  *    2019.8.27  __を含む名前を修正
+ *    2019.8.29  duplicatePictureIndexedの返却型をunique_ptrに變更
  */
 #include <memory>
 #include "picture.h"
@@ -572,16 +572,16 @@ deColor_(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
  *  Pictureに減色處理を施して
  *  PictureIndexedオブジェクトを生成する。
  */
-polymnia::PictureIndexed*
+std::unique_ptr<polymnia::PictureIndexed>
 polymnia::Picture::duplicatePictureIndexed() const noexcept
 {
-  PictureIndexed* pc = PictureIndexed::create(w_, h_);
+  auto pc = PictureIndexed::create(w_, h_);
   if (!pc)
     return nullptr;
 
   sumpling_(pc->paletteBuffer(), this);
   updateChain_(pc->paletteBuffer());
-  deColor_(pc, this);
+  deColor_(pc.get(), this);
 
   return pc;
 }

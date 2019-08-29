@@ -2,7 +2,7 @@
  *
  *  dibin.cpp
  *
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  DIB INput
  *  DIB形式画像入力用クラス実装
@@ -11,6 +11,7 @@
  *    2016.3.2    C++11對應
  *    2018.12.23  C++17對應
  *    2018.12.28  資源管理をunique_ptrに移行
+ *    2019.8.29   new[]をmake_uniqueに置換
  */
 #include <iostream>
 #include <fstream>
@@ -236,8 +237,10 @@ read01bit_(
   std::unique_ptr<UByte[]> palbuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
-    palbuf.reset(new UByte[pct->width()]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    palbuf = std::make_unique<UByte[]>(pct->width());
+    //linebuf.reset(new UByte[bufsize]);
+    //palbuf.reset(new UByte[pct->width()]);
   }
   catch(std::bad_alloc&)
   {
@@ -275,8 +278,10 @@ read04bit_(
   std::unique_ptr<UByte[]> palbuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
-    palbuf.reset(new UByte[pct->width()]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    palbuf = std::make_unique<UByte[]>(pct->width());
+    //linebuf.reset(new UByte[bufsize]);
+    //palbuf.reset(new UByte[pct->width()]);
   }
   catch(std::bad_alloc&)
   {
@@ -310,7 +315,8 @@ read08bit_(
   std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    //linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc&)
   {
@@ -344,7 +350,8 @@ bool read24bit_(std::istream& is, polymnia::Picture* pct)
   std::unique_ptr<UByte[]> imgbuf;
   try
   {
-    imgbuf.reset(new UByte[linesize * pct->height()]);
+    imgbuf = std::make_unique<UByte[]>(linesize * pct->height());
+    //imgbuf.reset(new UByte[linesize * pct->height()]);
   }
   catch(std::bad_alloc&)
   {
@@ -378,7 +385,8 @@ bool read32bit_(std::istream& is, polymnia::Picture* pct)
   std::unique_ptr<UByte[]> imgbuf;
   try
   {
-    imgbuf.reset(new UByte[linesize*pct->height()]);
+    imgbuf = std::make_unique<UByte[]>(linesize * pct->height());
+    //imgbuf.reset(new UByte[linesize*pct->height()]);
   }
   catch(std::bad_alloc&)
   {
@@ -410,7 +418,8 @@ bool read01bit_(std::istream& is, polymnia::PictureIndexed* pct)
   std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    //linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc&)
   {
@@ -440,7 +449,8 @@ bool read04bit_(std::istream& is, polymnia::PictureIndexed* pct)
   std::unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    //linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc&)
   {
@@ -471,7 +481,8 @@ bool read08bit_(std::istream& is, polymnia::PictureIndexed* pct)
   unique_ptr<UByte[]> linebuf;
   try
   {
-    linebuf.reset(new UByte[bufsize]);
+    linebuf = std::make_unique<UByte[]>(bufsize);
+    //linebuf.reset(new UByte[bufsize]);
   }
   catch(std::bad_alloc&)
   {
@@ -501,7 +512,8 @@ bool read08bit_(std::istream& is, polymnia::PictureIndexed* pct)
  *  DibLoader::load()
  *  DIBの読み込み
  */
-polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
+std::unique_ptr<polymnia::Picture>
+polymnia::DibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
 
@@ -517,13 +529,13 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
   if (!readInfo_(ifs, &info))
     return nullptr;
 
-  if (info.bit!=1 && info.bit!=4 && info.bit!=8 && info.bit!=24
-      && info.bit!=32)
+  if (   info.bit != 1 && info.bit != 4 && info.bit != 8 
+      && info.bit != 24 && info.bit != 32
+     )
     return nullptr;
 
   RgbColor pal[256];
-  if (info.bit!=24 && info.bit!=32)
-  {
+  if (info.bit!=24 && info.bit!=32) {
     int np = info.npal;
     if (np==0)
       np = 1 << info.bit;
@@ -535,8 +547,7 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
   if (!q)
     return nullptr;
 
-  switch(info.bit)
-  {
+  switch(info.bit) {
   case 1:
     if (!read01bit_(ifs, q.get(), pal))
       return nullptr;
@@ -566,7 +577,7 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
       return nullptr;
   }
 
-  return q.release();
+  return q;
 }
 
 
@@ -574,7 +585,7 @@ polymnia::Picture* polymnia::DibLoader::load(const std::filesystem::path& path)
  *  IndexedDibLoader::load()
  *  パレットDIBの読み込み
  */
-polymnia::PictureIndexed*
+std::unique_ptr<polymnia::PictureIndexed>
 polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
 {
   using namespace std;
@@ -590,7 +601,7 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
   if (!readInfo_(ifs, &info))
     return nullptr;
 
-  if (info.bit!=1 && info.bit!=4 && info.bit!=8)
+  if (info.bit != 1 && info.bit != 4 && info.bit != 8)
     return nullptr;
 
 
@@ -604,8 +615,7 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
   if (!readPalette_(ifs, q->paletteBuffer(), np))
     return nullptr;
 
-  switch(info.bit)
-  {
+  switch(info.bit) {
   case 1:
     if (!read01bit_(ifs, q.get()))
       return nullptr;
@@ -625,7 +635,7 @@ polymnia::IndexedDibLoader::load(const std::filesystem::path& path)
     return nullptr;
   }
 
-  return q.release();
+  return q;
 }
 
 
