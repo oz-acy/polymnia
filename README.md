@@ -53,7 +53,6 @@ $ resizer -l 處理後の畫像の幅 處理後の畫像の高さ 入力path 出
 
 
 ## 依存してゐるライブラリ
-* [Boost](https://www.boost.org/)
 * [libpng](http://www.libpng.org/pub/png/libpng.html)
 * [zlib](https://www.zlib.net/)
 * [libjpeg](http://www.ijg.org/)
