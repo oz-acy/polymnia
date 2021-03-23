@@ -1,8 +1,7 @@
 /**************************************************************************
  *
  *  dibout.cpp
- *
- *  (C) 2002-2019 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  DIB OUTput
  *  DIB形式画像出力用クラス実装
@@ -21,16 +20,6 @@
 
 namespace
 {
-
-// DIBファイル情報(の一部)
-struct Info_
-{
-  int w;    //幅
-  int h;    //高さ
-  int bit;  //Bit per Pixel
-  int npal; //パレット数
-};
-
 
 /* DIBヘッダ書き出し */
 bool writeHeader_(std::ostream& os, int bitsize, int npal)
@@ -123,6 +112,27 @@ bool writePalette_(std::ostream& os, const polymnia::RgbColor pal[], int np)
 }
 
 
+/* 8bit Bitmap 書き出し */
+bool writeBits_(
+  std::ostream& os, const polymnia::PictureIndexed* pct, int bufsize)
+{
+  using namespace themis;
+  using namespace std;
+
+  int w = pct->width();
+  auto linebuf = std::make_unique<UByte[]>(bufsize);
+
+  memset(linebuf.get(), 0, bufsize);
+
+  for (int j = pct->height() - 1; j >= 0; --j) {
+    memcpy(linebuf.get(), pct->buffer() + w * j, w);
+    os.write((char*)(linebuf.get()), bufsize);
+  }
+
+  return true;
+}
+
+
 /* 24bit Bitmapデータ書き出し */
 bool writeBits_(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 {
@@ -131,7 +141,6 @@ bool writeBits_(std::ostream& os, const polymnia::Picture* pct, int bufsize)
 
   int w = pct->width();
   auto linebuf = std::make_unique<UByte[]>(bufsize);
-  //UByte* linebuf = new UByte[bufsize];
 
   memset(linebuf.get(), 0, bufsize);
 
@@ -146,30 +155,6 @@ bool writeBits_(std::ostream& os, const polymnia::Picture* pct, int bufsize)
     os.write((char*)(linebuf.get()), bufsize);
   }
 
-  //delete[] linebuf;
-  return true;
-}
-
-
-/* 8bit Bitmap 書き出し */
-bool writeBits_(
-  std::ostream& os, const polymnia::PictureIndexed* pct, int bufsize)
-{
-  using namespace themis;
-  using namespace std;
-
-  int w = pct->width();
-  auto linebuf = std::make_unique<UByte[]>(bufsize);
-  //UByte* linebuf = new UByte[bufsize];
-
-  memset(linebuf.get(), 0, bufsize);
-
-  for (int j = pct->height() - 1; j>=0; j--) {
-    memcpy(linebuf.get(), pct->buffer() + w * j, w);
-    os.write((char*)(linebuf.get()), bufsize);
-  }
-
-  //delete[] linebuf;
   return true;
 }
 
@@ -179,11 +164,6 @@ bool writeBits_(
 }//end of namespace
 
 
-
-/*==============================
- *  DibSaver::save_()
- *  24bitDIBの保存
- */
 bool
 polymnia::DibSaver::save(
   const polymnia::Picture* p, const std::filesystem::path& path)
@@ -207,10 +187,6 @@ polymnia::DibSaver::save(
 }
 
 
-/*=============================
- *  IndexedDibSaver::save_()
- *  パレットDIBの保存
- */
 bool
 polymnia::IndexedDibSaver::save(
   const polymnia::PictureIndexed* p, const std::filesystem::path& path)

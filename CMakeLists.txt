@@ -9,16 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#set(Boost_USE_STATIC_LIBS ON)
-
-
 
 # 依存するライブラリ
 find_package(themis REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
-#find_package(Boost REQUIRED)
 
 
 # ソースファイルとヘッダファイル
@@ -56,10 +52,10 @@ set_target_properties(polymnia
   PROPERTIES PUBLIC_HEADER "${POLYMNIA_HEADERS}"
 )
 
-#target_include_directories(polymnia PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(polymnia themis png jpeg z)
 
 target_compile_options(polymnia PRIVATE
+  #$<$<CXX_COMPILER_ID:Clang>:-Wall -O3 -stdlib=libc++>
   $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
   $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
@@ -68,25 +64,24 @@ target_compile_options(polymnia PRIVATE
 target_compile_definitions(polymnia PRIVATE NDEBUG)
 
 target_link_options(polymnia PRIVATE
-  $<$<CXX_COMPILER_ID:Clang>:-static>
+  #$<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++ -static>
   $<$<CXX_COMPILER_ID:GNU>:-static>
 )
 
 
 # Debug版ライブラリ
 add_library(polymnia-debug STATIC ${POLYMNIA_SOURCES})
-
-#target_include_directories(polymnia-debug PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(polymnia-debug themis png jpeg z)
 
 target_compile_options(polymnia-debug PRIVATE
+  #$<$<CXX_COMPILER_ID:Clang>:-Wall -g3 -ggdb -stdlib=libc++>
   $<$<CXX_COMPILER_ID:Clang>:-Wall -g3 -ggdb>
   $<$<CXX_COMPILER_ID:GNU>:-Wall -g3 -ggdb>
   $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
 
 target_link_options(polymnia-debug PRIVATE
-  $<$<CXX_COMPILER_ID:Clang>:-static>
+  #$<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++ -static>
   $<$<CXX_COMPILER_ID:GNU>:-static>
 )
 
@@ -98,13 +93,14 @@ add_executable(resizer
 )
 
 target_compile_options(resizer PRIVATE
+  #$<$<CXX_COMPILER_ID:Clang>:-Wall -O3 -stdlib=libc++>
   $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
   $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
 )
 
 target_link_options(resizer PRIVATE
-  $<$<CXX_COMPILER_ID:Clang>:-static>
+  #$<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++ -static>
   $<$<CXX_COMPILER_ID:GNU>:-static>
 )
 target_compile_definitions(resizer PRIVATE NDEBUG)
