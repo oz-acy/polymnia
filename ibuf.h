@@ -1,8 +1,34 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  *
  *  @file ibuf.h
  *  @author oZ/acy (名賀月晃嗣)
- *  @brief 畫像バッファのクラステンプレート
+ *  @brief 畫像バッファクラステンプレート
  *
  *  @date 2016.3.2  C++11/14對應(假)
  *  @date 2018.12.21  C++17對應(假)
@@ -105,6 +131,9 @@ protected:
   int offset_; ///< オフセット 水平方向の1ラインのバッファサイズ
 
   /// @brief 構築子
+  ///
+  /// 畫像バッファの幅、高さ、オフセットの情報を指定値で初期化する。
+  /// バッファそのものは、派生クラスで確保せねばならない。
   /// @param w 幅
   /// @param h 高さ
   /// @param o オフセット
@@ -171,14 +200,14 @@ public:
   //======================================================================
   //  圖形描写
   //======================================================================
-  /// @brief 直線を描畫
+  /// @brief 直線の描畫
   void line(int x1, int y1, int x2, int y2, const C_& col);
-  /// @brief 長方形を描畫
+  /// @brief 長方形の描畫
   void box(int x1, int y1, int x2, int y2, const C_& col, bool fl=false);
-  /// @brief 楕圓を描畫
+  /// @brief 楕圓の描畫
   void ellipse(int x, int y, int a, int b, const C_& col, bool fl=false);
 
-  /// @brief 圓を描畫
+  /// @brief 圓の描畫
   void circle(int x, int y, int r, const C_& col, bool fl=false)
   {
     ellipse(x, y, r, r, col, fl);
@@ -253,8 +282,8 @@ public:
 
   /// @brief 色表現の異なるバッファ間の轉送
   ///
-  /// 色表現型C_の異なる畫像バッファ間で轉送を行ふ。
-  /// 轉送元の色表現を轉送先の色表現に暗默的に變換可能でなければならない。
+  /// 色表現型がC_とは異なる畫像バッファからの轉送を行ふ。
+  /// 轉送元の色表現型C2_からC_への暗默的な變換が可能でなければならない。
   /// @param dx 轉送先x座標
   /// @param dy 轉送先y座標
   /// @param src 轉送元バッファ
@@ -269,8 +298,8 @@ public:
 
   /// @brief 色表現の異なるバッファ間の轉送
   ///
-  /// 色表現型C_の異なる畫像バッファ間で轉送を行ふ。
-  /// 轉送元の色表現を轉送先の色表現に暗默的に變換可能でなければならない。
+  /// 色表現型がC_とは異なる畫像バッファからの轉送を行ふ。
+  /// 轉送元の色表現型C2_からC_への暗默的な變換が可能でなければならない。
   /// @param dx 轉送先x座標
   /// @param dy 轉送先y座標
   /// @param src 轉送元バッファ
@@ -286,8 +315,8 @@ public:
 
   /// @brief 色表現の異なるバッファ間の轉送
   ///
-  /// 色表現型C_の異なる畫像バッファ間で轉送を行ふ。
-  /// 轉送元の色表現を轉送先の色表現に暗默的に變換可能でなければならない。
+  /// 色表現型がC_とは異なる畫像バッファからの轉送を行ふ。
+  /// 轉送元の色表現型C2_からC_への暗默的な變換が可能でなければならない。
   /// @param dx 轉送先x座標
   /// @param dy 轉送先y座標
   /// @param src 轉送元バッファ
@@ -303,8 +332,8 @@ public:
 
   /// @brief 色表現の異なるバッファ間の轉送
   ///
-  /// 色表現型C_の異なる畫像バッファ間で轉送を行ふ。
-  /// 轉送元の色表現を轉送先の色表現に暗默的に變換可能でなければならない。
+  /// 色表現型がC_とは異なる畫像バッファからの轉送を行ふ。
+  /// 轉送元の色表現型C2_からC_への暗默的な變換が可能でなければならない。
   /// @param dx 轉送先x座標
   /// @param dy 轉送先y座標
   /// @param src 轉送元バッファ

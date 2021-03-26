@@ -1,11 +1,36 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  pngin.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  PNG 形式入力クラス
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  last update: 2019.8.29
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file pngin.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief PNG形式入力クラスの實裝
+ *
+ * @date 2019.8.29 修正
+ * @date 2021.3.26 修正
  *
  */
 #include <cstdio>
@@ -78,21 +103,17 @@ void checkColorFormat_(bool* alpha, int* type, int* obits, int bits, int ctype)
   *type = PNG_NUL_;
   *obits = -1;
 
-  if (ctype == PNG_COLOR_TYPE_RGB_ALPHA)
-  {
+  if (ctype == PNG_COLOR_TYPE_RGB_ALPHA) {
     ctype = PNG_COLOR_TYPE_RGB;
     *alpha = true;
   }
-  else if (ctype == PNG_COLOR_TYPE_GRAY_ALPHA)
-  {
+  else if (ctype == PNG_COLOR_TYPE_GRAY_ALPHA) {
     ctype = PNG_COLOR_TYPE_GRAY;
     *alpha = true;
   }
 
-  for (int i=0; pngtype_G[i].cbits != 0; i++)
-  {
-    if (bits == pngtype_G[i].cbits && ctype == pngtype_G[i].ctype)
-    {
+  for (int i=0; pngtype_G[i].cbits != 0; i++) {
+    if (bits == pngtype_G[i].cbits && ctype == pngtype_G[i].ctype) {
       *type = pngtype_G[i].type;
       *obits = pngtype_G[i].bits;
       break;
@@ -112,9 +133,6 @@ void pngRead_(png_structp png_ptr, png_bytep data, png_size_t length)
   using namespace std;
   ifstream* pifs = reinterpret_cast<ifstream*>(png_get_io_ptr(png_ptr));
   pifs->read(reinterpret_cast<char*>(data), length);
-
-  // H23.4.24 coment out for libpng-1.5.x
-  //((std::ifstream*)(png_ptr->io_ptr))->read((char*)data, length);
 }
 
 
@@ -280,7 +298,7 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
     //グレイスケールなら自分で用意する
     int d = 255 / ((1<<obits) - 1);
     for (int i = 0, c = 0; c < 256; i++, c += d)
-      pal[i] = RgbColor((UByte)c, (UByte)c, (UByte)c);
+      pal[i] = RgbColor((std::uint8_t)c, (std::uint8_t)c, (std::uint8_t)c);
   }
   else if (type == PNG_PAL_) {
     int npal;
@@ -292,7 +310,7 @@ polymnia::IndexedPngLoader::load(const std::filesystem::path& path)
   }
 
 
-  UByte *buf = pct->buffer();
+  std::uint8_t* buf = pct->buffer();
   int o = pct->offset();
   for (int pass = 0; pass < n_pass; pass++)
     for (unsigned j = 0, y = 0; y < hh; y++, j += o)

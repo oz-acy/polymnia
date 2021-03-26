@@ -1,26 +1,50 @@
-/**************************************************************************
+/*
+ * Copyright 2003-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  reduce.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  Picture用縮小ルーチン
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    27 Nov MMIV    resize.cpp から縮小專用ルーチンを切り分け
- *    27 Feb MMVIII  LIBPOLYMNIAに移動
- *    20 Apr MMVIII  PictureをLIBPOLYMNIAに移動したことによる修正
- *     8 Sep MMXI    NULL を nullptr に修正(C++11)
- *    28 Jul MMXII   バグ修正(メモリ不正アクセス)
- *     2 Mar MMXVI   throw()削除
- *    28 Dec MMXVIII createReducedPicture()をPictureのメンバ函數に編入
- *    27 Aug MMXIX   __を含む名前を修正
- *    29 Aug MMXIX   createReducedPicture()の返却型をunique_ptrに變更
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file reduce.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief Picture用縮小ルーチン
+ *
+ * @date 27 Nov MMIV    resize.cpp から縮小專用ルーチンを切り分け
+ * @date 27 Feb MMVIII  LIBPOLYMNIAに移動
+ * @date 20 Apr MMVIII  PictureをLIBPOLYMNIAに移動したことによる修正
+ * @date  8 Sep MMXI    NULL を nullptr に修正(C++11)
+ * @date 28 Jul MMXII   バグ修正(メモリ不正アクセス)
+ * @date  2 Mar MMXVI   throw()を削除
+ * @date 28 Dec MMXVIII createReducedPicture()をPictureのメンバ函數に編入
+ * @date 27 Aug MMXIX   __を含む名前を修正
+ * @date 29 Aug MMXIX   createReducedPicture()の返却型をunique_ptrに變更
+ * @date 25 Mar MMXXI   themis/inttype.hの非推奬化に對應
+ *
  */
 #include "picture.h"
 
 
 namespace {
-
 
 polymnia::RgbColor
 toSmall_(
@@ -78,7 +102,11 @@ toSmall_(
   G /= S;
   B /= S;
 
-  return RgbColor((UByte)(R + 0.5), (UByte)(G + 0.5), (UByte)(B + 0.5));
+  return
+    RgbColor(
+      (std::uint8_t)(R + 0.5),
+      (std::uint8_t)(G + 0.5),
+      (std::uint8_t)(B + 0.5));
 }
 
 

@@ -1,17 +1,42 @@
-/*************************************************************************
+/*
+ * Copyright 2003-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  toindexed.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  Picture -> PictureIndexed の減色複寫ルーチン
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.2.26  ファイル名變更、他修正
- *    2016.3.2   throw()削除
- *    2018.12.28
- *      reducePictureColors()をPicture::duplicatePictureIndexed()に變更
- *    2019.8.27  __を含む名前を修正
- *    2019.8.29  duplicatePictureIndexedの返却型をunique_ptrに變更
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file toindexed.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief PictureからPictureIndexedへの減色複寫處理
+ *
+ * @date 2016.2.26 ファイル名變更、他修正
+ * @date 2016.3.2  throw()削除
+ * @date 2018.12.28
+ *     reducePictureColors()をPicture::duplicatePictureIndexed()に變更
+ * @date 2019.8.27  __を含む名前を修正
+ * @date 2019.8.29  duplicatePictureIndexedの返却型をunique_ptrに變更
+ * @date 2021.3.25  themis/inttype.hの非推奬化に對應
+ *
  */
 #include <memory>
 #include "picture.h"
@@ -33,10 +58,10 @@ namespace
 struct ColorRange_
 {
 public:
-  themis::UByte min;
-  themis::UByte max;
-  themis::UDWord bits[8];  // exist x in min..max <=> bits[x>>5]<x&0x1f> = 1
-  themis::UDWord sum;      // pixel 値の總計
+  std::uint8_t min;
+  std::uint8_t max;
+  std::uint32_t bits[8]; // exist x in min..max <=> bits[x>>5]<x&0x1f> = 1
+  std::uint32_t sum;     // pixel値の總計
 
 public:
   int cutoff();
@@ -56,8 +81,7 @@ int ColorRange_::cutoff()
 
   // 最小値を切り上げていく
   for (j = min >> 5; j < 8; j++)
-    if (bits[j])
-    {
+    if (bits[j]) {
       for (i = 0, k = 1; i < 32 && !(bits[j] & k); i++, k <<= 1)
         ;
       break;
@@ -65,12 +89,11 @@ int ColorRange_::cutoff()
 
   i += j << 5;
   if (i <= (int)max)
-    min = (UByte)i;
+    min = (std::uint8_t)i;
 
   // 最大値を切り下げていく
   for (j = max >> 5; j >= 0; j--)
-    if (bits[j])
-    {
+    if (bits[j]) {
       for (i = 31, k = 1 << 31; i >= 0 && !(bits[j] & k); i--, k >>= 1)
         ;
       break;
@@ -78,7 +101,7 @@ int ColorRange_::cutoff()
 
   i += j << 5;
   if (i >= (int)min)
-    max = (UByte)i;
+    max = (std::uint8_t)i;
 
   // 區間の幅を返す
   return max - min + 1;
@@ -117,20 +140,17 @@ void PixelRange_::divide(PixelRange_& neu)
 
   neu = *this;
 
-  if (gw >= bw && gw >= rw)
-  {
-    g.max = (UByte)(g.sum / count);
-    neu.g.min = (UByte)(g.sum / count + 1);
+  if (gw >= bw && gw >= rw) {
+    g.max = (std::uint8_t)(g.sum / count);
+    neu.g.min = (std::uint8_t)(g.sum / count + 1);
   }
-  else if(rw>=bw && rw>=gw)
-  {
-    r.max = (UByte)(r.sum / count);
-    neu.r.min = (UByte)(r.sum / count + 1);
+  else if(rw>=bw && rw>=gw) {
+    r.max = (std::uint8_t)(r.sum / count);
+    neu.r.min = (std::uint8_t)(r.sum / count + 1);
   }
-  else
-  {
-    b.max = (UByte)(b.sum / count);
-    neu.b.min = (UByte)(b.sum / count + 1);
+  else {
+    b.max = (std::uint8_t)(b.sum / count);
+    neu.b.min = (std::uint8_t)(b.sum / count + 1);
   }
 }
 
@@ -167,9 +187,9 @@ void sumpling_(polymnia::RgbColor pal[], const polymnia::Picture* src)
 
     for (int y = 0; y < src->height(); y++) {
       for (int x = 0; x < src->width(); x++) {
-        UByte r = src->pixel(x, y).r;
-        UByte g = src->pixel(x, y).g;
-        UByte b = src->pixel(x, y).b;
+        std::uint8_t r = src->pixel(x, y).r;
+        std::uint8_t g = src->pixel(x, y).g;
+        std::uint8_t b = src->pixel(x, y).b;
 
         // r,g,bが属するrange#を得る
         for (i = 0; i < current_range; i++) {
@@ -189,9 +209,9 @@ void sumpling_(polymnia::RgbColor pal[], const polymnia::Picture* src)
         range[i].b.sum += b;
 
         // Pixel値(r,g,b)の存在フラグを立てる
-        range[i].r.bits[r>>5] |= (UDWord)1<<(r&0x1F);
-        range[i].g.bits[g>>5] |= (UDWord)1<<(g&0x1F);
-        range[i].b.bits[b>>5] |= (UDWord)1<<(b&0x1F);
+        range[i].r.bits[r >> 5] |= (std::uint32_t)1 << (r & 0x1F);
+        range[i].g.bits[g >> 5] |= (std::uint32_t)1 << (g & 0x1F);
+        range[i].b.bits[b >> 5] |= (std::uint32_t)1 << (b & 0x1F);
 
         // Pixel数
         range[i].count += 1;
@@ -209,9 +229,9 @@ void sumpling_(polymnia::RgbColor pal[], const polymnia::Picture* src)
   for (i = 0; i < 256; i++) {
     if (range[i].count==0)
       range[i].count = 1;
-    pal[i].r = (UByte)(range[i].r.sum / range[i].count);
-    pal[i].g = (UByte)(range[i].g.sum / range[i].count);
-    pal[i].b = (UByte)(range[i].b.sum / range[i].count);
+    pal[i].r = (std::uint8_t)(range[i].r.sum / range[i].count);
+    pal[i].g = (std::uint8_t)(range[i].g.sum / range[i].count);
+    pal[i].b = (std::uint8_t)(range[i].b.sum / range[i].count);
   }
 }// end of sampling_()
 
@@ -361,8 +381,7 @@ void updateChain_(const polymnia::RgbColor pal[])
   for (int i = 0; i < NCLASS; i++)
     index_G[i] = -1;
 
-  for (int i = 0; i < NPAL; i++)
-  {
+  for (int i = 0; i < NPAL; i++) {
     int k = pal[i].r + pal[i].g + pal[i].b;
     next_G[i] = index_G[k];
     index_G[k] = i;
@@ -371,7 +390,7 @@ void updateChain_(const polymnia::RgbColor pal[])
 
 
 /* 與RGB値の最近パレットを求める */
-themis::UByte findNearestPal_(
+std::uint8_t findNearestPal_(
   const polymnia::RgbColor& col, const polymnia::RgbColor pal[])
 {
   using namespace themis;
@@ -380,7 +399,7 @@ themis::UByte findNearestPal_(
   unsigned long memdif = ~0;
 
   // 現在のところの最近パレット : 取りあへず 0で初期化
-  UByte mempos = 0;
+  std::uint8_t mempos = 0;
 
   // 與RGB値の成分和
   int base = col.r + col.g + col.b;
@@ -391,8 +410,7 @@ themis::UByte findNearestPal_(
    *  與 RGB 値との RGB 成分差の和が
    *  小さいところから大きいところに擴げながら調べる
    */
-  for (int absval = 0; absval < NCLASS; absval++)
-  {
+  for (int absval = 0; absval < NCLASS; absval++) {
     /*
      *  現在の最近パレットとの距離より
      *  これから調べる對象 (の最小値) との距離の方が
@@ -408,15 +426,14 @@ themis::UByte findNearestPal_(
 
     /* RGBの總和が col より absval だけ大きいパレットを調べて廻る */
     int cc = (base+absval < NCLASS) ? index_G[base + absval] : -1;
-    while (cc >= 0 && cc < NPAL)
-    {
+    while (cc >= 0 && cc < NPAL) {
       dif = rms_(col, pal[cc]);
       if (dif == 0)
-        return (UByte)cc;  // 距離 0 なら 文句なし終了
+        return (std::uint8_t)cc;  // 距離 0 なら 文句なし終了
       else if (dif<memdif)
       {
         // 最近パレットと最小距離を付け替え
-        mempos = (UByte)cc;
+        mempos = (std::uint8_t)cc;
         memdif = dif;
       }
       cc = next_G[cc];  // リンクを辿る
@@ -425,15 +442,13 @@ themis::UByte findNearestPal_(
 
     /* RGBの總和が col より absval だけ小さいパレットを調べて廻る */
     cc = (base - absval >= 0) ? index_G[base - absval] : -1;
-    while (cc >= 0 && cc < NPAL)
-    {
+    while (cc >= 0 && cc < NPAL) {
       dif = rms_(col, pal[cc]);
       if (dif == 0)
-        return (UByte)cc;  // 距離 0 なら 文句なし終了
-      else if (dif < memdif)
-      {
+        return (std::uint8_t)cc;  // 距離 0 なら 文句なし終了
+      else if (dif < memdif) {
         // 最近パレットと最小距離を付け替え
-        mempos = (UByte)cc;
+        mempos = (std::uint8_t)cc;
         memdif = dif;
       }
       cc = next_G[cc];  // リンクを辿る
@@ -466,16 +481,12 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
   int mx = src->width() + D_AREA * 2;
   int sum = mx * PATY;
   
-  unique_ptr<int[]> rerr(new int[sum]);
-  unique_ptr<int[]> gerr(new int[sum]);
-  unique_ptr<int[]> berr(new int[sum]);
-  
-  //int* rerr = new int[sum];
-  //int* gerr = new int[sum];
-  //int* berr = new int[sum];
-  memset(rerr.get(), 0, sizeof(int)*sum);
-  memset(gerr.get(), 0, sizeof(int)*sum);
-  memset(berr.get(), 0, sizeof(int)*sum);
+  auto rerr = std::make_unique<int[]>(sum);
+  auto gerr = std::make_unique<int[]>(sum);
+  auto berr = std::make_unique<int[]>(sum);
+  memset(rerr.get(), 0, sizeof(int) * sum);
+  memset(gerr.get(), 0, sizeof(int) * sum);
+  memset(berr.get(), 0, sizeof(int) * sum);
 
   // 分散パターン
   int err_pat[PATX*PATY] = ERR_PTN;
@@ -484,10 +495,8 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
     pat_sum += err_pat[i];
 
 
-  for (int y = 0; y < src->height(); y++)
-  {
-    for (int x = 0; x < src->width(); x++)
-    {
+  for (int y = 0; y < src->height(); y++) {
+    for (int x = 0; x < src->width(); x++) {
       RgbColor col = src->pixel(x, y);
       int adr = x + D_AREA;
       int rr = col.r + rerr[adr]/pat_sum;
@@ -498,9 +507,9 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
       int g2 = gg > 255 ? 255 : gg;   g2 = g2 < 0 ? 0 : g2;
       int b2 = bb > 255 ? 255 : bb;   b2 = b2 < 0 ? 0 : b2;
 
-      UByte bst
+      std::uint8_t bst
         = findNearestPal_(
-            RgbColor((UByte)r2, (UByte)g2, (UByte)b2),
+            RgbColor((std::uint8_t)r2, (std::uint8_t)g2, (std::uint8_t)b2),
             dst->paletteBuffer());
 
       int re = rr - dst->palette(bst).r;
@@ -510,10 +519,8 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 
       // 誤差分散
       adr -= D_AREA;
-      for (int iy = 0; iy < PATY; iy++, adr+=mx)
-      {
-        for (int ix = 0; ix < PATX; ix++)
-        {
+      for (int iy = 0; iy < PATY; iy++, adr+=mx) {
+        for (int ix = 0; ix < PATX; ix++) {
           rerr[adr + ix] += re * err_pat[ix + iy * PATX];
           gerr[adr + ix] += ge * err_pat[ix + iy * PATX];
           berr[adr + ix] += be * err_pat[ix + iy * PATX];
@@ -524,10 +531,8 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
     }
 
     // バッファのずらし處理
-    for (int i = 0; i < mx; i++)
-    {
-      for (int j = 0; j < PATY-1; j++)
-      {
+    for (int i = 0; i < mx; i++) {
+      for (int j = 0; j < PATY-1; j++) {
         rerr[i + j * mx] = rerr[i + (j+1) * mx];
         gerr[i + j * mx] = gerr[i + (j+1) * mx];
         berr[i + j * mx] = berr[i + (j+1) * mx];
@@ -537,10 +542,6 @@ void deColor_(polymnia::PictureIndexed* dst, const polymnia::Picture* src)
       berr[i + (PATY-1) * mx] = 0;
     }
   }
-
-  //delete[] rerr;
-  //delete[] gerr;
-  //delete[] berr;
 }
 #else
   // 單純近似による減色
@@ -549,11 +550,9 @@ deColor_(const polymnia::PictureIndexed* dst, const polymnia::Picture* src)
 {
   using namespace themis;
 
-  for (int y = 0; y < src->height(); y++)
-  {
-    for (int x = 0; x < src->width(); x++)
-    {
-      UByte bst
+  for (int y = 0; y < src->height(); y++) {
+    for (int x = 0; x < src->width(); x++) {
+      std::uint8_t bst
         = findNearestPal_(src->pixel(x, y), dst->paletteBuffer());
       dst->pixel(x, y) = bst;
     }

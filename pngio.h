@@ -1,5 +1,30 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  *  @file pngoio.h
  *  @author oZ/acy (名賀月晃嗣)
  *  @brief PNG形式畫像入出力クラス (libpngのラッパー)
@@ -7,8 +32,10 @@
  *  @date 2018.12.23 C++17對應
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
  *  @date 2019.8.29 Loaderのload()の返却型をunique_ptrに變更
+ *  @date 2021.3.26 themis/inttype.hの非推奬化に對應
  *
- *//*
+ */
+/*
  *  Classes defined in this file are inplemented with "libpng" library.
  *  The author thanks authors of "libpng."
  */
@@ -114,9 +141,9 @@ class polymnia::IndexedPngSaver
 : public polymnia::PictSaver<polymnia::PictureIndexed>
 {
 private:
-  bool interlace; ///< インターレース化するか否か
-  bool trans;  ///< 透過色を設定するか否か
-  themis::UByte paltp;  ///< 透過色
+  bool interlace;      ///< インターレース化するか否か
+  bool trans;          ///< 透過色を設定するか否か
+  std::uint8_t paltp;  ///< 透過色
 
 public:
   /// @brief 構築子
@@ -132,7 +159,11 @@ public:
   void disableInterlace() { interlace = false; }
   
   /// @brief 透過色を設定
-  void enableTransparent(themis::UByte pl) { trans = true; paltp = pl; }
+  void enableTransparent(std::uint8_t pl)
+  {
+    trans = true;
+    paltp = pl;
+  }
   /// @brief 透過色を持たぬやう設定
   void disableTransparent() { trans = false; }
 

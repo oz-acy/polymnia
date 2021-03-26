@@ -1,11 +1,37 @@
-/**********************************************************************//**
+/*
+ * Copyright 2016-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  *  @file hex.h
  *  @author oZ/acy (名賀月晃嗣)
  *  @brief 正六角形マス描畫クラス
  *
  *  @date 2018.12.28 新規實裝
  *  @date 2019.8.16 インクルードガードの識別子を豫約されてゐないものに修正
+ *
  */
 #ifndef INCLUDE_GUARD_POLYMNIA_HEX_H
 #define INCLUDE_GUARD_POLYMNIA_HEX_H
@@ -23,8 +49,7 @@ namespace polymnia
 /*------------------------------------------------*//**
  *  @brief 正六角形マス描畫クラス
  *
- *  内部狀態として以下の値を保持し、
- *  それらに基づいて正六角形の升目を描畫する。
+ *  内部狀態として以下の値を保持し、それらに基づいて正六角形の升目を描畫する。
  *  - R 正六角形の一邊のピクセル長
  *  - P0 マス(0, 0)の中心のピクセル水平座標
  *  - Q0 マス(0, 0)の中心のピクセル垂直座標
@@ -33,14 +58,16 @@ template<class C_>
 class polymnia::HexPainter
 {
 private:
-  int r_; ///< HEXの一邊の長さR
-  int p0_; ///< HEX(0, 0)の中心の水平座標P0
-  int q0_; ///< HEX(0, 0)の中心の垂直座標Q0
+  int r_; ///< HEXの一邊のピクセル長R
+  int p0_; ///< HEX(0, 0)の中心のピクセル水平座標P0
+  int q0_; ///< HEX(0, 0)の中心のピクセル垂直座標Q0
 
   static inline const double SQRT3_ = std::sqrt(3);
 
 public:
   /// @brief 構築子
+  ///
+  /// 内部狀態を與へて初期化する。
   /// @param r HEXの邊の長さR
   /// @param p0 HEX(0, 0)の中心の水平座標P0
   /// @param q0 HEX(0, 0)の中心の垂直座標Q0

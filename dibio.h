@@ -1,5 +1,30 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  *  @file dibio.h
  *  @author oZ/acy (名賀月晃嗣)
  *  @brief DIB形式畫像入出力用クラス
@@ -27,7 +52,7 @@ namespace polymnia
  *  @brief DIB形式畫像の讀み込み用クラス
  *
  *  DIB形式の畫像を
- *  RGB24bitカラーの畫像として讀み込む。
+ *  RGB24bit色の畫像として讀み込む。
  */
 class polymnia::DibLoader : public polymnia::PictLoader<polymnia::Picture>
 {
@@ -49,10 +74,9 @@ public:
 
 
 /*----------------------------------------------*//**
- *  @brief DIB形式畫像の讀み込みクラス
+ *  @brief 256パレットDIB形式畫像の讀み込み用クラス
  *
- *  DIB形式(indexed color)の畫像を
- *  256パレットカラーの畫像として讀み込む。
+ *  DIB形式(indexed color)の畫像を256パレットの畫像として讀み込む。
  */
 class polymnia::IndexedDibLoader
 : public polymnia::PictLoader<polymnia::PictureIndexed>
@@ -76,9 +100,9 @@ public:
 
 
 /*---------------------------------------------------*//**
- *  @brief 24bitカラーDIB形式の畫像保存クラス
+ *  @brief 24bit色DIB形式の畫像保存クラス
  *
- *  畫像を24ビットカラーDIB形式で保存する。
+ *  畫像を24ビット色DIB形式で保存する。
  */
 class polymnia::DibSaver : public polymnia::PictSaver<polymnia::Picture>
 {
@@ -101,9 +125,9 @@ public:
 
 
 /*------------------------------------------------------*//**
- *  @brief 256パレットカラーDIB形式の畫像保存クラス
+ *  @brief 256パレットDIB形式の畫像保存クラス
  *
- *  畫像を256パレットカラーのDIB形式で保存する。
+ *  畫像を256パレットのDIB形式で保存する。
  */
 class polymnia::IndexedDibSaver
 : public polymnia::PictSaver<polymnia::PictureIndexed>
@@ -116,7 +140,7 @@ public:
 
   /// @brief 保存
   ///
-  /// 畫像を256パレットカラーDIB形式で保存する。
+  /// 畫像を256パレットDIB形式で保存する。
   /// @param p 畫像
   /// @param path ファイルパス
   /// @return 成功したときはtrue、さもなくばfalse

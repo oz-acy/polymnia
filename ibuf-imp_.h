@@ -1,14 +1,37 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  ibuf-imp_.h
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  implement of Image BUFfer template
- *  畫像バッファクラステンプレート實裝部分
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.2.26 ellipse()内の不使用變數の宣言を削除
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file ibuf-imp_.h
+ * @author oZ/acy
+ * @brief 畫像バッファクラステンプレートの實裝
+ *
+ * @date 2016.2.26  ellipse()内の不使用變數の宣言を削除
+ * @date 2021.3.25  整形
+ *
  */
 #include <stack>
 #include <cstring>
@@ -99,8 +122,7 @@ polymnia::ImageBuffer<C_>::blt(
 {
   imp_::Clip_ clip(sx, sy, w, h, dx, dy, mk);
 
-  if (clip)
-  {
+  if (clip) {
     int dp = clip.dx + clip.dy * offset_;
     int sp = clip.sx + clip.sy * src->offset_;
     for (int i = 0; i < clip.h; i++, dp += offset_, sp += src->offset_)
@@ -134,8 +156,7 @@ polymnia::ImageBuffer<C_>::blt(
 {
   imp_::Clip_ clip(sx, sy, w, h, dx, dy, mk);
 
-  if (clip)
-  {
+  if (clip) {
     const C2_* b = src->buffer();
     int dp = clip.dx + clip.dy * offset_;
     int sp = clip.sx + clip.sy * src->offset();
@@ -166,8 +187,7 @@ polymnia::ImageBuffer<C_>::blt(
 {
   imp_::Clip_ clip(sx, sy, w, h, dx, dy, mk);
 
-  if (clip)
-  {
+  if (clip) {
     const C2_* b = src->buffer();
     int dp = clip.dx + clip.dy * offset_;
     int sp = clip.sx + clip.sy * src->offset();
@@ -226,8 +246,7 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
   dx = x2 - x1;
   dy = y2 - y1;
 
-  if (dx < 0)
-  {
+  if (dx < 0) {
     sx = -1;
     dx = -dx;
   }
@@ -236,8 +255,7 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
   else
     sx = 1;
 
-  if (dy < 0)
-  {
+  if (dy < 0) {
     sy = -1;
     dy = -dy;
   }
@@ -253,16 +271,14 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
 
   int e, i, p, q;
 
-  if (dx >= dy)
-  {
+  if (dx >= dy) {
     e = -dx;
     int lx = (dx + 1) / 2;
 
     p = x1 + y1 * offset_;
     q = x2 + y2 * offset_;
 
-    for (i = 0; i < lx; i++)
-    {
+    for (i = 0; i < lx; i++) {
       if (xx1 >= 0 && xx1 < w_ && yy1 >= 0 && yy1 < h_)
         buf_[p] = col;
       if (xx2 >= 0 && xx2 < w_ && yy2 >= 0 && yy2 < h_)
@@ -273,17 +289,14 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
       xx1 += sx;
       xx2 -= sx;
       e += 2 * dy;
-      if (e >= 0)
-      {
-        if (sy > 0)
-        {
+      if (e >= 0) {
+        if (sy > 0) {
           p += offset_;
           q -= offset_;
           yy1++;
           yy2--;
         }
-        else if (sy < 0)
-        {
+        else if (sy < 0) {
           p -= offset_;
           q += offset_;
           yy1--;
@@ -304,22 +317,19 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
     p = x1 + y1 * offset_;
     q = x2 + y2 * offset_;
 
-    for (i = 0; i < ly; i++)
-    {
+    for (i = 0; i < ly; i++) {
       if (xx1 >= 0 && xx1 < w_ && yy1 >= 0 && yy1 < h_)
         buf_[p] = col;
       if (xx2 >= 0 && xx2 < w_ && yy2 >= 0 && yy2 < h_)
         buf_[q] = col;
 
-      if(sy > 0)
-      {
+      if(sy > 0) {
         p += offset_;
         q -= offset_;
         yy1++;
         yy2--;
       }
-      else if (sy < 0)
-      {
+      else if (sy < 0) {
         p -= offset_;
         q += offset_;
         yy1--;
@@ -327,8 +337,7 @@ polymnia::ImageBuffer<C_>::line(int x1, int y1, int x2, int y2, const C_& col)
       }
 
       e += 2 * dx;
-      if (e >= 0)
-      {
+      if (e >= 0) {
         p += sx;
         q -= sx;
         xx1 += sx;
@@ -360,34 +369,33 @@ polymnia::ImageBuffer<C_>::box(
     std::swap(y1, y2);
 
   // 全部が範圍外なら return
-  if (x1>=w_ || x2<0 || y1>=h_ || y2<0)
+  if (x1 >= w_ || x2 < 0 || y1 >= h_ || y2 < 0)
     return;
 
   // 範圍内に切りつめた値
   int xx1, xx2, yy1, yy2;
 
-  if (x1<0)
+  if (x1 < 0)
     xx1 = 0;
   else
     xx1 = x1;
 
-  if (x2>=w_)
+  if (x2 >= w_)
     xx2 = w_-1;
   else
     xx2 = x2;
 
-  if (y1<0)
+  if (y1 < 0)
     yy1 = 0;
   else
     yy1 = y1;
 
-  if (y2>=h_)
+  if (y2 >= h_)
     yy2 = h_-1;
   else
     yy2 = y2;
 
-  if (fl)
-  { // 塗り潰し
+  if (fl) { // 塗り潰し
     int i, j;
     int p = yy1 * offset_;
     //int w = xx2 - xx1;
@@ -395,45 +403,41 @@ polymnia::ImageBuffer<C_>::box(
       for (j=xx1; j<=xx2; j++)
         buf_[p+j] = col;
   }
-  else
-  {
+  else {
     int i, p, q;
 
     // 横枠を描く
-    p = xx1 + y1*offset_;
-    q = xx1 + y2*offset_;
-    if (y1>=0)
-    {
-      if (y2<h_)
-        for (i=xx1; i<=xx2; i++,p++,q++)
+    p = xx1 + y1 * offset_;
+    q = xx1 + y2 * offset_;
+    if (y1 >= 0) {
+      if (y2 < h_)
+        for (i = xx1; i <= xx2; i++, p++, q++)
           buf_[p] = buf_[q] = col;
       else
-        for (i=xx1; i<=xx2; i++,p++)
+        for (i = xx1; i <= xx2; i++, p++)
           buf_[p] = col;
     }
     else
     {
-      if (y2<h_)
-        for (i=xx1; i<=xx2; i++,q++)
+      if (y2 < h_)
+        for (i = xx1; i <= xx2; i++, q++)
           buf_[q] = col;
     }
 
     // 縦枠を描く
-    p = x1 + yy1*offset_;
-    q = x2 + yy1*offset_;
-    if (x1>=0)
-    {
-      if (x2<w_)
-        for (i=yy1; i<=yy2; i++, p+=offset_, q+=offset_)
+    p = x1 + yy1 * offset_;
+    q = x2 + yy1 * offset_;
+    if (x1 >= 0) {
+      if (x2 < w_)
+        for (i = yy1; i <= yy2; i++, p += offset_, q += offset_)
           buf_[p] = buf_[q] = col;
       else
-        for (i=yy1; i<=yy2; i++,p+=offset_)
+        for (i = yy1; i <= yy2; i++, p += offset_)
           buf_[p] = col;
     }
-    else
-    {
-      if (x2<w_)
-        for (i=yy1; i<=yy2; i++,q+=offset_)
+    else {
+      if (x2 < w_)
+        for (i = yy1; i <= yy2; i++, q += offset_)
           buf_[q] = col;
     }
   }
@@ -455,7 +459,7 @@ void
 polymnia::ImageBuffer<C_>::ellipse(
   int x, int y, int a, int b, const C_& col, bool fl)
 {
-  if (a==0 || b==0)
+  if (a == 0 || b == 0)
     return;
 
   int ytp, ytm;
@@ -465,38 +469,32 @@ polymnia::ImageBuffer<C_>::ellipse(
 
   int p = 0;
   int q, e;
-  if (a < b)
-  {
+  if (a < b) {
     e = 2 - 3 * b;
     q = b;
   }
-  else
-  {
+  else {
     e = 2 - 3 * a;
     q = a;
   }
 
-  while (p <= q)
-  {
+  while (p <= q) {
     if (e < 0)
       e += (p << 2) + 6;
-    else
-    {
+    else {
       e += ((p - q) << 2) + 10;
       q--;
     }
 
     int s, t, s2, t2;
-    if (a < b)
-    {
+    if (a < b) {
       s = p * a / b;   // 1, 2, 7, 8
       t = q;
 
       s2 = q * a / b;  // 3, 4, 5, 6 
       t2 = p;
     }
-    else
-    {
+    else {
       s = p;
       t = q * b / a;
 
@@ -507,53 +505,43 @@ polymnia::ImageBuffer<C_>::ellipse(
     p++;
 
 
-    if (x - s < w_  &&  x + s >= 0  &&  y - t < h_  &&  y + t >= 0)
-    {
-      if (fl)
-      {
+    if (x - s < w_  &&  x + s >= 0  &&  y - t < h_  &&  y + t >= 0) {
+      if (fl) {
         int i = (x - s < 0) ? 0 : x-s;
         int j = (x + s + 1 >= w_) ? w_-1 : x + s + 1;
-        if (y + t < h_)
-        {
+        if (y + t < h_) {
           int ytp = (y + t) * offset_;
 
-          if (y - t >= 0)
-          { // 1=>2, 7=>8
+          if (y - t >= 0) { // 1=>2, 7=>8
             int ytm = (y - t) * offset_;
             for ( ; i < j; ++i)
               buf_[i + ytp] = buf_[i + ytm] = col;
           }
-          else
-          { // 1=>2
+          else { // 1=>2
             for ( ; i < j; ++i)
               buf_[i + ytp] = col;
           }
         }
-        else
-        {
-          if (y - t >= 0)
-          { //7->8
+        else {
+          if (y - t >= 0) { //7->8
             int ytm = (y - t) * offset_;
             for ( ; i < j; i++)
               buf_[i + ytm] = col;
           }
         }
       }
-      else
-      {
+      else {
         bool xs1 = (x - s) >= 0;
         bool xs2 = (x + s) < w_;
 
-        if (y + t < h_)
-        {
+        if (y + t < h_) {
           ytp = (y + t) * offset_;
           if (xs1)
             buf_[x - s + ytp] = col;  //1
           if (xs2)
             buf_[x + s + ytp] = col;  //2
         }
-        if (y - t >= 0)
-        {
+        if (y - t >= 0) {
           ytm = (y - t) * offset_;
           if (xs1)
             buf_[x - s + ytm] = col;  //7
@@ -564,53 +552,43 @@ polymnia::ImageBuffer<C_>::ellipse(
     }
 
 
-    if (x - s2 < w_  &&  x + s2 >= 0  && y - t2 < h_  &&  y + t2 >= 0)
-    {
-      if (fl)
-      {
+    if (x - s2 < w_  &&  x + s2 >= 0  && y - t2 < h_  &&  y + t2 >= 0) {
+      if (fl) {
         int i = (x - s2 < 0) ? 0 : x - s2;
         int j = (x + s2 + 1 >= w_) ? w_ - 1 : x + s2 + 1;
-        if (y + t2 < h_)
-        {
+        if (y + t2 < h_) {
           int ytp = (y + t2) * offset_;
 
-          if (y - t2 >= 0)
-          { // 3=>4, 5=>6
+          if (y - t2 >= 0) { // 3=>4, 5=>6
             int ytm = (y - t2) * offset_;
             for ( ; i < j; ++i)
               buf_[i + ytp] = buf_[i + ytm] = col;
           }
-          else
-          { // 3=>4
+          else { // 3=>4
             for ( ; i < j; ++i)
               buf_[i + ytp] = col;
           }
         }
-        else
-        {
-          if (y - t2 >= 0)
-          { //5=>6
+        else {
+          if (y - t2 >= 0) { //5=>6
             int ytm = (y - t2) * offset_;
             for ( ; i < j; i++)
               buf_[i + ytm] = col;
           }
         }
       }
-      else
-      {
+      else {
         bool xs1 = (x - s2) >= 0;
         bool xs2 = (x + s2) < w_;
 
-        if (y + t2 < h_)
-        {
+        if (y + t2 < h_) {
           ytp = (y + t2) * offset_;
           if (xs1)
             buf_[x - s2 + ytp] = col;  //3
           if (xs2)
             buf_[x + s2 + ytp] = col;  //4
         }
-        if (y - t2 >= 0)
-        {
+        if (y - t2 >= 0) {
           ytm = (y - t2) * offset_;
           if (xs1)
             buf_[x - s2 + ytm] = col;  //5
@@ -642,8 +620,7 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
   if (p_col==col)
     return;
 
-  while (!p_stc.empty())
-  {
+  while (!p_stc.empty()) {
     int pt = p_stc.top();
     p_stc.pop();
 
@@ -651,8 +628,7 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
     int yy = pt / offset_;
 
     bool ful, fur;
-    if (yy > 0 && buf_[pt-offset_]==p_col)
-    {
+    if (yy > 0 && buf_[pt-offset_]==p_col) {
       p_stc.push(pt-offset_);
       ful = fur = true;
     }
@@ -660,8 +636,7 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
       ful = fur = false;
 
     bool fdl, fdr;
-    if (yy < h_ - 1 && buf_[pt+offset_]==p_col)
-    {
+    if (yy < h_ - 1 && buf_[pt+offset_]==p_col) {
       p_stc.push(pt+offset_);
       fdl = fdr = true;
     }
@@ -676,25 +651,20 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
 
     buf_[pt] = col;
 
-    while (l >= 0 && buf_[L]==p_col)
-    {
-      if (L-offset_ >= 0)
-      {
+    while (l >= 0 && buf_[L]==p_col) {
+      if (L-offset_ >= 0) {
         if (ful && buf_[L-offset_] != p_col)
           ful = false;
-        else if (!ful && buf_[L-offset_] == p_col)
-        {
+        else if (!ful && buf_[L-offset_] == p_col) {
           ful = true;
           p_stc.push(L-offset_);
         }
       }
 
-      if (L+offset_ < h_*offset_)
-      {
+      if (L+offset_ < h_*offset_) {
         if (fdl && buf_[L+offset_] != p_col)
           fdl = false;
-        else if (!fdl && buf_[L+offset_] == p_col)
-        {
+        else if (!fdl && buf_[L+offset_] == p_col) {
           fdl = true;
           p_stc.push(L+offset_);
         }
@@ -705,25 +675,20 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
       --l;
     }
 
-    while (r < w_ && buf_[R]==p_col)
-    {
-      if (R-offset_ >= 0)
-      {
+    while (r < w_ && buf_[R]==p_col) {
+      if (R-offset_ >= 0) {
         if (fur)
           fur = false;
-        else if (buf_[R-offset_]==p_col)
-        {
+        else if (buf_[R-offset_]==p_col) {
           fur = true;
           p_stc.push(R - offset_);
         }
       }
 
-      if (R+offset_ < h_*offset_)
-      {
+      if (R+offset_ < h_*offset_) {
         if (fdr && buf_[R+offset_] != p_col)
           fdr = false;
-        else if (!fdr && buf_[R+offset_] == p_col)
-        {
+        else if (!fdr && buf_[R+offset_] == p_col) {
           fdr = true;
           p_stc.push(R + offset_);
         }

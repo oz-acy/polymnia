@@ -1,12 +1,36 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  pngout.cpp
- *  by oZ/acy
- *  (c) 2002-2019 oZ/acy. ALL RIGHTS RESERVED.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  PNG 形式出力クラス
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  last update: 2019.8.27
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file pngout.cpp
+ * @author oZ/acy
+ * @brief PNG形式出力クラスの實裝
+ *
+ * @date 2019.8.27 修正
+ * @date 2021.3.26 修正
  *
  */
 #include <cstdio>
@@ -56,14 +80,14 @@ bool pngWriteInit_(
   if (!ofs)
     return false;
 
-  png_ptr = png_create_write_struct(
-              PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_ptr
+    = png_create_write_struct(
+        PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (!png_ptr)
     return false;
 
   info_ptr = png_create_info_struct(png_ptr);
-  if(!info_ptr)
-  {
+  if(!info_ptr) {
     png_destroy_write_struct(&png_ptr, nullptr);
     return false;
   }
@@ -150,26 +174,26 @@ polymnia::IndexedPngSaver::save(
 
 
   // パレット関係
-  png_colorp palette = new png_color[256];
-  for (int i=0; i<256; i++)
-  {
+  auto palette = std::make_unique<png_color[]>(256);
+  //png_colorp palette = new png_color[256];
+  for (int i=0; i<256; i++) {
     palette[i].red = pct->palette(i).r;
     palette[i].green = pct->palette(i).g;
     palette[i].blue = pct->palette(i).b;
   }
-  png_set_PLTE(png_ptr, info_ptr, palette, 256);
+  png_set_PLTE(png_ptr, info_ptr, palette.get(), 256);
 
   // 透過処理
-  png_bytep transbf = new png_byte[256];
-  if (trans)
-  {
+  auto transbf = std::make_unique<png_byte[]>(256);
+  //png_bytep transbf = new png_byte[256];
+  if (trans) {
     for (int i=0; i < 256; i++)
       if (i == paltp)
         transbf[i] = 0;
       else
         transbf[i] = 0xff;
 
-    png_set_tRNS(png_ptr, info_ptr, transbf, 256, nullptr);
+    png_set_tRNS(png_ptr, info_ptr, transbf.get(), 256, nullptr);
   }
 
   png_write_info(png_ptr,info_ptr);
@@ -183,19 +207,18 @@ polymnia::IndexedPngSaver::save(
     n_pass = 1;
 
 
-  const themis::UByte* buf = pct->buffer();
+  const std::uint8_t* buf = pct->buffer();
   int o = pct->offset();
   for (int pass = 0; pass < n_pass; pass++)
-    for (int j=0, y=0; y < hh; y++, j+=o)
-    {
+    for (int j=0, y=0; y < hh; y++, j+=o) {
       png_bytep pp = (png_bytep)&buf[j];
       png_write_rows(png_ptr,&pp,1);
     }
 
   png_write_end(png_ptr, info_ptr);
   png_destroy_write_struct(&png_ptr, &info_ptr);
-  delete[] palette;
-  delete[] transbf;
+  //delete[] palette;
+  //delete[] transbf;
   return true;
 }
 

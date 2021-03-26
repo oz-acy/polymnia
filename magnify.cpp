@@ -1,19 +1,43 @@
-/**************************************************************************
+/*
+ * Copyright 2003-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  magnify.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  Picture用擴大縮小ルーチン
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    27 Nov MMIV    擴大ルーチンのアルゴリズムを變更
- *    27 Fev MMVIII  LIBPOLYMNIAに移行
- *    20 Apl MMVIII  LIBPOLYMNIAの構成變更に伴ひ修正
- *     8 Sep MMXI    NULL を nullptr に修正 (C++11)
- *    26 Feb MMXVI   ファイル名變更
- *     2 Mar MMXVI   throw()を削除
- *    28 Dec MMXVIII createMagnifiedPictureをPictureのメンバ函數に編入
- *    29 Aug MMXIX   createMagnifiedPictureの返却型をunique_ptrに變更
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file magnify.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief Picture用擴大縮小ルーチン
+ *
+ * @date 27 Nov MMIV    擴大ルーチンのアルゴリズムを變更
+ * @date 27 Fev MMVIII  LIBPOLYMNIAに移行
+ * @date 20 Apl MMVIII  LIBPOLYMNIAの構成變更に伴ひ修正
+ * @date  8 Sep MMXI    NULL を nullptr に修正 (C++11)
+ * @date 26 Feb MMXVI   ファイル名變更
+ * @date  2 Mar MMXVI   throw()を削除
+ * @date 28 Dec MMXVIII createMagnifiedPictureをPictureのメンバ函數に編入
+ * @date 29 Aug MMXIX   createMagnifiedPictureの返却型をunique_ptrに變更
+ * @date 25 Mar MMXXI   themis/inttype.hの非推奬化に對應
  */
 #include "picture.h"
 
@@ -59,7 +83,7 @@ void productMat14_44_(double* res, double* vec, double* mat)
 /*================================================
  *  createMagnifiedPicture()
  *  擴大畫像生成ルーチン
- *==============================================*/
+ */
 std::unique_ptr<polymnia::Picture> 
 polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
 {
@@ -133,27 +157,27 @@ polymnia::Picture::createMagnifiedPicture(int w, int h) const noexcept
       double G = innerProduct_(4, tmpG, fx);
       double B = innerProduct_(4, tmpB, fx);
 
-      UByte r, g, b;
+      std::uint8_t r, g, b;
       if (R < 0.0)
         r = 0;
       else if (R > 255.0)
         r = 255;
       else
-        r = (UByte)R;
+        r = (std::uint8_t)R;
 
       if (G < 0.0)
         g = 0;
       else if (G > 255.0)
         g = 255;
       else
-        g = (UByte)G;
+        g = (std::uint8_t)G;
 
       if (B < 0.0)
         b = 0;
       else if (B > 255.0)
         b = 255;
       else
-        b = (UByte)B;
+        b = (std::uint8_t)B;
 
       pict->pixel(X, Y) = RgbColor(r, g, b);
     }
