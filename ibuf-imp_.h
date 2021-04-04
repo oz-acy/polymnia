@@ -31,11 +31,13 @@
  *
  * @date 2016.2.26  ellipse()内の不使用變數の宣言を削除
  * @date 2021.3.25  整形
+ * @date 2021.4.1   修正
  *
  */
 #include <stack>
 #include <cstring>
 #include <cstdlib>
+#include <algorithm>
 
 
 namespace polymnia{
@@ -92,12 +94,16 @@ polymnia::ImageBuffer<C_>::blt(
 {
   imp_::Clip_ clip(sx, sy, w, h, dx, dy, mk);
 
-  if (clip)
-  {
-    int dp = clip.dx + clip.dy * offset_;
-    int sp = clip.sx + clip.sy * src->offset_;
-    for (int i=0; i<clip.h; i++, dp+=offset_, sp+=src->offset_)
-      std::memcpy(&(buf_[dp]), &(src->buf_[sp]), clip.w * sizeof(C_));
+  if (clip) {
+    auto dp = buf_ + clip.dx + clip.dy * offset_;
+    auto sp = src->buf_ + clip.sx + clip.sy * src->offset_;
+    for (int i = 0; i < clip.h; i++, dp += offset_, sp += src->offset_)
+      std::copy_n(sp, clip.w, dp);
+
+    //int dp = clip.dx + clip.dy * offset_;
+    //int sp = clip.sx + clip.sy * src->offset_;
+    //for (int i = 0; i < clip.h; i++, dp += offset_, sp += src->offset_)
+      //std::memcpy(&(buf_[dp]), &(src->buf_[sp]), clip.w * sizeof(C_));
   }
 }
 
@@ -126,8 +132,7 @@ polymnia::ImageBuffer<C_>::blt(
     int dp = clip.dx + clip.dy * offset_;
     int sp = clip.sx + clip.sy * src->offset_;
     for (int i = 0; i < clip.h; i++, dp += offset_, sp += src->offset_)
-      for (int j = 0; j < clip.w; j++)
-      {
+      for (int j = 0; j < clip.w; j++) {
         if (src->buf_[sp + j] != tcol)
           buf_[dp + j] = src->buf_[sp + j];
       }
@@ -208,8 +213,12 @@ inline void polymnia::ImageBuffer<C_>::clear(const C_& col)
 {
   int dp = 0;
   for (int j = 0; j < h_; j++, dp += offset_)
-    for (int i = 0; i < w_; i++)
-      buf_[dp + i] = col;
+    std::fill_n(buf_ + dp, w_, col);
+    //for (int i = 0; i < w_; i++)
+    //  buf_[dp + i] = col;
+
+  //あるいは以下で濟ませるか?
+  //std::fill_n(buf_, h_ * offset_, col);
 }
 
 
@@ -613,11 +622,11 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
     return;
 
   std::stack<int> p_stc;
-  unsigned pos = x + y*offset_;
+  unsigned pos = x + y * offset_;
 
   p_stc.push(pos);
   C_ p_col = buf_[pos];
-  if (p_col==col)
+  if (p_col == col)
     return;
 
   while (!p_stc.empty()) {
@@ -628,16 +637,16 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
     int yy = pt / offset_;
 
     bool ful, fur;
-    if (yy > 0 && buf_[pt-offset_]==p_col) {
-      p_stc.push(pt-offset_);
+    if (yy > 0 && buf_[pt - offset_] == p_col) {
+      p_stc.push(pt - offset_);
       ful = fur = true;
     }
     else
       ful = fur = false;
 
     bool fdl, fdr;
-    if (yy < h_ - 1 && buf_[pt+offset_]==p_col) {
-      p_stc.push(pt+offset_);
+    if (yy < h_ - 1 && buf_[pt + offset_] == p_col) {
+      p_stc.push(pt + offset_);
       fdl = fdr = true;
     }
     else
@@ -651,22 +660,22 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
 
     buf_[pt] = col;
 
-    while (l >= 0 && buf_[L]==p_col) {
+    while (l >= 0 && buf_[L] == p_col) {
       if (L-offset_ >= 0) {
-        if (ful && buf_[L-offset_] != p_col)
+        if (ful && buf_[L - offset_] != p_col)
           ful = false;
-        else if (!ful && buf_[L-offset_] == p_col) {
+        else if (!ful && buf_[L - offset_] == p_col) {
           ful = true;
-          p_stc.push(L-offset_);
+          p_stc.push(L - offset_);
         }
       }
 
-      if (L+offset_ < h_*offset_) {
-        if (fdl && buf_[L+offset_] != p_col)
+      if (L + offset_ < h_ * offset_) {
+        if (fdl && buf_[L + offset_] != p_col)
           fdl = false;
-        else if (!fdl && buf_[L+offset_] == p_col) {
+        else if (!fdl && buf_[L + offset_] == p_col) {
           fdl = true;
-          p_stc.push(L+offset_);
+          p_stc.push(L + offset_);
         }
       }
 
@@ -675,20 +684,20 @@ inline void polymnia::ImageBuffer<C_>::paintFill(int x, int y, const C_& col)
       --l;
     }
 
-    while (r < w_ && buf_[R]==p_col) {
-      if (R-offset_ >= 0) {
+    while (r < w_ && buf_[R] == p_col) {
+      if (R - offset_ >= 0) {
         if (fur)
           fur = false;
-        else if (buf_[R-offset_]==p_col) {
+        else if (buf_[R - offset_] == p_col) {
           fur = true;
           p_stc.push(R - offset_);
         }
       }
 
-      if (R+offset_ < h_*offset_) {
-        if (fdr && buf_[R+offset_] != p_col)
+      if (R + offset_ < h_ * offset_) {
+        if (fdr && buf_[R + offset_] != p_col)
           fdr = false;
-        else if (!fdr && buf_[R+offset_] == p_col) {
+        else if (!fdr && buf_[R + offset_] == p_col) {
           fdr = true;
           p_stc.push(R + offset_);
         }

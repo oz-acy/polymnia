@@ -104,7 +104,7 @@ target_link_options(resizer PRIVATE
   $<$<CXX_COMPILER_ID:GNU>:-static>
 )
 target_compile_definitions(resizer PRIVATE NDEBUG)
-target_link_libraries(resizer polymnia themis)
+target_link_libraries(resizer polymnia)
 
 
 

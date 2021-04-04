@@ -288,7 +288,7 @@ read04bit_(
   using namespace themis;
   using namespace polymnia;
 
-  int bufsize = getBufSize_((pct->width()+1)/2);
+  int bufsize = getBufSize_((pct->width() + 1) / 2);
 
   std::unique_ptr<std::uint8_t[]> linebuf;
   std::unique_ptr<std::uint8_t[]> palbuf;
